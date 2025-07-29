@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Nav from "./components/Nav";
+import Navigator from "./components/Navigator";
 import Home from "./pages/Home/Home";
 import CreateUser from "./pages/User/CreateUser";
 import UserList from "./pages/User/UserList";
@@ -7,7 +7,7 @@ import UserList from "./pages/User/UserList";
 const App = () => {
   return (
     <>
-      <Nav />
+      <Navigator />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/user" element={<UserList />} />

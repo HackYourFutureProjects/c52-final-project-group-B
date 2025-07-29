@@ -20,10 +20,16 @@
     "prettier:fix": "prettier ./src --write"
   },
   "dependencies": {
+    "@heroui/react": "^2.8.2",
+    "@tailwindcss/vite": "^4.1.11",
+    "framer-motion": "^12.23.11",
+    "install": "^0.13.0",
+    "npm": "^11.5.1",
     "prop-types": "^15.7.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7"
+    "react-router-dom": "^7",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

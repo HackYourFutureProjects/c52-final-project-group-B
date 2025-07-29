@@ -1,3 +1,4 @@
+import { Button } from "@heroui/react";
 import TEST_ID from "./Home.testid";
 import hyfLogo from "../../assets/hyf-logo.png";
 
@@ -7,6 +8,7 @@ const Home = () => {
       <h1>This is the homepage</h1>
       <p>Good luck with the project!</p>
       <img src={hyfLogo} alt="HackYourFuture Logo" style={{ width: "200px" }} />
+      <Button color="primary">Button</Button>
     </div>
   );
 };
