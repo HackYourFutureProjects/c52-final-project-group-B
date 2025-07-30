@@ -11,7 +11,7 @@ const AppWrapper = ({ children }) => {
   return (
     <HeroUIProvider>
       <Navigator />
-      <main className="light text-foreground bg-background">
+      <main className="light text-foreground bg-background container mx-auto">
         <Router>{children}</Router>
       </main>
       <Footer />
