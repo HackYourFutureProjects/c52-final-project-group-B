@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userProgressSchema = new mongoose.Schema({
+export const userProgressSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -24,10 +24,3 @@ const userProgressSchema = new mongoose.Schema({
     default: false,
   },
 });
-
-const UserProgress = mongoose.model(
-  "UserProgress",
-  userProgressSchema,
-  "usersprogress",
-);
-export default UserProgress;

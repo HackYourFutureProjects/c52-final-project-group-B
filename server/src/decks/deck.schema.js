@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const deckSchema = new mongoose.Schema({
+export const deckSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -14,7 +14,6 @@ const deckSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    minlength: 10,
     maxlength: 500,
   },
   language: {
@@ -34,6 +33,3 @@ const deckSchema = new mongoose.Schema({
     default: false,
   },
 });
-
-const Deck = mongoose.model("Deck", deckSchema, "decks");
-export default Deck;

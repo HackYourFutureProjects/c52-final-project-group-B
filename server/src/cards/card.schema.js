@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const cardSchema = new mongoose.Schema({
+export const cardSchema = new mongoose.Schema({
   deckId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -15,6 +15,3 @@ const cardSchema = new mongoose.Schema({
     required: true,
   },
 });
-
-const Card = mongoose.model("Card", cardSchema, "cards");
-export default Card;
