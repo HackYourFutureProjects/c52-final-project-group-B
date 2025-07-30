@@ -30,7 +30,7 @@ const useFetch = (route, onReceived) => {
      * As an error that happens later because of this can be very confusing!
      */
     throw Error(
-      "when using the useFetch hook, the route should not include the /api/ part",
+      "when using the useFetch hook, the route should not include the /api/ part"
     );
   }
 
@@ -58,7 +58,7 @@ const useFetch = (route, onReceived) => {
         setError(
           `Fetch for ${url} returned an invalid status (${
             res.status
-          }). Received: ${JSON.stringify(res)}`,
+          }). Received: ${JSON.stringify(res)}`
         );
       }
 
@@ -70,8 +70,8 @@ const useFetch = (route, onReceived) => {
         setError(
           jsonResult.msg ||
             `The result from our API did not have an error message. Received: ${JSON.stringify(
-              jsonResult,
-            )}`,
+              jsonResult
+            )}`
         );
       }
 

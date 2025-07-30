@@ -14,7 +14,7 @@ const CreateUser = () => {
   };
   const { isLoading, error, performFetch, cancelFetch } = useFetch(
     "/users",
-    onSuccess,
+    onSuccess
   );
 
   useEffect(() => {

@@ -6,5 +6,5 @@ import AppWrapper from "@/AppWrapper";
 createRoot(document.getElementById("root")).render(
   <AppWrapper>
     <App />
-  </AppWrapper>,
+  </AppWrapper>
 );
