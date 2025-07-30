@@ -11,4 +11,5 @@
 
 .heading-title {
   font-family: "Baloo Bhaijaan 2", sans-serif;
+  transform: translateY(1px);
 }
