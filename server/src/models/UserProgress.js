@@ -4,26 +4,30 @@ const userProgressSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Users"
+    ref: "User",
   },
   cardId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Cards"
+    ref: "Card",
   },
   correctCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   incorrectCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   isLearned: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-const UserProgress = mongoose.model("UserProgress", userProgressSchema, "usersprogress");
+const UserProgress = mongoose.model(
+  "UserProgress",
+  userProgressSchema,
+  "usersprogress",
+);
 export default UserProgress;

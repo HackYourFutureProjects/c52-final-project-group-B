@@ -4,16 +4,16 @@ const cardSchema = new mongoose.Schema({
   deckId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Decks"
+    ref: "Deck",
   },
   question: {
     type: String,
-    required: true
+    required: true,
   },
   answer: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const Card = mongoose.model("Card", cardSchema, "cards");
