@@ -11,60 +11,63 @@ import {
 
 export default function Navigator() {
   return (
-    <Navbar
-      classNames={{
-        base: "rounded-full max-w-[1280px] mx-auto mt-8 top-8 px-1 bg-default-200",
-      }}
-      maxWidth="xl"
-    >
-      <NavbarContent className="hidden sm:flex gap-4" justify="start">
-        <NavbarItem>
-          <Button
-            as={Link}
+    <>
+      <Navbar
+        classNames={{
+          base: "rounded-full container mx-auto mt-8 top-8 px-1 bg-default-300/70",
+        }}
+        maxWidth="full"
+      >
+        <NavbarContent className="hidden gap-4 sm:flex" justify="start">
+          <NavbarItem>
+            <Button
+              as={Link}
+              href="/"
+              variant="solid"
+              radius="full"
+              className="font-bold"
+            >
+              Home
+            </Button>
+          </NavbarItem>
+          <NavbarItem>
+            <Button
+              as={Link}
+              href="#"
+              variant="solid"
+              radius="full"
+              className="font-bold"
+            >
+              Library
+            </Button>
+          </NavbarItem>
+          <NavbarItem>
+            <Button
+              as={Link}
+              href="/user"
+              variant="solid"
+              radius="full"
+              className="font-bold"
+            >
+              User (temp)
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
+
+        <NavbarBrand className="flex justify-center" justify="center">
+          <Link
+            className="bg-default cursor-pointer rounded-full px-5 py-2"
             href="/"
-            color="default"
-            variant="flat"
-            radius="full"
-            className="font-bold"
           >
-            Home
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button
-            as={Link}
-            href="#"
-            color="default"
-            variant="flat"
-            radius="full"
-            className="font-bold"
-          >
-            Library
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Button
-            as={Link}
-            href="/user"
-            color="default"
-            variant="flat"
-            radius="full"
-            className="font-bold"
-          >
-            User (temp)
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
+            <Image alt="Memix Logo" src="/memix-logo.svg" width={100}></Image>
+          </Link>
+        </NavbarBrand>
 
-      <NavbarBrand className="flex justify-center" justify="center">
-        <div className="bg-default-300 rounded-full px-5 py-2">
-          <Image alt="Memix Logo" src="/memix-logo.svg" width={100}></Image>
-        </div>
-      </NavbarBrand>
-
-      <NavbarContent as="div" justify="end">
-        <Avatar as="button" color="primary" name="U" size="sm" />
-      </NavbarContent>
-    </Navbar>
+        <NavbarContent as="div" justify="end">
+          <Avatar as="button" color="primary" name="U" size="sm" />
+        </NavbarContent>
+      </Navbar>
+      <div className="h-20"></div>
+    </>
   );
 }
