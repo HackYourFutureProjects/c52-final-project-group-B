@@ -7,7 +7,7 @@ export const errorHandler = (err, req, res, next) => {
 
   const responseBody = isZodError
     ? { message: "Validation failed", errors: err.format() }
-    : { message: err.message || "Internal Server Error hello yana" };
+    : { message: err.message || "Internal Server Error" };
 
   res.status(status).json(responseBody);
 };

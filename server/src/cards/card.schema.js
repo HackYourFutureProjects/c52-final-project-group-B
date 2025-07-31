@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { objectIdSchema } from "../constants/shared";
+import { objectIdSchema } from "../constants/shared.js";
 
 export const cardValidationSchema = z.object({
   deckId: objectIdSchema,
