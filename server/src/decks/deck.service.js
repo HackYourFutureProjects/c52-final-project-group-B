@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { User } from "../users/user.model.js";
+import { User } from "../users/user.model.js"; //do not delete!!!
 import { DeckModel } from "./deck.model.js";
 import { CardModel } from "../cards/card.model.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
