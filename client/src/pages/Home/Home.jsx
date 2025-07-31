@@ -73,7 +73,7 @@ const Home = () => {
         </div>
         <div className="bg-default-300 flex-1 rounded-[35px] p-8">
           <h3 className="text-3xl font-black">57,872</h3>
-          <p>Card Learned</p>
+          <p>Cards Learned</p>
         </div>
       </div>
 
