@@ -10,10 +10,8 @@ export function validateRequestBody(schema, req) {
 
 export function validateRequestParams(schema, req) {
   const result = schema.safeParse(req.params);
-
   if (!result.success) {
     throw result.error;
   }
-
   return result.data;
 }

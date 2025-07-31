@@ -1,5 +1,6 @@
 import express from "express";
 import cardRouter from "./cards/card.router.js";
+import deckRouter from "./decks/deck.router.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.use("/api/cards", cardRouter);
+app.use("/api", deckRouter);
 app.use(notFound);
 app.use(errorHandler);
 
