@@ -1,5 +1,6 @@
 import express from "express";
 import cardRouter from "./cards/card.router.js";
+import deckRouter from "./decks/deck.router.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 
@@ -15,6 +16,7 @@ app.use(express.json());
  * As we also host our client code on heroku we want to separate the API endpoints.
  */
 app.use("/api/cards", cardRouter);
+app.use("/api", deckRouter);
 app.use(notFound);
 app.use(errorHandler);
 

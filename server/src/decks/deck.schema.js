@@ -1,35 +1,21 @@
-import mongoose from "mongoose";
+import { z } from "zod";
+import { objectIdSchema } from "../constants/shared.js";
 
-export const deckSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
-  title: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 100,
-  },
-  description: {
-    type: String,
-    maxlength: 500,
-  },
-  language: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 50,
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
-  isPublic: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+export const deckValidationSchema = z.object({
+  id: objectIdSchema,
+});
+
+export const updateDeckSchema = z.object({
+  title: z.string().min(1).optional(),
+  description: z.string().optional(),
+  language: z.string().optional(),
+  isPublic: z.boolean().optional(),
+});
+
+export const createDeckSchema = z.object({
+  userId: objectIdSchema,
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  language: z.string().min(1, "Language is required"),
+  isPublic: z.boolean().optional(),
 });

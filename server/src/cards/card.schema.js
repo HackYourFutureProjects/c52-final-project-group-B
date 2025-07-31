@@ -1,8 +1,5 @@
 import { z } from "zod";
-
-const objectIdSchema = z.string().regex(/^[a-f\d]{24}$/i, {
-  message: "Must be a valid Id",
-});
+import { objectIdSchema } from "../constants/shared.js";
 
 export const cardValidationSchema = z.object({
   deckId: objectIdSchema,

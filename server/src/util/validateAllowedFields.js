@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+// import { ZodError } from "zod";
 
 export function validateRequestBody(schema, req) {
   const result = schema.safeParse(req.body);
@@ -12,10 +12,8 @@ export function validateRequestBody(schema, req) {
 
 export function validateRequestParams(schema, req) {
   const result = schema.safeParse(req.params);
-
   if (!result.success) {
-    throw new ZodError(result.error.errors);
+    throw result.error;
   }
-
   return result.data;
 }
