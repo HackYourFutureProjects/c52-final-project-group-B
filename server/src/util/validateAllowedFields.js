@@ -1,5 +1,3 @@
-// import { ZodError } from "zod";
-
 export function validateRequestBody(schema, req) {
   const result = schema.safeParse(req.body);
 

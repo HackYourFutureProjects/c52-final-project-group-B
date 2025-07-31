@@ -7,14 +7,25 @@ import { notFound } from "./middlewares/notFound.middleware.js";
 // Create an express server
 const app = express();
 
-// Tell express to use the json middleware
 app.use(express.json());
 
-/****** Attach routes ******/
+/****** Host our client code for Heroku *****/
 /**
- * We use /api/ at the start of every route!
- * As we also host our client code on heroku we want to separate the API endpoints.
+ * We only want to host our client code when in production mode as we then want to use the production build that is built in the dist folder.
+ * When not in production, don't host the files, but the development version of the app can connect to the backend itself.
  */
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(new URL("../../client/dist", import.meta.url).pathname),
+  );
+  // Redirect * requests to give the client data
+  app.get("/*file", (req, res) =>
+    res.sendFile(
+      new URL("../../client/dist/index.html", import.meta.url).pathname,
+    ),
+  );
+}
+
 app.use("/api/cards", cardRouter);
 app.use("/api", deckRouter);
 app.use(notFound);
