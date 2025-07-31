@@ -1,4 +1,19 @@
 import mongoose from "mongoose";
-import { cardSchema } from "./card.schema.js";
 
-export const Card = mongoose.model("Card", cardSchema, "cards");
+const cardSchema = new mongoose.Schema({
+  deckId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Deck",
+  },
+  question: {
+    type: String,
+    required: true,
+  },
+  answer: {
+    type: String,
+    required: true,
+  },
+});
+
+export const CardModel = mongoose.model("Card", cardSchema, "cards");
