@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 const Title = ({ children, classes }) => {
   return (
-    <h1 className={classes ? classes : "heading-title text-4xl font-bold"}>
+    <h1 className={classes ?? "heading-title text-4xl font-bold"}>
       {children}
     </h1>
   );
