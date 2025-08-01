@@ -82,35 +82,35 @@ const Home = () => {
         <h2 className="heading-title text-2xl font-bold">Trending Decks</h2>
         <div className="flex w-[200%] justify-center gap-4">
           <Deck
-            deckID="1"
+            deckID={1}
             title="Math Basics"
             description="This deck covers fundamental math concepts and operations."
             user="John_Doe"
             numCards={10}
           />
           <Deck
-            deckID="2"
+            deckID={2}
             title="Science Essentials"
             description="Explore key concepts in biology, chemistry, and physics."
             user="Jane_Smith"
             numCards={15}
           />
           <Deck
-            deckID="3"
+            deckID={3}
             title="Spanish Basics"
             description="This deck contains basic vocabulary and grammar to start learning Spanish."
             user="Zet_Ahmad"
             numCards={12}
           />
           <Deck
-            deckID="4"
+            deckID={4}
             title="History Highlights"
             description="Important events and figures from world history."
             user="Alice_Wonder"
             numCards={8}
           />
           <Deck
-            deckID="5"
+            deckID={5}
             title="Literature 101"
             description="Classic literature summaries and analysis."
             user="Bob_Builder"
