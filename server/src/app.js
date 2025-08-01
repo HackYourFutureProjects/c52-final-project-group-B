@@ -16,14 +16,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     express.static(new URL("../../client/dist", import.meta.url).pathname),
   );
-
-  app.get("/*", (req, res, next) => {
-    if (req.path.startsWith("/api")) return next();
-
+  // Redirect * requests to give the client data
+  app.get("/*file", (req, res) =>
     res.sendFile(
       new URL("../../client/dist/index.html", import.meta.url).pathname,
-    );
-  });
+    ),
+  );
 }
 
 app.use(notFound);
