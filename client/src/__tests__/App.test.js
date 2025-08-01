@@ -16,7 +16,7 @@ describe("Routing", () => {
     render(
       <MemoryRouter initialEntries={["/"]}>
         <App />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(screen.getByTestId(TEST_ID_HOME.container)).toBeInTheDocument();
@@ -28,13 +28,13 @@ describe("Routing", () => {
     render(
       <MemoryRouter initialEntries={["/user"]}>
         <App />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     await waitFor(() =>
       expect(
-        screen.getByTestId(TEST_ID_USER_LIST.container),
-      ).toBeInTheDocument(),
+        screen.getByTestId(TEST_ID_USER_LIST.container)
+      ).toBeInTheDocument()
     );
   });
 
@@ -42,11 +42,11 @@ describe("Routing", () => {
     render(
       <MemoryRouter initialEntries={["/user/create"]}>
         <App />
-      </MemoryRouter>,
+      </MemoryRouter>
     );
 
     expect(
-      screen.getByTestId(TEST_ID_CREATE_USER.container),
+      screen.getByTestId(TEST_ID_CREATE_USER.container)
     ).toBeInTheDocument();
   });
 });

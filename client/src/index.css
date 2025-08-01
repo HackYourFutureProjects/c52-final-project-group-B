@@ -1,19 +1,14 @@
-*,
-::after,
-::before,
-::backdrop,
-::file-selector-button {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+@import "tailwindcss";
+@plugin '../hero.js';
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+* {
+  font-family: "Nunito", sans-serif;
 }
 
-ol,
-ul,
-menu {
-  list-style: none;
-}
-
-body {
-  padding: 20px;
+.heading-title {
+  font-family: "Baloo Bhaijaan 2", sans-serif;
 }
