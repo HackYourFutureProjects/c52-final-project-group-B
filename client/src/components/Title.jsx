@@ -4,7 +4,7 @@ import { Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 const Title = ({ children, classes, breadcrumbs }) => {
   return (
     <>
-      <h1 className={classes ? classes : "heading-title text-4xl font-bold"}>
+      <h1 className={classes ?? "heading-title text-4xl font-bold"}>
         {children}
       </h1>
       {breadcrumbs && breadcrumbs.length > 0 && (
