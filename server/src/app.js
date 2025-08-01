@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === "production") {
     express.static(new URL("../../client/dist", import.meta.url).pathname),
   );
 
-  app.get("*", (req, res, next) => {
+  app.get("/*", (req, res, next) => {
     if (req.path.startsWith("/api")) return next();
 
     res.sendFile(
