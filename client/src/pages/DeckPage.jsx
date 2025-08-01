@@ -18,6 +18,7 @@ import {
   MoreIcon,
   DeleteIcon,
 } from "@/components/Icons";
+import { DecksCard } from "@/components/Card";
 
 const DeckPage = () => {
   const { id } = useParams();
@@ -35,9 +36,16 @@ const DeckPage = () => {
           Deck ID: {id}
         </Title>
       </div>
-      <div className="mt-20 flex items-stretch justify-center gap-3">
+      <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
+        <h3 className="text-xl font-bold">Description</h3>
+        <p>
+          This deck contains basic vocabulary and grammar to start learning
+          Spanish.
+        </p>
+      </div>
+      <div className="mt-3 flex items-stretch justify-center gap-3">
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
-          <h3 className="text-xl font-bold">Progress</h3>
+          <h3 className="text-xl font-bold">Your Progress</h3>
           <Progress
             showValueLabel={true}
             maxValue={58}
@@ -145,18 +153,18 @@ const DeckPage = () => {
       </div>
 
       <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
-        <div className="bg-default-200 h-90 w-90 rounded-[35px]"></div>
+        <DecksCard front="Hola" back="Hello" />
+        <DecksCard front="Gracias" back="Thank you" />
+        <DecksCard front="Adiós" back="Goodbye" />
+        <DecksCard front="Por favor" back="Please" />
+        <DecksCard front="Buenos días" back="Good morning" />
+        <DecksCard front="Buenas noches" back="Good night" />
+        <DecksCard front="¿Cómo estás?" back="How are you?" />
+        <DecksCard front="Lo siento" back="I'm sorry" />
+        <DecksCard front="Sí" back="Yes" />
+        <DecksCard front="No" back="No" />
+        <DecksCard front="¿Qué hora es?" back="What time is it?" />
+        <DecksCard front="¿Dónde está el baño?" back="Where is the bathroom?" />
       </div>
     </>
   );
