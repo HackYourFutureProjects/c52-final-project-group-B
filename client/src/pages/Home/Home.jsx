@@ -1,7 +1,8 @@
 import TEST_ID from "./Home.testid";
-import Title from "@/components/Title";
 import { Button } from "@heroui/button";
 import { Link, Accordion, AccordionItem } from "@heroui/react";
+import Deck from "@/components/Deck";
+import Title from "@/components/Title";
 
 const Home = () => {
   return (
@@ -79,12 +80,42 @@ const Home = () => {
 
       <div className="bg-default-300 mt-20 flex flex-col items-center gap-8 overflow-hidden rounded-[35px] p-8 text-center">
         <h2 className="heading-title text-2xl font-bold">Trending Decks</h2>
-        <div className="flex w-[120%] justify-center gap-4">
-          <div className="bg-default-600 h-70 w-130 rounded-[35px]"></div>
-          <div className="bg-default-600 h-70 w-130 rounded-[35px]"></div>
-          <div className="bg-default-600 h-70 w-130 rounded-[35px]"></div>
-          <div className="bg-default-600 h-70 w-130 rounded-[35px]"></div>
-          <div className="bg-default-600 h-70 w-130 rounded-[35px]"></div>
+        <div className="flex w-[200%] justify-center gap-4">
+          <Deck
+            deckID={1}
+            title="Math Basics"
+            description="This deck covers fundamental math concepts and operations."
+            user="John_Doe"
+            numCards={10}
+          />
+          <Deck
+            deckID={2}
+            title="Science Essentials"
+            description="Explore key concepts in biology, chemistry, and physics."
+            user="Jane_Smith"
+            numCards={15}
+          />
+          <Deck
+            deckID={3}
+            title="Spanish Basics"
+            description="This deck contains basic vocabulary and grammar to start learning Spanish."
+            user="Zet_Ahmad"
+            numCards={12}
+          />
+          <Deck
+            deckID={4}
+            title="History Highlights"
+            description="Important events and figures from world history."
+            user="Alice_Wonder"
+            numCards={8}
+          />
+          <Deck
+            deckID={5}
+            title="Literature 101"
+            description="Classic literature summaries and analysis."
+            user="Bob_Builder"
+            numCards={20}
+          />
         </div>
         <Button
           as={Link}
@@ -99,13 +130,13 @@ const Home = () => {
         </Button>
       </div>
 
-      <div className="my-20 flex flex-col gap-8 text-center">
+      <div className="mt-20 flex flex-col gap-8 text-center">
         <h2 className="heading-title text-2xl font-bold">FAQ</h2>
         <Accordion
           showDivider={false}
           itemClasses={{
-            base: "border-1 border-default rounded-[35px] my-4 px-8 text-left",
-            title: "font-bold",
+            base: "border-1 border-default rounded-[35px] my-4 px-8 text-left cursor-pointer",
+            title: "font-bold cursor-pointer",
           }}
         >
           <AccordionItem
