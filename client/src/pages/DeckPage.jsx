@@ -35,7 +35,7 @@ const DeckPage = () => {
       }
     };
     fetchCards();
-  }, []);
+  }, [id]);
 
   return (
     <>
