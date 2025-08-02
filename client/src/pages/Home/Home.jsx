@@ -38,10 +38,10 @@ const Home = () => {
               variant="ghost"
               color="primary"
               radius="full"
-              href="#"
+              href="/deck/create"
               className="font-bold"
             >
-              Sign up
+              Create A Deck
             </Button>
           </div>
         </div>
