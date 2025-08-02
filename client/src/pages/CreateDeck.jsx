@@ -171,7 +171,7 @@ const CreateDeck = () => {
             name="language"
             label="Language"
             radius="full"
-            // selectionMode="multiple"
+            {/* TODO: If multiple selection is needed in the future, add selectionMode="multiple" to the Select component. */}
             isRequired
             classNames={{
               trigger:
