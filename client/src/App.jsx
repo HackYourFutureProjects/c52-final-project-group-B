@@ -12,7 +12,7 @@ const App = () => {
       <Route path="/user" element={<UserList />} />
       <Route path="/user/create" element={<CreateUser />} />
       <Route path="/deck/:id" element={<DeckPage />} />
-      <Route path="/createdeck" element={<CreateDeck />} />
+      <Route path="/deck/create" element={<CreateDeck />} />
     </Routes>
   );
 };

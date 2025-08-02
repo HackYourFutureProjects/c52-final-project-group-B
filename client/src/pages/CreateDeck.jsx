@@ -92,8 +92,9 @@ const CreateDeck = () => {
           Create A Deck
         </Title>
       </div>
-      <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
-        <Form>
+
+      <Form className="mt-20 items-stretch">
+        <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
           <Input
             label="Enter Deck Title"
             type="text"
@@ -103,7 +104,7 @@ const CreateDeck = () => {
             maxLength={100}
             classNames={{
               inputWrapper:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 p-5",
+                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
             }}
           />
           <Textarea
@@ -114,7 +115,7 @@ const CreateDeck = () => {
             maxLength={500}
             classNames={{
               inputWrapper:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 rounded-[25px] p-5",
+                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 rounded-[25px] px-5",
             }}
           />
           <Select
@@ -124,7 +125,7 @@ const CreateDeck = () => {
             isRequired
             classNames={{
               trigger:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 p-5",
+                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
             }}
           >
             {languages.map((language) => (
@@ -142,77 +143,99 @@ const CreateDeck = () => {
               </SelectItem>
             ))}
           </Select>
-        </Form>
-      </div>
-      <div className="mt-20 flex items-center justify-between">
-        <div className="flex flex-col">
-          <h3 className="text-xl font-bold">Add cards</h3>
-          <p className="text-gray-500">
-            Below you can add new cards to your deck.
-          </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Tooltip
-            content="Delete Deck"
-            showArrow={true}
-            delay={0}
-            closeDelay={0}
-            radius="full"
-          >
-            <Button
-              as={Link}
-              href="#"
-              isIconOnly
-              radius="full"
-              size="lg"
-              className="p-3"
-            >
-              <DeleteIcon />
-            </Button>
-          </Tooltip>
-        </div>
-      </div>
-
-      <div className="mt-20 flex flex-col gap-5">
-        {cards.map((card, index) => (
-          <div
-            key={card.id}
-            className="bg-default-200 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
-          >
-            <div className="ml-2 text-xl font-bold">{index + 1}.</div>
-            <Divider orientation="vertical" className="h-10 w-[2px]" />
-            <Input
-              label="Enter the question"
-              type="text"
-              radius="full"
-              value={card.question}
-              onChange={(e) => updateCard(card.id, "question", e.target.value)}
-              isRequired
-              minLength={2}
-              maxLength={100}
-              classNames={{
-                inputWrapper:
-                  "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 p-5",
-              }}
-            />
-            <Divider orientation="vertical" className="h-10 w-[2px]" />
-            <Input
-              label="Enter the answer"
-              type="text"
-              radius="full"
-              value={card.answer}
-              onChange={(e) => updateCard(card.id, "answer", e.target.value)}
-              isRequired
-              minLength={2}
-              maxLength={100}
-              classNames={{
-                inputWrapper:
-                  "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 p-5",
-              }}
-            />
-            <Divider orientation="vertical" className="h-10 w-[2px]" />
+        <div className="mt-20 flex items-center justify-between">
+          <div className="flex flex-col">
+            <h3 className="text-xl font-bold">Add cards</h3>
+            <p className="text-gray-500">
+              Below you can add new cards to your deck.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
             <Tooltip
-              content="Delete Card"
+              content="Delete Deck"
+              showArrow={true}
+              delay={0}
+              closeDelay={0}
+              radius="full"
+            >
+              <Button
+                as={Link}
+                href="#"
+                isIconOnly
+                radius="full"
+                size="lg"
+                className="p-3"
+              >
+                <DeleteIcon />
+              </Button>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div className="mt-20 flex flex-col gap-5">
+          {cards.map((card, index) => (
+            <div
+              key={card.id}
+              className="bg-default-200 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
+            >
+              <div className="ml-2 text-xl font-bold">{index + 1}.</div>
+              <Divider orientation="vertical" className="h-10 w-[2px]" />
+              <Input
+                label="Enter the question"
+                type="text"
+                radius="full"
+                value={card.question}
+                onChange={(e) =>
+                  updateCard(card.id, "question", e.target.value)
+                }
+                isRequired
+                minLength={2}
+                maxLength={100}
+                classNames={{
+                  inputWrapper:
+                    "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+                }}
+              />
+              <Divider orientation="vertical" className="h-10 w-[2px]" />
+              <Input
+                label="Enter the answer"
+                type="text"
+                radius="full"
+                value={card.answer}
+                onChange={(e) => updateCard(card.id, "answer", e.target.value)}
+                isRequired
+                minLength={2}
+                maxLength={100}
+                classNames={{
+                  inputWrapper:
+                    "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+                }}
+              />
+              <Divider orientation="vertical" className="h-10 w-[2px]" />
+              <Tooltip
+                content="Delete Card"
+                showArrow={true}
+                delay={0}
+                closeDelay={0}
+                radius="full"
+              >
+                <Button
+                  isIconOnly
+                  radius="full"
+                  size="lg"
+                  className="p-3"
+                  onPress={() => removeCard(card.id)}
+                >
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            </div>
+          ))}
+
+          <div className="border-default-600 flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
+            <Tooltip
+              content="Add a new card"
               showArrow={true}
               delay={0}
               closeDelay={0}
@@ -223,34 +246,25 @@ const CreateDeck = () => {
                 radius="full"
                 size="lg"
                 className="p-3"
-                onPress={() => removeCard(card.id)}
+                onPress={() => addCard()}
               >
-                <DeleteIcon />
+                <AddIcon />
               </Button>
             </Tooltip>
           </div>
-        ))}
-
-        <div className="border-default-600 flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
-          <Tooltip
-            content="Add a new card"
-            showArrow={true}
-            delay={0}
-            closeDelay={0}
-            radius="full"
-          >
-            <Button
-              isIconOnly
-              radius="full"
-              size="lg"
-              className="p-3"
-              onPress={addCard}
-            >
-              <AddIcon />
-            </Button>
-          </Tooltip>
         </div>
-      </div>
+        <div className="mt-20 flex justify-center">
+          <Button
+            size="lg"
+            radius="full"
+            className="font-bold"
+            color="primary"
+            onPress={() => {}}
+          >
+            Save Deck
+          </Button>
+        </div>
+      </Form>
     </>
   );
 };
