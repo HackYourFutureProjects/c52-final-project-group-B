@@ -1,11 +1,17 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import deckRouter from "./decks/deck.router.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 
-// Create an express server
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://c52-group-b-6754f1cb75b0.herokuapp.com",
@@ -21,22 +27,19 @@ app.use(
     },
   }),
 );
+
 app.use(express.json());
 
 app.use("/api/decks", deckRouter);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(
-    express.static(new URL("../../client/dist", import.meta.url).pathname),
-  );
+  const clientBuildPath = path.resolve(__dirname, "../../client/dist");
 
-  // Redirect *file requests to client, but skip /api
-  app.get("/*file", (req, res, next) => {
-    if (req.path.startsWith("/api")) return next(); // Let /api go to notFound
+  app.use(express.static(clientBuildPath));
 
-    res.sendFile(
-      new URL("../../client/dist/index.html", import.meta.url).pathname,
-    );
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(clientBuildPath, "index.html"));
   });
 }
 

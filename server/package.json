@@ -17,7 +17,9 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "prettier": "prettier ./src --check",
-    "prettier:fix": "prettier ./src --write"
+    "prettier:fix": "prettier ./src --write",
+    "client:build": "cd ../client && npm install && npm run build",
+    "postinstall": "npm run client:build"
   },
   "author": "",
   "license": "ISC",
