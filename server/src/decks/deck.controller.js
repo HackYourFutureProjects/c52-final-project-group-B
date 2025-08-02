@@ -93,5 +93,5 @@ export const deleteCardById = async (req, res) => {
 
   await deckService.deleteCardByDeckAndId(deckId, cardId);
 
-  res.status(200).json({ message: "Card deleted successfully" });
+  res.status(HTTP_STATUS.OK).json({ message: "Card deleted successfully" });
 };
