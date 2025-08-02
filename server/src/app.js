@@ -6,7 +6,21 @@ import { notFound } from "./middlewares/notFound.middleware.js";
 
 // Create an express server
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://c52-group-b-6754f1cb75b0.herokuapp.com",
+];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  }),
+);
 app.use(express.json());
 
 app.use("/api/decks", deckRouter);
