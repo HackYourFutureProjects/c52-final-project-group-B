@@ -1,5 +1,5 @@
-const BASE_URL = 
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+// const BASE_URL =
+//   import. .VITE_BACKEND_URL || "http://localhost:3000/api";
 
 const apiRequest = async (endpoint, method = "GET", body = null) => {
   try {
@@ -7,7 +7,6 @@ const apiRequest = async (endpoint, method = "GET", body = null) => {
       method,
       headers: {
         "Content-Type": "application/json",
-        // "Authorization": `Bearer ${token}`
       },
     };
 
@@ -15,7 +14,7 @@ const apiRequest = async (endpoint, method = "GET", body = null) => {
       options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+    const response = await fetch(`/api${endpoint}`, options);
 
     if (!response.ok) {
       const errorData = await response.json();
