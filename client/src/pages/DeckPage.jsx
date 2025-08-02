@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Title from "@/components/Title";
 import {
@@ -19,9 +20,22 @@ import {
   DeleteIcon,
 } from "@/components/Icons";
 import { DecksCard } from "@/components/Card";
+import { getCardsByDeckId } from "@/api/cardsAPI";
 
 const DeckPage = () => {
+  const [cards, setCards] = useState([]);
   const { id } = useParams();
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const result = await getCardsByDeckId(id);
+        setCards(result);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchCards();
+  }, [id]);
 
   return (
     <>
@@ -153,18 +167,9 @@ const DeckPage = () => {
       </div>
 
       <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
-        <DecksCard front="Hola" back="Hello" />
-        <DecksCard front="Gracias" back="Thank you" />
-        <DecksCard front="Adiós" back="Goodbye" />
-        <DecksCard front="Por favor" back="Please" />
-        <DecksCard front="Buenos días" back="Good morning" />
-        <DecksCard front="Buenas noches" back="Good night" />
-        <DecksCard front="¿Cómo estás?" back="How are you?" />
-        <DecksCard front="Lo siento" back="I'm sorry" />
-        <DecksCard front="Sí" back="Yes" />
-        <DecksCard front="No" back="No" />
-        <DecksCard front="¿Qué hora es?" back="What time is it?" />
-        <DecksCard front="¿Dónde está el baño?" back="Where is the bathroom?" />
+        {cards.map((card) => (
+          <DecksCard key={card._id} front={card.question} back={card.answer} />
+        ))}
       </div>
     </>
   );
