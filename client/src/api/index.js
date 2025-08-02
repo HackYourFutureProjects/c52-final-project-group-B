@@ -1,22 +1,31 @@
-import axios from "axios";
-
-const BASE_URL =
+const BASE_URL = 
   import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
 
-const apiRequest = async (endpoint, method = "get", body = null) => {
+const apiRequest = async (endpoint, method = "GET", body = null) => {
   try {
-    const res = await axios({
+    const options = {
       method,
-      data: body,
-      url: `${BASE_URL}${endpoint}`,
       headers: {
         "Content-Type": "application/json",
-        //...authorization token is coming
+        // "Authorization": `Bearer ${token}`
       },
-    });
-    return res.data;
+    };
+
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Something went wrong");
+    }
+
+    return await response.json();
   } catch (e) {
-    console.error(e);
+    console.error("API Error:", e.message);
+    throw e;
   }
 };
 
