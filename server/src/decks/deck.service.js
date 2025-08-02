@@ -118,7 +118,7 @@ class DeckService {
 
     if (!deleted) {
       createAndThrowError(
-        404,
+        HTTP_STATUS.NOT_FOUND,
         "Card not found or does not belong to this deck",
       );
     }
