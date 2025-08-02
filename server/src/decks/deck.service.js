@@ -104,7 +104,7 @@ class DeckService {
     );
 
     if (!updatedCard) {
-      throw new Error("Card not found");
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "Card not found");
     }
 
     return updatedCard;
