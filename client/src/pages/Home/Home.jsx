@@ -1,10 +1,25 @@
+import { useEffect, useState } from "react";
 import TEST_ID from "./Home.testid";
 import { Button } from "@heroui/button";
 import { Link, Accordion, AccordionItem } from "@heroui/react";
 import Deck from "@/components/Deck";
 import Title from "@/components/Title";
+import { getDecks } from "@/api/decksAPI";
 
 const Home = () => {
+  const [decks, setDecks] = useState([]);
+  useEffect(() => {
+    const fetchDecks = async () => {
+      try {
+        const result = await getDecks();
+        setDecks(result);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchDecks();
+  }, []);
+
   return (
     <>
       <div
@@ -80,42 +95,17 @@ const Home = () => {
 
       <div className="bg-default-300 mt-20 flex flex-col items-center gap-8 overflow-hidden rounded-[35px] p-8 text-center">
         <h2 className="heading-title text-2xl font-bold">Trending Decks</h2>
-        <div className="flex w-[200%] justify-center gap-4">
-          <Deck
-            deckID={1}
-            title="Math Basics"
-            description="This deck covers fundamental math concepts and operations."
-            user="John_Doe"
-            numCards={10}
-          />
-          <Deck
-            deckID={2}
-            title="Science Essentials"
-            description="Explore key concepts in biology, chemistry, and physics."
-            user="Jane_Smith"
-            numCards={15}
-          />
-          <Deck
-            deckID={3}
-            title="Spanish Basics"
-            description="This deck contains basic vocabulary and grammar to start learning Spanish."
-            user="Zet_Ahmad"
-            numCards={12}
-          />
-          <Deck
-            deckID={4}
-            title="History Highlights"
-            description="Important events and figures from world history."
-            user="Alice_Wonder"
-            numCards={8}
-          />
-          <Deck
-            deckID={5}
-            title="Literature 101"
-            description="Classic literature summaries and analysis."
-            user="Bob_Builder"
-            numCards={20}
-          />
+        <div className="flex w-[200%] flex-wrap justify-center gap-4">
+          {decks.slice(0, 5).map((deck) => (
+            <Deck
+              key={deck._id}
+              deckID={deck._id}
+              title={deck.title}
+              description={deck.description}
+              user={deck.userInfo?.username}
+              numCards={deck.cardsCount}
+            />
+          ))}
         </div>
         <Button
           as={Link}
