@@ -13,7 +13,7 @@ export const DecksCard = ({ front, back }) => {
       onClick={() => setIsFlipped(!isFlipped)}
       // onMouseEnter={() => setIsFlipped(true)}
       // onMouseLeave={() => setIsFlipped(false)}
-      className="h-90 w-90 cursor-pointer rounded-[35px] perspective-midrange"
+      className="h-90 min-h-90 min-w-90 flex-1 cursor-pointer rounded-[35px] perspective-midrange"
     >
       <div
         className={cn(

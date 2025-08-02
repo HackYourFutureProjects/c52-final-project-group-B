@@ -1,6 +1,3 @@
-// const BASE_URL =
-//   import. .VITE_BACKEND_URL || "http://localhost:3000/api";
-
 const apiRequest = async (endpoint, method = "GET", body = null) => {
   try {
     const options = {

@@ -1,4 +1,9 @@
-import { DeleteIcon, AddIcon } from "@/components/Icons";
+import {
+  DeleteIcon,
+  AddIcon,
+  LockedIcon,
+  UnlockedIcon,
+} from "@/components/Icons";
 import Title from "@/components/Title";
 import {
   addToast,
@@ -9,11 +14,13 @@ import {
   SelectItem,
   Avatar,
   Button,
-  Link,
   Tooltip,
   Divider,
 } from "@heroui/react";
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { createDeck } from "@/api/decksAPI";
+import { createCard } from "@/api/cardsAPI";
 
 const languages = [
   { key: "english", label: "English", code: "us" },
@@ -48,8 +55,13 @@ const languages = [
   { key: "greek", label: "Greek", code: "gr" },
 ];
 
+const userID = "6888bcc6cbee93b576f1cd35"; // Temporary user ID until authentication is implemented
+
 const CreateDeck = () => {
   const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
+  const [isPublic, setIsPublic] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const addCard = () => {
     const newCard = {
@@ -79,6 +91,41 @@ const CreateDeck = () => {
     );
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+
+    try {
+      const createdDeck = await createDeck({
+        userId: userID,
+        title: data.title,
+        description: data.description,
+        language: data.language,
+        isPublic: isPublic,
+      });
+
+      const cardPromises = cards.map((card) =>
+        createCard({
+          deckId: createdDeck._id,
+          question: card.question,
+          answer: card.answer,
+        })
+      );
+
+      await Promise.all(cardPromises);
+
+      navigate(`/deck/${createdDeck._id}`);
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: error.message || "Failed to create deck",
+        color: "danger",
+        radius: "full",
+      });
+      return;
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col justify-center text-center">
@@ -93,9 +140,10 @@ const CreateDeck = () => {
         </Title>
       </div>
 
-      <Form className="mt-20 items-stretch">
+      <Form className="mt-20 items-stretch" onSubmit={onSubmit}>
         <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
           <Input
+            name="title"
             label="Enter Deck Title"
             type="text"
             radius="full"
@@ -108,6 +156,7 @@ const CreateDeck = () => {
             }}
           />
           <Textarea
+            name="description"
             label="Description"
             placeholder="Enter Deck description"
             isRequired
@@ -119,6 +168,7 @@ const CreateDeck = () => {
             }}
           />
           <Select
+            name="language"
             label="Language"
             radius="full"
             // selectionMode="multiple"
@@ -153,23 +203,44 @@ const CreateDeck = () => {
           </div>
           <div className="flex items-center gap-3">
             <Tooltip
-              content="Delete Deck"
+              content={
+                isPublic ? "Deck is set to public" : "Deck is set to private"
+              }
               showArrow={true}
               delay={0}
               closeDelay={0}
               radius="full"
             >
               <Button
-                as={Link}
-                href="#"
                 isIconOnly
                 radius="full"
                 size="lg"
-                className="p-3"
+                className="p-2"
+                onPress={() => setIsPublic(!isPublic)}
               >
-                <DeleteIcon />
+                {isPublic ? <UnlockedIcon /> : <LockedIcon />}
               </Button>
             </Tooltip>
+
+            {id && (
+              <Tooltip
+                content="Delete Deck"
+                showArrow={true}
+                delay={0}
+                closeDelay={0}
+                radius="full"
+              >
+                <Button
+                  isIconOnly
+                  radius="full"
+                  size="lg"
+                  className="p-3"
+                  onPress={() => {}}
+                >
+                  <DeleteIcon />
+                </Button>
+              </Tooltip>
+            )}
           </div>
         </div>
 
@@ -182,6 +253,7 @@ const CreateDeck = () => {
               <div className="ml-2 text-xl font-bold">{index + 1}.</div>
               <Divider orientation="vertical" className="h-10 w-[2px]" />
               <Input
+                name={`question-${card.id}`}
                 label="Enter the question"
                 type="text"
                 radius="full"
@@ -199,6 +271,7 @@ const CreateDeck = () => {
               />
               <Divider orientation="vertical" className="h-10 w-[2px]" />
               <Input
+                name={`answer-${card.id}`}
                 label="Enter the answer"
                 type="text"
                 radius="full"
@@ -259,7 +332,7 @@ const CreateDeck = () => {
             radius="full"
             className="font-bold"
             color="primary"
-            onPress={() => {}}
+            type="submit"
           >
             Save Deck
           </Button>
