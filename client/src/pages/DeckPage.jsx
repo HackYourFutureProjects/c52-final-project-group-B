@@ -33,7 +33,6 @@ const DeckPage = () => {
     const fetchCards = async () => {
       try {
         const getDeck = await getDeckById(id);
-        console.log(getDeck);
         setDeck(getDeck);
 
         const getCards = await getCardsByDeckId(id);
