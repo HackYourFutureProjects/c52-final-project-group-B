@@ -2,7 +2,7 @@ import { z } from "zod";
 import { objectIdSchema } from "../constants/shared.js";
 
 export const deckValidationSchema = z.object({
-  id: objectIdSchema,
+  deckId: objectIdSchema,
 });
 
 export const updateDeckSchema = z.object({
