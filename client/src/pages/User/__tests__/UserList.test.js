@@ -13,7 +13,14 @@ import {
   getUsersSuccessMock,
   getUsersFailedMock,
 } from "../../../__testUtils__/fetchUserMocks";
-import { asSlowResponse } from "../../../__testUtils__/fetchMocks";
+
+const asSlowResponse = (res) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(res);
+    }, 300);
+  });
+};
 
 beforeEach(() => {
   fetch.resetMocks();
