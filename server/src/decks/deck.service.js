@@ -66,6 +66,7 @@ class DeckService {
       error.status = HTTP_STATUS.NOT_FOUND;
       throw error;
     }
+    await CardModel.deleteMany({ deckId: id });
 
     return deleted;
   }
