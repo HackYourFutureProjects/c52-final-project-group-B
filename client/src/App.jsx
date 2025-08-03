@@ -3,6 +3,7 @@ import Home from "@/pages/Home/Home";
 import CreateUser from "@/pages/User/CreateUser";
 import UserList from "@/pages/User/UserList";
 import DeckPage from "@/pages/DeckPage";
+import NotFound from "./pages/NotFound/NotFoundPage";
 
 const App = () => {
   return (
@@ -11,6 +12,8 @@ const App = () => {
       <Route path="/user" element={<UserList />} />
       <Route path="/user/create" element={<CreateUser />} />
       <Route path="/deck/:id" element={<DeckPage />} />
+      <Route path="/not-found" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
