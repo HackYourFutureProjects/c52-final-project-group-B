@@ -9,6 +9,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Tooltip,
 } from "@heroui/react";
 import {
   CardsIcon,
@@ -20,22 +21,28 @@ import {
   DeleteIcon,
 } from "@/components/Icons";
 import { DecksCard } from "@/components/Card";
+import { getDeckById } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 
 const DeckPage = () => {
-  const [cards, setCards] = useState([]);
+  const [deck, setDeck] = useState(null);
+  const [cards, setCards] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchCards = async () => {
+    const fetchDeckAndCards = async () => {
       try {
-        const result = await getCardsByDeckId(id);
-        setCards(result);
+        const getDeck = await getDeckById(id);
+        setDeck(getDeck);
+
+        const getCards = await getCardsByDeckId(id);
+        setCards(getCards);
       } catch {
         navigate("/not-found");
       }
     };
-    fetchCards();
+    fetchDeckAndCards();
   }, [id, navigate]);
 
   return (
@@ -45,27 +52,24 @@ const DeckPage = () => {
           breadcrumbs={[
             { label: "Home", path: "/" },
             { label: `Library`, path: `/library` },
-            { label: `Deck ID: ${id}`, path: `/decks/${id}` },
+            { label: `${deck?.title}`, path: `/decks/${id}` },
           ]}
         >
-          Deck ID: {id}
+          {deck?.title}
         </Title>
       </div>
       <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
         <h3 className="text-xl font-bold">Description</h3>
-        <p>
-          This deck contains basic vocabulary and grammar to start learning
-          Spanish.
-        </p>
+        <p>{deck?.description}</p>
       </div>
       <div className="mt-3 flex items-stretch justify-center gap-3">
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Your Progress</h3>
           <Progress
             showValueLabel={true}
-            maxValue={58}
-            label="15/58 cards"
-            value={15}
+            maxValue={deck?.cardsCount}
+            label={`${deck?.progress || 0}/${deck?.cardsCount || 0} cards`}
+            value={deck?.progress || 0}
             classNames={{
               label: "text-sm text-gray-500",
               value: "text-sm text-gray-500",
@@ -75,12 +79,9 @@ const DeckPage = () => {
         </div>
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Languages</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 capitalize">
             <Button radius="full" as={Link} href="#">
-              English
-            </Button>
-            <Button radius="full" as={Link} href="#">
-              Spanish
+              {deck?.language}
             </Button>
           </div>
         </div>
@@ -115,31 +116,48 @@ const DeckPage = () => {
 
       <div className="mt-20 flex items-center justify-between">
         <div className="flex flex-col">
-          <h3 className="text-xl font-bold">This Deck has 58 cards</h3>
+          <h3 className="text-xl font-bold">
+            This Deck has {deck?.cardsCount} cards
+          </h3>
           <p className="text-gray-500">Start Learning these cards today!</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button
-            as={Link}
-            href="#"
-            isIconOnly
+          <Tooltip
+            content="Save Deck"
+            showArrow={true}
+            delay={0}
+            closeDelay={0}
             radius="full"
-            size="lg"
-            className="p-3"
           >
-            <BookMarkIcon />
-          </Button>
+            <Button
+              isIconOnly
+              radius="full"
+              size="lg"
+              className="p-3"
+              onPress={() => {}}
+            >
+              <BookMarkIcon />
+            </Button>
+          </Tooltip>
 
-          <Button
-            as={Link}
-            href="#"
-            isIconOnly
+          <Tooltip
+            content="Share Deck"
+            showArrow={true}
+            delay={0}
+            closeDelay={0}
             radius="full"
-            size="lg"
-            className="p-3"
           >
-            <ShareIcon />
-          </Button>
+            <Button
+              isIconOnly
+              radius="full"
+              size="lg"
+              className="p-3"
+              onPress={() => {}}
+            >
+              <ShareIcon />
+            </Button>
+          </Tooltip>
+
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
               <Button as={Link} href="#" isIconOnly radius="full" size="lg">
@@ -168,9 +186,14 @@ const DeckPage = () => {
       </div>
 
       <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
-        {cards.map((card) => (
-          <DecksCard key={card._id} front={card.question} back={card.answer} />
-        ))}
+        {cards &&
+          cards.map((card) => (
+            <DecksCard
+              key={card._id}
+              front={card.question}
+              back={card.answer}
+            />
+          ))}
       </div>
     </>
   );
