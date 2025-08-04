@@ -29,13 +29,13 @@ const DeckPage = () => {
   const [cards, setCards] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchDeckAndCards = async () => {
       try {
         const getDeck = await getDeckById(id);
         setDeck(getDeck);
-        
+
         const getCards = await getCardsByDeckId(id);
         setCards(getCards);
       } catch {
