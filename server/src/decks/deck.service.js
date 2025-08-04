@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { User } from "../users/user.model.js"; //do not delete!!!
+import mongoose from "mongoose";
 import { DeckModel } from "./deck.model.js";
 import { CardModel } from "../cards/card.model.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
@@ -59,15 +60,27 @@ class DeckService {
   }
 
   async deleteDeck(id) {
-    const deleted = await DeckModel.findByIdAndDelete(id);
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    if (!deleted) {
-      const error = new Error("Deck not found");
-      error.status = HTTP_STATUS.NOT_FOUND;
-      throw error;
+    try {
+      const deleted = await DeckModel.findByIdAndDelete(id).session(session);
+
+      if (!deleted) {
+        await session.abortTransaction();
+        createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
+      }
+
+      await CardModel.deleteMany({ deckId: id }).session(session);
+
+      await session.commitTransaction();
+      return deleted;
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    } finally {
+      session.endSession();
     }
-
-    return deleted;
   }
 
   async getCardsByDeckId(id) {

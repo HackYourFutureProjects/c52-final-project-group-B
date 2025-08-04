@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Title from "@/components/Title";
 import {
   Progress,
@@ -28,21 +28,22 @@ const DeckPage = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
   const { id } = useParams();
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
-    const fetchCards = async () => {
+    const fetchDeckAndCards = async () => {
       try {
         const getDeck = await getDeckById(id);
         setDeck(getDeck);
-
+        
         const getCards = await getCardsByDeckId(id);
         setCards(getCards);
-      } catch (e) {
-        console.error(e);
+      } catch {
+        navigate("/not-found");
       }
     };
-    fetchCards();
-  }, [id]);
+    fetchDeckAndCards();
+  }, [id, navigate]);
 
   return (
     <>
