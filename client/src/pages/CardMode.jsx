@@ -11,9 +11,38 @@ const CardMode = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [progress, setProgress] = useState([]);
 
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const handleAnswer = (isCorrect) => {
+    const currentCard = cards[currentCardIndex];
+
+    const newProgress = [
+      ...progress,
+      {
+        cardId: currentCard._id,
+        isCorrect,
+      },
+    ];
+
+    setProgress(newProgress);
+
+    const dataToSave = {
+      userId: "user123",
+      results: newProgress,
+      currentCardIndex: currentCardIndex + 1,
+    };
+
+    localStorage.setItem(`cardProgress-${id}`, JSON.stringify(dataToSave));
+
+    if (currentCardIndex < cards.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
+    } else {
+      alert("🎉 You've completed the deck!");
+    }
+  };
 
   useEffect(() => {
     const fetchDeckAndCards = async () => {
@@ -24,7 +53,14 @@ const CardMode = () => {
         const getCards = await getCardsByDeckId(id);
         setCards(getCards);
 
-        setCurrentCardIndex(0);
+        const savedProgress = localStorage.getItem(`cardProgress-${id}`);
+        if (savedProgress) {
+          const parsed = JSON.parse(savedProgress);
+          setProgress(parsed.results || []);
+          setCurrentCardIndex(parsed.currentCardIndex || 0);
+        } else {
+          setCurrentCardIndex(0);
+        }
       } catch {
         navigate("/not-found");
       }
@@ -63,7 +99,7 @@ const CardMode = () => {
               radius="full"
               size="lg"
               className="text-white"
-              onPress={() => {}}
+              onPress={() => handleAnswer(true)}
             >
               <WrongIcon />
             </Button>
@@ -76,7 +112,7 @@ const CardMode = () => {
               radius="full"
               size="lg"
               className="px-5 text-white"
-              onPress={() => {}}
+              onPress={() => handleAnswer(false)}
             >
               <CorrectIcon />
             </Button>
