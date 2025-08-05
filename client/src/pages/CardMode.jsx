@@ -54,7 +54,6 @@ const CardMode = () => {
               front={cards[currentCardIndex].question}
               back={cards[currentCardIndex].answer}
               flipDirection="vertical"
-              isCardMode={true}
             />
           </div>
           <div className="mt-4 flex items-center justify-center gap-4">
