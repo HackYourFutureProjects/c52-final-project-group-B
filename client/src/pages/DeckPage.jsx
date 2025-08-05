@@ -13,7 +13,6 @@ import {
 } from "@heroui/react";
 import {
   CardsIcon,
-  LightBulbIcon,
   PencilIcon,
   BookMarkIcon,
   ShareIcon,
@@ -52,7 +51,7 @@ const DeckPage = () => {
           breadcrumbs={[
             { label: "Home", path: "/" },
             { label: `Library`, path: `/library` },
-            { label: `${deck?.title}`, path: `/decks/${id}` },
+            { label: `${deck?.title}`, path: `/deck/${id}` },
           ]}
         >
           {deck?.title}
@@ -87,39 +86,12 @@ const DeckPage = () => {
         </div>
       </div>
 
-      <div className="mt-3 flex items-stretch justify-center gap-3">
-        <Button
-          as={Link}
-          href="#"
-          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
-          startContent={<CardsIcon />}
-        >
-          Card Mode
-        </Button>
-        <Button
-          as={Link}
-          href="#"
-          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
-          startContent={<LightBulbIcon />}
-        >
-          Learn Mode
-        </Button>
-        <Button
-          as={Link}
-          href="#"
-          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
-          startContent={<PencilIcon />}
-        >
-          Test Mode
-        </Button>
-      </div>
-
       <div className="mt-20 flex items-center justify-between">
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">
             This Deck has {deck?.cardsCount} cards
           </h3>
-          <p className="text-gray-500">Start Learning these cards today!</p>
+          <p className="text-gray-500">Start learning using the card mode!</p>
         </div>
         <div className="flex items-center gap-3">
           <Tooltip
@@ -183,6 +155,17 @@ const DeckPage = () => {
             </DropdownMenu>
           </Dropdown>
         </div>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between">
+        <Button
+          as={Link}
+          href={`/deck/card-mode/${id}`}
+          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
+          startContent={<CardsIcon />}
+        >
+          Card Mode
+        </Button>
       </div>
 
       <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
