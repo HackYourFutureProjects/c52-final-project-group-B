@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import deckRouter from "./decks/deck.router.js";
+import userProgressRouter from "./usersProgress/userProgress.router.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { notFound } from "./middlewares/notFound.middleware.js";
 
@@ -10,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/decks", deckRouter);
+app.use("/api/user-progress", userProgressRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(
