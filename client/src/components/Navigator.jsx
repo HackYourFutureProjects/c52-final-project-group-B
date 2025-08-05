@@ -6,8 +6,8 @@ import {
   Link,
   Button,
   Image,
-  Avatar,
 } from "@heroui/react";
+import UserAuth from "@/components/UserAuth";
 
 export default function Navigator() {
   return (
@@ -63,8 +63,8 @@ export default function Navigator() {
           </Link>
         </NavbarBrand>
 
-        <NavbarContent as="div" justify="end">
-          <Avatar as="button" color="primary" name="U" size="sm" />
+        <NavbarContent justify="end">
+          <UserAuth />
         </NavbarContent>
       </Navbar>
       <div className="h-20"></div>
