@@ -5,7 +5,7 @@ import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
 import { Button } from "@heroui/react";
-import { WrongIcon, CorrectIcon } from "@/components/icons";
+import { WrongIcon, CorrectIcon } from "@/components/Icons";
 
 const CardMode = () => {
   const [deck, setDeck] = useState(null);
