@@ -43,7 +43,6 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
         color: "danger",
         radius: "full",
       });
-      return;
     }
   };
 
