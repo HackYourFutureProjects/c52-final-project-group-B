@@ -9,9 +9,44 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { LockedIcon, MailIcon } from "@/components/icons";
+import { useNavigate } from "react-router-dom";
+import { addToast } from "@heroui/react";
+import { LockedIcon, MailIcon, UserIcon } from "@/components/icons";
+import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+
+    try {
+      const userData = await createUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
+      setIsSignupOpen(false);
+      addToast({
+        title: "Success",
+        description: "User created successfully",
+        color: "success",
+        radius: "full",
+      });
+      navigate(`/dashboard/${userData.username}`);
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: error.message || "Failed to create user",
+        color: "danger",
+        radius: "full",
+      });
+      return;
+    }
+  };
+
   return (
     <Modal
       backdrop="blur"
@@ -41,7 +76,7 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
       classNames={{ base: "rounded-[35px] pt-1", closeButton: "m-3" }}
     >
       <ModalContent>
-        <Form className="block">
+        <Form className="block" onSubmit={handleSubmit}>
           <ModalHeader className="flex flex-col gap-1">Sign up</ModalHeader>
 
           <ModalBody>
@@ -51,12 +86,25 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               radius="full"
               variant="bordered"
               endContent={
-                <MailIcon className="text-default pointer-events-none" />
+                <UserIcon className="text-default pointer-events-none" />
               }
               label="Username"
               name="username"
               placeholder="Enter your username"
               type="text"
+            />
+            <Input
+              isRequired
+              color="primary"
+              radius="full"
+              variant="bordered"
+              endContent={
+                <MailIcon className="text-default pointer-events-none" />
+              }
+              label="Email"
+              name="email"
+              placeholder="Enter your email"
+              type="email"
             />
             <Input
               isRequired

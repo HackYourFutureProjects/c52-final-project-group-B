@@ -1,6 +1,6 @@
 import { User } from "./user.model.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
-import { hash, compare } from "bcrypt";
+import { hash } from "bcrypt";
 
 class UserService {
   async createUser(username, email, password) {
