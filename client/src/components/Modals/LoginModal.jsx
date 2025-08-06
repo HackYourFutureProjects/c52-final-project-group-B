@@ -9,7 +9,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { LockedIcon, MailIcon } from "@/components/icons";
+import { LockedIcon, MailIcon } from "@/components/Icons";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
   return (
