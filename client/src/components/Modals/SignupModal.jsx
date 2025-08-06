@@ -11,7 +11,7 @@ import {
 } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
-import { LockedIcon, MailIcon, UserIcon } from "@/components/icons";
+import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
 import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
