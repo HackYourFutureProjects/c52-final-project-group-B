@@ -1,14 +1,21 @@
+import { userProgressSubmitSchema } from "./userProgress.schema.js";
 import { submitUserProgress } from "./userProgress.service.js";
 
-export async function handleSubmitUserProgress(req, res) {
-  const { userId, results } = req.body;
+export function handleSubmitUserProgress(req, res, next) {
+  const parseResult = userProgressSubmitSchema.safeParse(req.body);
 
-  if (!userId || !Array.isArray(results)) {
-    res.status(400).json({ error: "Invalid request data" });
-    return;
+  if (!parseResult.success) {
+    return res.status(400).json({
+      error: "Invalid request data",
+      details: parseResult.error.format(),
+    });
   }
 
-  await submitUserProgress(userId, results);
+  const { userId, results } = parseResult.data;
 
-  res.status(200).json({ message: "User progress submitted successfully" });
+  submitUserProgress(userId, results)
+    .then(() => {
+      res.status(200).json({ message: "User progress submitted successfully" });
+    })
+    .catch(next);
 }
