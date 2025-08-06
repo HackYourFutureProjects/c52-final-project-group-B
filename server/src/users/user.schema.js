@@ -25,6 +25,11 @@ export const userSchema = new mongoose.Schema(
     profilePictureUrl: {
       type: String,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   {
     timestamps: true,
