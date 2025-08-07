@@ -16,3 +16,7 @@ export const registerUserSchema = z.object({
     .max(255, "Password is too long"),
   profilePictureUrl: z.string().url().optional(),
 });
+
+export const userIdParamSchema = z.object({
+  userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
+});

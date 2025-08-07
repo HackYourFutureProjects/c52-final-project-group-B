@@ -27,6 +27,20 @@ class UserService {
     return publicFields;
   }
 
+  async softDeleteUser(userId) {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isDeleted: true },
+      { new: true },
+    );
+
+    if (!user) {
+      createAndThrowError(404, "User not found");
+    }
+
+    return { message: "User deleted successfully" };
+  }
+
   // async loginUser(name, password) {
   //   const user = fakeDb.getAll("users").find((user) => user.name === name);
 
