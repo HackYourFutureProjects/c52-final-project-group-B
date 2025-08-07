@@ -1,5 +1,32 @@
 import mongoose from "mongoose";
-import { userProgressSchema } from "./userProgress.schema.js";
+
+const userProgressSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
+  cardId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Card",
+  },
+  correctCount: {
+    type: Number,
+    default: 0,
+  },
+  incorrectCount: {
+    type: Number,
+    default: 0,
+  },
+  isLearned: {
+    type: Boolean,
+    default: false,
+  },
+  lastReviewed: {
+    type: Date,
+  },
+});
 
 const UserProgress = mongoose.model(
   "UserProgress",
