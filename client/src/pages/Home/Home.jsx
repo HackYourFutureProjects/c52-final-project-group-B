@@ -4,6 +4,7 @@ import { Button } from "@heroui/button";
 import { Link, Accordion, AccordionItem } from "@heroui/react";
 import Deck from "@/components/Deck";
 import Title from "@/components/Title";
+import Marquee from "@/components/Marquee";
 import { getDecks } from "@/api/decksAPI";
 
 const Home = () => {
@@ -23,7 +24,7 @@ const Home = () => {
   return (
     <>
       <div
-        className="flex flex-row items-center gap-8"
+        className="-mt-20 flex flex-row items-center gap-8"
         data-testid={TEST_ID.container}
       >
         <div className="flex basis-2/5 flex-col gap-5">
@@ -60,12 +61,42 @@ const Home = () => {
             </Button>
           </div>
         </div>
-        <div className="bg-primary-300 flex h-100 basis-3/5 items-center justify-center rounded-[35px]">
-          A placeholder for the Marquee component
+        <div className="pointer-events-none flex basis-3/5 items-center justify-center overflow-hidden rounded-[35px] select-none">
+          <div className="relative flex h-full w-full rotate-z-10 flex-col items-center justify-center overflow-hidden">
+            <Marquee>
+              {decks.slice(0, 2).map((deck) => (
+                <Deck
+                  key={deck._id}
+                  deckID={deck._id}
+                  title={deck.title}
+                  description={deck.description}
+                  user={deck.userInfo?.username}
+                  numCards={deck.cardsCount}
+                />
+              ))}
+            </Marquee>
+            <Marquee reverse>
+              {decks.slice(2, 5).map((deck) => (
+                <Deck
+                  key={deck._id}
+                  deckID={deck._id}
+                  title={deck.title}
+                  description={deck.description}
+                  user={deck.userInfo?.username}
+                  numCards={deck.cardsCount}
+                />
+              ))}
+            </Marquee>
+
+            <div className="dark:from-background pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white"></div>
+            <div className="dark:from-background pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white"></div>
+            <div className="dark:from-background pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white"></div>
+            <div className="dark:from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-white"></div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-default-300 mt-20 flex flex-col items-center gap-3 rounded-[35px] p-8">
+      <div className="bg-default-300 flex flex-col items-center gap-3 rounded-[35px] p-8">
         <h2 className="heading-title text-2xl font-bold">
           Your Learning Companion
         </h2>
