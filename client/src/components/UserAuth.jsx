@@ -16,7 +16,6 @@ const UserAuth = () => {
   const navigate = useNavigate();
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  console.log(user);
   return (
     <>
       <Dropdown placement="bottom-end">
