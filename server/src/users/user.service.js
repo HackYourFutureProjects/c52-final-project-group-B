@@ -1,17 +1,19 @@
 import { User } from "./user.model.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
+import { HTTP_STATUS } from "../constants/httpStatus.js";
+import { generateAccessToken } from "../util/authUtils.js";
 
 class UserService {
   async createUser(username, email, password) {
     const usernameExists = await User.findOne({ username });
     if (usernameExists) {
-      createAndThrowError(409, "Username is already taken");
+      createAndThrowError(HTTP_STATUS.CONFLICT, "Username is already taken");
     }
 
     const emailExists = await User.findOne({ email });
     if (emailExists) {
-      createAndThrowError(409, "Email is already taken");
+      createAndThrowError(HTTP_STATUS.CONFLICT, "Email is already taken");
     }
 
     const hashedPassword = await hash(password, +process.env.SALT_ROUNDS);
@@ -27,6 +29,22 @@ class UserService {
     return publicFields;
   }
 
+  async loginUser(email, password) {
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || user.isDeleted) {
+      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    const passwordMatches = await compare(password, user.password);
+    if (!passwordMatches) {
+      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    const accessToken = generateAccessToken(user);
+
+    return accessToken;
+  }
+
   async softDeleteUser(userId) {
     const user = await User.findByIdAndUpdate(
       userId,
@@ -35,26 +53,11 @@ class UserService {
     );
 
     if (!user) {
-      createAndThrowError(404, "User not found");
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
     }
 
     return { message: "User deleted successfully" };
   }
-
-  // async loginUser(name, password) {
-  //   const user = fakeDb.getAll("users").find((user) => user.name === name);
-
-  //   if (!user || !(await compare(password, user.password))) {
-  //     createErrorAndThrow("Authentication failed", 401);
-  //   }
-
-  //   const payload = { id: user.id };
-  //   const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-  //     expiresIn: "15m",
-  //   });
-
-  //   return accessToken;
-  // }
 }
 
 export default UserService;
