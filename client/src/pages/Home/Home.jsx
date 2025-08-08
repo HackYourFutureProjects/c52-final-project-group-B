@@ -86,7 +86,34 @@ const Home = () => {
                   numCards={deck.cardsCount}
                 />
               ))}
-            </Marquee>
+            {decks.length > 0 && (
+              <Marquee>
+                {decks.slice(0, 2).map((deck) => (
+                  <Deck
+                    key={deck._id}
+                    deckID={deck._id}
+                    title={deck.title}
+                    description={deck.description}
+                    user={deck.userInfo?.username}
+                    numCards={deck.cardsCount}
+                  />
+                ))}
+              </Marquee>
+            )}
+            {decks.length > 2 && (
+              <Marquee reverse>
+                {decks.slice(2, 5).map((deck) => (
+                  <Deck
+                    key={deck._id}
+                    deckID={deck._id}
+                    title={deck.title}
+                    description={deck.description}
+                    user={deck.userInfo?.username}
+                    numCards={deck.cardsCount}
+                  />
+                ))}
+              </Marquee>
+            )}
 
             <div className="dark:from-background pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white"></div>
             <div className="dark:from-background pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white"></div>
