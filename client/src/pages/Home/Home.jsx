@@ -63,29 +63,6 @@ const Home = () => {
         </div>
         <div className="pointer-events-none flex basis-3/5 items-center justify-center overflow-hidden rounded-[35px] select-none">
           <div className="relative flex h-full w-full rotate-z-10 flex-col items-center justify-center overflow-hidden">
-            <Marquee>
-              {decks.slice(0, 2).map((deck) => (
-                <Deck
-                  key={deck._id}
-                  deckID={deck._id}
-                  title={deck.title}
-                  description={deck.description}
-                  user={deck.userInfo?.username}
-                  numCards={deck.cardsCount}
-                />
-              ))}
-            </Marquee>
-            <Marquee reverse>
-              {decks.slice(2, 5).map((deck) => (
-                <Deck
-                  key={deck._id}
-                  deckID={deck._id}
-                  title={deck.title}
-                  description={deck.description}
-                  user={deck.userInfo?.username}
-                  numCards={deck.cardsCount}
-                />
-              ))}
             {decks.length > 0 && (
               <Marquee>
                 {decks.slice(0, 2).map((deck) => (
