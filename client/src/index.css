@@ -18,6 +18,10 @@
   transform: translateY(1px);
 }
 
+.swiper-pagination-bullet-active {
+  background-color: hsl(var(--heroui-primary));
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
