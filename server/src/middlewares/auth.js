@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
-import { verifyAccessToken } from "../services/auth.service.js";
+import { verifyAccessToken } from "../util/authUtils.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 export const authenticate = (req, res, next) => {
