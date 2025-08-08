@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 @import "tailwindcss";
+
+@import "swiper/css";
+@import "swiper/css/navigation";
+
 @plugin '../hero.js';
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
