@@ -22,6 +22,6 @@ export const softDeleteUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = loginUserSchema.parse(req.body);
-  const token = await userService.loginUser(email, password);
-  res.status(HTTP_STATUS.OK).json({ accessToken: token });
+  const user = await userService.loginUser(email, password);
+  res.status(HTTP_STATUS.OK).json(user);
 };
