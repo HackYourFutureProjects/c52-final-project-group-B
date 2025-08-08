@@ -1,6 +1,10 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import UserService from "./user.service.js";
-import { registerUserSchema, userIdParamSchema } from "./user.schema.js";
+import {
+  registerUserSchema,
+  userIdParamSchema,
+  loginUserSchema,
+} from "./user.schema.js";
 
 const userService = new UserService();
 
@@ -14,4 +18,10 @@ export const softDeleteUser = async (req, res) => {
   const { userId } = userIdParamSchema.parse(req.params);
   const result = await userService.softDeleteUser(userId);
   res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const loginUser = async (req, res) => {
+  const { email, password } = loginUserSchema.parse(req.body);
+  const token = await userService.loginUser(email, password);
+  res.status(HTTP_STATUS.OK).json({ accessToken: token });
 };
