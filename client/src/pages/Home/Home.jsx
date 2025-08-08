@@ -101,7 +101,6 @@ const Home = () => {
           <Swiper
             modules={[Pagination]}
             slidesPerView={"auto"}
-            // spaceBetween={30}
             pagination={{
               clickable: true,
             }}
