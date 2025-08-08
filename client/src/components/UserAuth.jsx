@@ -25,7 +25,7 @@ const UserAuth = () => {
             as="button"
             className="hover:bg-primary cursor-pointer transition-transform"
             color="default"
-            name={user?.username[0] ?? ""}
+            name={user?.username?.charAt(0) ?? ""}
             size="sm"
           />
         </DropdownTrigger>
