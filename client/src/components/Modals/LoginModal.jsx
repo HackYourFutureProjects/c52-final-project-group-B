@@ -10,11 +10,14 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { LockedIcon, MailIcon } from "@/components/Icons";
 import { loginUser } from "@/api/userAPI";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
+  const { setLocalStorageUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,10 +25,14 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
-      await loginUser({
+      const response = await loginUser({
         email: data.email,
         password: data.password,
       });
+
+      if (response.accessToken) {
+        setLocalStorageUser(response);
+      }
 
       setIsLoginOpen(false);
       navigate(`/dashboard`);

@@ -9,5 +9,5 @@ export const submitUserProgress = async (body) => {
 };
 
 export const loginUser = async (body) => {
-  return apiRequest(`/login`, "POST", body);
+  return apiRequest(`/users/login`, "POST", body);
 };

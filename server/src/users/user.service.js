@@ -26,7 +26,13 @@ class UserService {
 
     const publicFields = newUser.toObject();
     delete publicFields.password;
-    return publicFields;
+
+    const accessToken = generateAccessToken(publicFields);
+
+    return {
+      username: publicFields.username,
+      accessToken,
+    };
   }
 
   async loginUser(email, password) {
@@ -42,7 +48,10 @@ class UserService {
 
     const accessToken = generateAccessToken(user);
 
-    return accessToken;
+    return {
+      username: user.username,
+      accessToken,
+    };
   }
 
   async softDeleteUser(userId) {
