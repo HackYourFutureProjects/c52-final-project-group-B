@@ -17,7 +17,7 @@ const Deck = ({ deckID, title, description, user, numCards }) => {
     <Card
       isPressable
       shadow="sm"
-      className="min-h-[250px] max-w-[400px] px-3 py-2"
+      className="min-h-[250px] w-[400px] px-3 py-2"
       classNames={{ base: "rounded-[35px]" }}
       onPress={() => navigate(`./deck/${deckID}`)}
     >

@@ -5,6 +5,8 @@ import { Link, Accordion, AccordionItem } from "@heroui/react";
 import Deck from "@/components/Deck";
 import Title from "@/components/Title";
 import { getDecks } from "@/api/decksAPI";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 
 const Home = () => {
   const [decks, setDecks] = useState([]);
@@ -93,19 +95,34 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="bg-default-300 mt-20 flex flex-col items-center gap-8 overflow-hidden rounded-[35px] p-8 text-center">
+      <div className="bg-default-300 mt-20 flex flex-col items-center gap-8 rounded-[35px] py-8 text-center">
         <h2 className="heading-title text-2xl font-bold">Trending Decks</h2>
-        <div className="flex w-[200%] flex-wrap justify-center gap-4">
-          {decks.slice(0, 5).map((deck) => (
-            <Deck
-              key={deck._id}
-              deckID={deck._id}
-              title={deck.title}
-              description={deck.description}
-              user={deck.userInfo?.username}
-              numCards={deck.cardsCount}
-            />
-          ))}
+        <div className="flex w-full items-center justify-center">
+          <Swiper
+            modules={[Pagination]}
+            slidesPerView={"auto"}
+            // spaceBetween={30}
+            pagination={{
+              clickable: true,
+            }}
+            wrapperClass="pb-12"
+          >
+            {decks.slice(0, 10).map((deck) => (
+              <SwiperSlide
+                key={deck._id}
+                style={{ width: "auto" }}
+                className="px-4 py-2"
+              >
+                <Deck
+                  deckID={deck._id}
+                  title={deck.title}
+                  description={deck.description}
+                  user={deck.userInfo?.username}
+                  numCards={deck.cardsCount}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         <Button
           as={Link}
