@@ -7,3 +7,7 @@ export const createUser = async (userData) => {
 export const submitUserProgress = async (body) => {
   return apiRequest(`/user-progress/submit`, "POST", body);
 };
+
+export const loginUser = async (body) => {
+  return apiRequest(`/login`, "POST", body);
+};

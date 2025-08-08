@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  addToast,
   Button,
   Form,
   Input,
@@ -10,7 +11,6 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
-import { addToast } from "@heroui/react";
 import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
 import { createUser } from "@/api/userAPI";
 
@@ -22,7 +22,7 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
-      const userData = await createUser({
+      await createUser({
         username: data.username,
         email: data.email,
         password: data.password,
@@ -35,7 +35,7 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
         color: "success",
         radius: "full",
       });
-      navigate(`/dashboard/${userData.username}`);
+      navigate(`/dashboard`);
     } catch (error) {
       addToast({
         title: "Error",
