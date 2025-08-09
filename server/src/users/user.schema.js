@@ -22,6 +22,19 @@ export const registerUserSchema = z.object({
   profilePictureUrl: z.string().url().optional(),
 });
 
+export const getUserSchema = z.object({
+  userId: z.string().length(24, "Invalid MongoDB ObjectId"),
+});
+
+export const updateUserSchema = z.object({
+  username: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  profilePictureUrl: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.string().url().optional(),
+  ),
+});
+
 export const userIdParamSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
 });
