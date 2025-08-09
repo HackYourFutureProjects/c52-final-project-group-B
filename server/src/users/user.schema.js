@@ -25,3 +25,11 @@ export const registerUserSchema = z.object({
 export const userIdParamSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
 });
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters")
+    .max(255, "New password is too long"),
+});

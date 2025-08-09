@@ -67,6 +67,28 @@ class UserService {
 
     return { message: "User deleted successfully" };
   }
+
+  async updatePassword(userId, currentPassword, newPassword) {
+    const user = await User.findById(userId).select("+password");
+
+    if (!user || user.isDeleted) {
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
+    }
+
+    const isMatch = await compare(currentPassword, user.password);
+    if (!isMatch) {
+      createAndThrowError(
+        HTTP_STATUS.UNAUTHORIZED,
+        "Current password is incorrect",
+      );
+    }
+
+    const hashed = await hash(newPassword, +process.env.SALT_ROUNDS);
+    user.password = hashed;
+    await user.save();
+
+    return { message: "Password updated successfully" };
+  }
 }
 
 export default UserService;
