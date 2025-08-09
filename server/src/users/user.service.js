@@ -64,8 +64,8 @@ class UserService {
     };
   }
 
-  async refreshToken(refreshToken) {
-    const verifyToken = verifyRefreshToken(refreshToken);
+  async refreshToken(token) {
+    const verifyToken = verifyRefreshToken(token);
     if (!verifyToken) {
       createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid refresh token");
     }

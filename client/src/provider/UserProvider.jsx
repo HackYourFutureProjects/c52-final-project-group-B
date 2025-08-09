@@ -50,14 +50,22 @@ export default function UserProvider({ children }) {
       radius: "full",
     });
     navigate("/");
-    // setIsLoginOpen(false);
-    // setIsSignupOpen(false);
   };
 
   const refreshToken = async () => {
-    const newTokens = await refreshAccessToken(user.refreshToken);
-    if (newTokens) {
-      setLocalStorageUser(newTokens);
+    try {
+      const newTokens = await refreshAccessToken(user.refreshToken);
+      if (newTokens) {
+        setLocalStorageUser(newTokens);
+      }
+    } catch {
+      addToast({
+        title: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+        color: "error",
+        radius: "full",
+      });
+      logoutUser();
     }
   };
 
