@@ -3,7 +3,7 @@ import {
   addUser,
   handleGetUserById,
   handleUpdateUser,
-  softDeleteUser, 
+  softDeleteUser,
   loginUser,
 } from "./user.controller.js";
 
@@ -20,6 +20,5 @@ userRouter.post("/", addUser);
 
 userRouter.post("/login", loginUser);
 userRouter.delete("/:userId", softDeleteUser);
-
 
 export default userRouter;
