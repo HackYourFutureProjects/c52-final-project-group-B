@@ -6,6 +6,7 @@ import {
   updateUserSchema,
   userIdParamSchema,
   loginUserSchema,
+  updatePasswordSchema,
 } from "./user.schema.js";
 
 const userService = new UserService();
@@ -54,4 +55,17 @@ export const loginUser = async (req, res) => {
   const { email, password } = loginUserSchema.parse(req.body);
   const user = await userService.loginUser(email, password);
   res.status(HTTP_STATUS.OK).json(user);
+};
+
+export const changePassword = async (req, res) => {
+  const { userId } = userIdParamSchema.parse(req.params);
+  const { currentPassword, newPassword } = updatePasswordSchema.parse(req.body);
+
+  const result = await userService.updatePassword(
+    userId,
+    currentPassword,
+    newPassword,
+  );
+
+  res.status(HTTP_STATUS.OK).json(result);
 };

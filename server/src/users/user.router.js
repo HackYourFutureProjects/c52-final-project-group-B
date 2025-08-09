@@ -5,6 +5,7 @@ import {
   handleUpdateUser,
   softDeleteUser,
   loginUser,
+  changePassword,
 } from "./user.controller.js";
 
 const userRouter = Router();
@@ -19,6 +20,7 @@ userRouter.put("/:id", handleUpdateUser);
 userRouter.post("/", addUser);
 
 userRouter.post("/login", loginUser);
+userRouter.put("/:userId/password", changePassword);
 userRouter.delete("/:userId", softDeleteUser);
 
 export default userRouter;
