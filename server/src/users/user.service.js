@@ -32,9 +32,10 @@ class UserService {
     delete publicFields.password;
 
     const accessToken = generateAccessToken(publicFields);
-    const refreshToken = generateRefreshToken(newUser._id);
+    const refreshToken = generateRefreshToken(publicFields._id);
 
     return {
+      userid: publicFields._id,
       username: publicFields.username,
       accessToken,
       refreshToken,
@@ -56,6 +57,7 @@ class UserService {
     const refreshToken = generateRefreshToken(user._id);
 
     return {
+      userid: user._id,
       username: user.username,
       accessToken,
       refreshToken,
@@ -77,6 +79,7 @@ class UserService {
     const newRefreshToken = generateRefreshToken(user._id);
 
     return {
+      userid: user._id,
       username: user.username,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,

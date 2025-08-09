@@ -160,7 +160,7 @@ const DeckPage = () => {
       <div className="mt-3 flex items-center justify-between">
         <Button
           as={Link}
-          href={`/deck/card-mode/${id}`}
+          href={`/deck/${id}/card-mode`}
           className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
           startContent={<CardsIcon />}
         >

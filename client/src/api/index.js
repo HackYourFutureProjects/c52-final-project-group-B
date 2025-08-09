@@ -1,5 +1,14 @@
-const apiRequest = async (endpoint, method = "GET", body = null) => {
+import { refreshAccessToken } from "@/api/userAPI";
+
+const apiRequest = async (
+  endpoint,
+  method = "GET",
+  body = null,
+  requiresAuth = false
+) => {
   try {
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const options = {
       method,
       headers: {
@@ -7,11 +16,30 @@ const apiRequest = async (endpoint, method = "GET", body = null) => {
       },
     };
 
+    if (requiresAuth && user?.accessToken) {
+      options.headers.Authorization = `Bearer ${user.accessToken}`;
+    }
+
     if (body) {
       options.body = JSON.stringify(body);
     }
 
     const response = await fetch(`/api${endpoint}`, options);
+
+    // if token is expired, refresh it and retry the request
+    if (response.status === 403) {
+      const newTokens = await refreshAccessToken(user?.refreshToken);
+
+      if (newTokens) {
+        localStorage.setItem("user", JSON.stringify(newTokens));
+        options.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+
+        const res = await fetch(`/api${endpoint}`, options);
+
+        return await res.json();
+      }
+      throw new Error("Session expired, please log in again.");
+    }
 
     if (!response.ok) {
       const errorData = await response.json();

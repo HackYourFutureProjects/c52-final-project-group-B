@@ -18,7 +18,7 @@ const App = () => {
       <Route path="/deck/:id" element={<DeckPage />} />
       <Route path="/deck/create" element={<CreateDeck />} />
       <Route path="/deck/edit/:id" element={<CreateDeck />} />
-      <Route path="/deck/card-mode/:id" element={<CardMode />} />
+      <Route path="/deck/:id/card-mode" element={<CardMode />} />
 
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />

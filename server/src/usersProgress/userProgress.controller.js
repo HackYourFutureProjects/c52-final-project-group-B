@@ -2,6 +2,10 @@ import { userProgressSubmitSchema } from "./userProgress.schema.js";
 import { submitUserProgress } from "./userProgress.service.js";
 
 export function handleSubmitUserProgress(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const parseResult = userProgressSubmitSchema.safeParse(req.body);
 
   if (!parseResult.success) {

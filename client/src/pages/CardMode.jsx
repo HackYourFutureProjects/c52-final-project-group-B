@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
 import { getDeckById } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
-import { Button } from "@heroui/react";
+import { Button, addToast } from "@heroui/react";
 import { WrongIcon, CorrectIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
 
 const CardMode = () => {
+  const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
+    useContext(UserContext);
+
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -17,52 +21,10 @@ const CardMode = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleAnswer = (isCorrect) => {
-    const currentCard = cards[currentCardIndex];
-
-    const newProgress = [
-      ...progress,
-      {
-        cardId: currentCard._id,
-        isCorrect,
-      },
-    ];
-
-    setProgress(newProgress);
-
-    const dataToSave = {
-      userId: "6888bcc6cbee93b576f1cd35",
-      results: newProgress,
-      currentCardIndex: currentCardIndex + 1,
-    };
-
-    localStorage.setItem(`cardProgress-${id}`, JSON.stringify(dataToSave));
-
-    if (currentCardIndex < cards.length - 1) {
-      setCurrentCardIndex(currentCardIndex + 1);
-    } else {
-      setCurrentCardIndex(cards.length);
-    }
-  };
-
-  const handleCompleteDeck = async () => {
-    try {
-      const dataToSend = {
-        userId: "6888bcc6cbee93b576f1cd35",
-        results: progress,
-      };
-      const res = await submitUserProgress(dataToSend);
-      console.log(res);
-      setProgress([]);
-      setCurrentCardIndex(0);
-      localStorage.removeItem(`cardProgress-${id}`);
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
+    if (!user && isUserLoaded === true) {
+      forceLogin();
+    }
     const fetchDeckAndCards = async () => {
       try {
         const getDeck = await getDeckById(id);
@@ -86,7 +48,76 @@ const CardMode = () => {
       }
     };
     fetchDeckAndCards();
-  }, [id]);
+  }, [id, user, isUserLoaded]);
+
+  if (!user) {
+    return (
+      <div className="text-center">
+        <p className="text-xl font-bold">
+          You need to be logged in to access card mode.
+        </p>
+        <Button
+          color="primary"
+          onPress={() => setIsLoginOpen(true)}
+          className="mt-4"
+        >
+          Login
+        </Button>
+      </div>
+    );
+  }
+
+  const handleAnswer = (isCorrect) => {
+    const currentCard = cards[currentCardIndex];
+
+    const newProgress = [
+      ...progress,
+      {
+        cardId: currentCard._id,
+        isCorrect,
+      },
+    ];
+
+    setProgress(newProgress);
+
+    const dataToSave = {
+      userId: user?.userid,
+      results: newProgress,
+      currentCardIndex: currentCardIndex + 1,
+    };
+
+    localStorage.setItem(`cardProgress-${id}`, JSON.stringify(dataToSave));
+
+    if (currentCardIndex < cards.length - 1) {
+      setCurrentCardIndex(currentCardIndex + 1);
+    } else {
+      setCurrentCardIndex(cards.length);
+    }
+  };
+
+  const handleCompleteDeck = async () => {
+    try {
+      const dataToSend = {
+        userId: user?.userid,
+        results: progress,
+      };
+
+      await submitUserProgress(dataToSend);
+
+      setProgress([]);
+      setCurrentCardIndex(0);
+      localStorage.removeItem(`cardProgress-${id}`);
+      addToast({
+        title: "Deck Completed",
+        description: `You have completed the deck "${deck.title}" in card mode.`,
+        color: "success",
+        radius: "full",
+      });
+      navigate(`/deck/${id}`);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const hasFinished = cards && currentCardIndex >= cards.length;
 

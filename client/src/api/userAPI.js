@@ -4,8 +4,8 @@ export const createUser = async (userData) => {
   return apiRequest("/users", "POST", userData);
 };
 
-export const submitUserProgress = async (body) => {
-  return apiRequest(`/user-progress/submit`, "POST", body);
+export const submitUserProgress = (body) => {
+  return apiRequest(`/user-progress/submit`, "POST", body, true); // true = requires authentication
 };
 
 export const loginUser = async (body) => {
