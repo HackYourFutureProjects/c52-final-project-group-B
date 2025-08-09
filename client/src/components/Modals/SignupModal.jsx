@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  addToast,
   Button,
   Form,
   Input,
@@ -9,12 +10,14 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { addToast } from "@heroui/react";
 import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
 import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
+  const { setLocalStorageUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,11 +25,15 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
-      const userData = await createUser({
+      const response = await createUser({
         username: data.username,
         email: data.email,
         password: data.password,
       });
+
+      if (response.accessToken) {
+        setLocalStorageUser(response);
+      }
 
       setIsSignupOpen(false);
       addToast({
@@ -35,7 +42,7 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
         color: "success",
         radius: "full",
       });
-      navigate(`/dashboard/${userData.username}`);
+      navigate(`/dashboard`);
     } catch (error) {
       addToast({
         title: "Error",

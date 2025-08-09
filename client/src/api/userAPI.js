@@ -15,3 +15,7 @@ export const updateUser = async (userId, body) => {
 export const submitUserProgress = async (body) => {
   return apiRequest(`/user-progress/submit`, "POST", body);
 };
+
+export const loginUser = async (body) => {
+  return apiRequest(`/users/login`, "POST", body);
+};

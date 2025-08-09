@@ -4,6 +4,8 @@ import {
   registerUserSchema,
   getUserSchema,
   updateUserSchema,
+  userIdParamSchema,
+  loginUserSchema,
 } from "./user.schema.js";
 
 const userService = new UserService();
@@ -40,4 +42,16 @@ export const handleUpdateUser = async (req, res) => {
 
   const updated = await userService.updateUser(userId, updateData);
   res.status(HTTP_STATUS.OK).json(updated);
+};
+
+export const softDeleteUser = async (req, res) => {
+  const { userId } = userIdParamSchema.parse(req.params);
+  const result = await userService.softDeleteUser(userId);
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const loginUser = async (req, res) => {
+  const { email, password } = loginUserSchema.parse(req.body);
+  const user = await userService.loginUser(email, password);
+  res.status(HTTP_STATUS.OK).json(user);
 };

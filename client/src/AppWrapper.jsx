@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useNavigate, useHref } from "react-router-dom";
 import { HeroUIProvider } from "@heroui/react";
 import { ToastProvider } from "@heroui/toast";
+import UserProvider from "@/provider/UserProvider";
 import Navigator from "@/components/Navigator";
 import Footer from "@/components/Footer";
 
@@ -14,11 +15,13 @@ const AppWrapper = ({ children }) => {
   return (
     <HeroUIProvider navigate={navigate} useHref={useHref}>
       <ToastProvider placement="top-right" toastOffset={25} />
-      <Navigator />
-      <main className="light text-foreground bg-background container mx-auto min-h-dvh">
-        {children}
-      </main>
-      <Footer />
+      <UserProvider>
+        <Navigator />
+        <main className="light text-foreground bg-background container mx-auto min-h-dvh">
+          {children}
+        </main>
+        <Footer />
+      </UserProvider>
     </HeroUIProvider>
   );
 };
