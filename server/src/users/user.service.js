@@ -60,7 +60,6 @@ class UserService {
       { isDeleted: true },
       { new: true },
     );
-
     if (!user) {
       createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
     }
@@ -89,6 +88,16 @@ class UserService {
 
     return { message: "Password updated successfully" };
   }
-}
 
+  async getUserById(userId) {
+    return await User.findById(userId);
+  }
+
+  async updateUser(userId, updateData) {
+    return await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+  }
+}
 export default UserService;
