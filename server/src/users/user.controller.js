@@ -25,3 +25,9 @@ export const loginUser = async (req, res) => {
   const user = await userService.loginUser(email, password);
   res.status(HTTP_STATUS.OK).json(user);
 };
+
+export const refreshToken = async (req, res) => {
+  const { refreshToken } = req.body;
+  const newTokens = await userService.refreshToken(refreshToken);
+  res.status(HTTP_STATUS.OK).json(newTokens);
+};

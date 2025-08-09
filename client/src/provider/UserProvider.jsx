@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
+import { refreshAccessToken } from "@/api/userAPI";
 
 export default function UserProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -14,6 +15,7 @@ export default function UserProvider({ children }) {
       setUser({
         username: localUser.username || "",
         accessToken: localUser.accessToken || "",
+        refreshToken: localUser.refreshToken || "",
       });
     }
   }, []);
@@ -23,6 +25,7 @@ export default function UserProvider({ children }) {
     setUser({
       username: userData.username || "",
       accessToken: userData.accessToken || "",
+      refreshToken: userData.refreshToken || "",
     });
   };
 
@@ -32,8 +35,19 @@ export default function UserProvider({ children }) {
     navigate("/");
   };
 
+  const refreshToken = async () => {
+    if (!user || !user.refreshToken) return;
+
+    const newTokens = await refreshAccessToken(user.refreshToken);
+    if (newTokens) {
+      setLocalStorageUser(newTokens);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ user, setLocalStorageUser, logoutUser }}>
+    <UserContext.Provider
+      value={{ user, setLocalStorageUser, logoutUser, refreshToken }}
+    >
       {children}
     </UserContext.Provider>
   );

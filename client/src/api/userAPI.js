@@ -11,3 +11,7 @@ export const submitUserProgress = async (body) => {
 export const loginUser = async (body) => {
   return apiRequest(`/users/login`, "POST", body);
 };
+
+export const refreshAccessToken = async (refreshToken) => {
+  return apiRequest(`/users/refresh-token`, "POST", { refreshToken });
+};
