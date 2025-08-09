@@ -22,6 +22,27 @@ export const registerUserSchema = z.object({
   profilePictureUrl: z.string().url().optional(),
 });
 
+export const getUserSchema = z.object({
+  userId: z.string().length(24, "Invalid MongoDB ObjectId"),
+});
+
+export const updateUserSchema = z.object({
+  username: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  profilePictureUrl: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+    z.string().url().optional(),
+  ),
+});
+
 export const userIdParamSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
+});
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters")
+    .max(255, "New password is too long"),
 });
