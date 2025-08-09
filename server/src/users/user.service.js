@@ -41,6 +41,17 @@ class UserService {
 
   //   return accessToken;
   // }
+
+  async getUserById(userId) {
+    return await User.findById(userId);
+  }
+
+  async updateUser(userId, updateData) {
+    return await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+  }
 }
 
 export default UserService;
