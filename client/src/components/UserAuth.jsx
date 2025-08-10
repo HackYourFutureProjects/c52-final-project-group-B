@@ -10,6 +10,7 @@ import {
 import { UserContext } from "@/context/UserContext";
 import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
+import ResetPasswordModal from "./Modals/ResetPasswordModal";
 
 const UserAuth = () => {
   const {
@@ -19,6 +20,8 @@ const UserAuth = () => {
     setIsSignupOpen,
     isLoginOpen,
     setIsLoginOpen,
+    isResetPasswordOpen,
+    setIsResetPasswordOpen,
   } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -80,6 +83,11 @@ const UserAuth = () => {
       <SignupModal
         isSignupOpen={isSignupOpen}
         setIsSignupOpen={setIsSignupOpen}
+      />
+
+      <ResetPasswordModal
+        isResetPasswordOpen={isResetPasswordOpen}
+        setIsResetPasswordOpen={setIsResetPasswordOpen}
       />
     </>
   );
