@@ -12,13 +12,11 @@ import {
 } from "@heroui/react";
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
-import { useNavigate } from "react-router-dom";
 import { LockedIcon, MailIcon } from "@/components/Icons";
 import { loginUser } from "@/api/userAPI";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
-  const { setLocalStorageUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { setLocalStorageUser, setIsSignupOpen } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +33,13 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
       }
 
       setIsLoginOpen(false);
-      navigate(`/dashboard`);
+
+      addToast({
+        title: "Success",
+        description: "You have successfully logged in!",
+        color: "success",
+        radius: "full",
+      });
     } catch (error) {
       addToast({
         title: "Error",
@@ -110,6 +114,18 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
             />
           </ModalBody>
           <ModalFooter>
+            <Button
+              color="default"
+              radius="full"
+              type="submit"
+              className="w-full"
+              onPress={() => {
+                setIsLoginOpen(false);
+                setIsSignupOpen(true);
+              }}
+            >
+              Signup
+            </Button>
             <Button
               color="primary"
               radius="full"

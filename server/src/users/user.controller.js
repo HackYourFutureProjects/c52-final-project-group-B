@@ -57,6 +57,12 @@ export const loginUser = async (req, res) => {
   res.status(HTTP_STATUS.OK).json(user);
 };
 
+export const refreshToken = async (req, res) => {
+  const { refreshToken } = req.body;
+  const newTokens = await userService.refreshToken(refreshToken);
+  res.status(HTTP_STATUS.OK).json(newTokens);
+};
+
 export const changePassword = async (req, res) => {
   const { userId } = userIdParamSchema.parse(req.params);
   const { currentPassword, newPassword } = updatePasswordSchema.parse(req.body);

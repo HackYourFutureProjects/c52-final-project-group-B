@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Dropdown,
@@ -12,10 +12,16 @@ import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
 
 const UserAuth = () => {
-  const { user, logoutUser } = useContext(UserContext);
+  const {
+    user,
+    logoutUser,
+    isSignupOpen,
+    setIsSignupOpen,
+    isLoginOpen,
+    setIsLoginOpen,
+  } = useContext(UserContext);
   const navigate = useNavigate();
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
     <>
       <Dropdown placement="bottom-end">

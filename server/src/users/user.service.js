@@ -2,7 +2,11 @@ import { User } from "./user.model.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 import { hash, compare } from "bcrypt";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
-import { generateAccessToken } from "../util/authUtils.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../util/authUtils.js";
 
 class UserService {
   async createUser(username, email, password) {
@@ -28,10 +32,13 @@ class UserService {
     delete publicFields.password;
 
     const accessToken = generateAccessToken(publicFields);
+    const refreshToken = generateRefreshToken(publicFields._id);
 
     return {
+      userid: publicFields._id,
       username: publicFields.username,
       accessToken,
+      refreshToken,
     };
   }
 
@@ -47,10 +54,35 @@ class UserService {
     }
 
     const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user._id);
 
     return {
+      userid: user._id,
       username: user.username,
       accessToken,
+      refreshToken,
+    };
+  }
+
+  async refreshToken(token) {
+    const verifyToken = verifyRefreshToken(token);
+    if (!verifyToken) {
+      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid refresh token");
+    }
+
+    const user = await User.findById(verifyToken.id);
+    if (!user || user.isDeleted) {
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
+    }
+
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user._id);
+
+    return {
+      userid: user._id,
+      username: user.username,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
     };
   }
 
