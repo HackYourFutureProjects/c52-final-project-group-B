@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 @import "swiper/css";
-@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 @plugin '../hero.js';
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
@@ -16,4 +16,41 @@
 .heading-title {
   font-family: "Baloo Bhaijaan 2", sans-serif;
   transform: translateY(1px);
+}
+
+.swiper-pagination-bullet-active {
+  background-color: hsl(var(--heroui-primary));
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee var(--duration) linear infinite;
+  }
+
+  .animate-marquee-reverse {
+    animation: marquee var(--duration) linear infinite;
+    animation-direction: reverse;
+  }
+
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
+  }
 }
