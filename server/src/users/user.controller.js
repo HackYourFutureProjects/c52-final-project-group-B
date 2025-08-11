@@ -7,6 +7,7 @@ import {
   userIdParamSchema,
   loginUserSchema,
   updatePasswordSchema,
+  forgetPasswordEmailSchema,
 } from "./user.schema.js";
 
 const userService = new UserService();
@@ -73,5 +74,11 @@ export const changePassword = async (req, res) => {
     newPassword,
   );
 
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const forgetPasswordEmail = async (req, res) => {
+  const { email } = forgetPasswordEmailSchema.parse(req.body);
+  const result = await userService.forgetPasswordEmail(email);
   res.status(HTTP_STATUS.OK).json(result);
 };

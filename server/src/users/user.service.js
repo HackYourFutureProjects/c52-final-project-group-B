@@ -131,5 +131,12 @@ class UserService {
       runValidators: true,
     });
   }
+
+  async forgetPasswordEmail(email) {
+    const emailExists = await User.findOne({ email });
+    if (!emailExists) {
+      return;
+    }
+  }
 }
 export default UserService;

@@ -7,6 +7,7 @@ import {
   loginUser,
   changePassword,
   refreshToken,
+  forgetPasswordEmail,
 } from "./user.controller.js";
 
 const userRouter = Router();
@@ -23,6 +24,7 @@ userRouter.post("/", addUser);
 userRouter.post("/login", loginUser);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.put("/:userId/password", changePassword);
+userRouter.post("/forget-password", forgetPasswordEmail);
 userRouter.delete("/:userId", softDeleteUser);
 
 export default userRouter;
