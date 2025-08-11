@@ -173,6 +173,10 @@ class UserService {
 
       return { message: "Password reset email sent successfully" };
     } catch (error) {
+      emailExists.resetToken = undefined;
+      emailExists.resetTokenExpiration = undefined;
+      await emailExists.save();
+
       createAndThrowError(
         HTTP_STATUS.INTERNAL_SERVER_ERROR,
         "Failed to send email",
