@@ -8,6 +8,7 @@ import {
   verifyRefreshToken,
 } from "../util/authUtils.js";
 import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 class UserService {
   async createUser(username, email, password) {
@@ -140,6 +141,12 @@ class UserService {
     }
 
     try {
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      emailExists.resetToken = resetToken;
+      emailExists.resetTokenExpiration = Date.now() + 3600000; // 1 hour
+      await emailExists.save();
+
+      const resetUrl = `https://c52b.hyf.dev/reset-password?token=${resetToken}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -152,7 +159,7 @@ class UserService {
         from: `"Memix" <${process.env.GOOGLE_EMAIL}>`,
         to: email,
         subject: "[Memix] Password Reset Request",
-        html: `Hi ${emailExists.username},<br><br>Someone recently requested a password change for your Memix account. If this was you, you can set a new password here:<br><br>Reset password XXXXXXX<br><br> If you don't want to change your password or didn't request this, just ignore and delete this message.<br><br>Thanks,<br>Memix Team`,
+        html: `Hi ${emailExists.username},<br><br>Someone recently requested a password change for your Memix account. If this was you, you can set a new password here:<br><br>Reset password: <br><a href="${resetUrl}">${resetUrl}</a><br><br> If you don't want to change your password or didn't request this, just ignore and delete this message.<br><br>Thanks,<br>Memix Team`,
       });
 
       return { message: "Password reset email sent successfully" };
