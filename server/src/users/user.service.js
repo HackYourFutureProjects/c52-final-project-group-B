@@ -7,6 +7,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../util/authUtils.js";
+import nodemailer from "nodemailer";
 
 class UserService {
   async createUser(username, email, password) {
@@ -136,6 +137,30 @@ class UserService {
     const emailExists = await User.findOne({ email });
     if (!emailExists) {
       return;
+    }
+
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.GOOGLE_EMAIL,
+          pass: process.env.GOOGLE_APP_PASSWORD,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"Memix" <${process.env.GOOGLE_EMAIL}>`,
+        to: email,
+        subject: "[Memix] Password Reset Request",
+        html: `Hi ${emailExists.username},<br><br>Someone recently requested a password change for your Memix account. If this was you, you can set a new password here:<br><br>Reset password XXXXXXX<br><br> If you don't want to change your password or didn't request this, just ignore and delete this message.<br><br>Thanks,<br>Memix Team`,
+      });
+
+      return { message: "Password reset email sent successfully" };
+    } catch (error) {
+      createAndThrowError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        "Failed to send email",
+      );
     }
   }
 }

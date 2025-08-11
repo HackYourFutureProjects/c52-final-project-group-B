@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  addToast,
   Button,
   Form,
   Input,
@@ -9,6 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
+import { requestPasswordReset } from "@/api/userAPI";
 import { MailIcon } from "@/components/Icons";
 
 const ResetPasswordModal = ({
@@ -17,7 +19,29 @@ const ResetPasswordModal = ({
 }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const data = Object.fromEntries(new FormData(e.currentTarget));
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+
+    try {
+      await requestPasswordReset({
+        email: data.email,
+      });
+
+      setIsResetPasswordOpen(false);
+
+      addToast({
+        title: "Success",
+        description: "Password reset email sent successfully!",
+        color: "success",
+        radius: "full",
+      });
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: error.message || "Failed to reset password",
+        color: "danger",
+        radius: "full",
+      });
+    }
   };
 
   return (
