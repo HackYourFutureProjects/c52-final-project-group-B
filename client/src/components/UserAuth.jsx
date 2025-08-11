@@ -52,11 +52,8 @@ const UserAuth = () => {
             >
               Logged in as @{user.username}
             </DropdownItem>
-            <DropdownItem
-              key="dashboard"
-              onPress={() => navigate("/dashboard")}
-            >
-              Dashboard
+            <DropdownItem key="profile" onPress={() => navigate("/profile")}>
+              Profile
             </DropdownItem>
             <DropdownItem
               key="logout"

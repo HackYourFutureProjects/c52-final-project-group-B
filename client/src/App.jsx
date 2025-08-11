@@ -1,7 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home/Home";
-import CreateUser from "@/pages/User/CreateUser";
-import UserList from "@/pages/User/UserList";
 import DeckPage from "@/pages/DeckPage";
 import CreateDeck from "@/pages/CreateDeck";
 import CardMode from "@/pages/CardMode";
@@ -13,9 +11,8 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />} />
 
-      <Route path="/user" element={<UserList />} />
-      <Route path="/users/:id" element={<UserProfile />} />
-      <Route path="/user/create" element={<CreateUser />} />
+      <Route path="/users/me" element={<UserProfile />} />
+      <Route path="/profile" element={<Navigate to="/users/me" replace />} />
 
       <Route path="/deck/:id" element={<DeckPage />} />
       <Route path="/deck/create" element={<CreateDeck />} />

@@ -4,6 +4,8 @@ import { hash, compare } from "bcrypt";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import {
   generateAccessToken,
+  verifyAccessToken,
+  decodedToken,
   generateRefreshToken,
   verifyRefreshToken,
 } from "../util/authUtils.js";
@@ -101,6 +103,17 @@ class UserService {
     return { message: "User deleted successfully" };
   }
 
+  async getUserById(fullToken) {
+    const token = fullToken.split(" ")[1];
+    const validToken = verifyAccessToken(token);
+    if (!validToken) {
+      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Token is not valid");
+    }
+    const userId = decodedToken(token)?.id;
+
+    return await User.findById(userId);
+  }
+
   async updatePassword(userId, currentPassword, newPassword) {
     const user = await User.findById(userId).select("+password");
 
@@ -121,10 +134,6 @@ class UserService {
     await user.save();
 
     return { message: "Password updated successfully" };
-  }
-
-  async getUserById(userId) {
-    return await User.findById(userId);
   }
 
   async updateUser(userId, updateData) {
