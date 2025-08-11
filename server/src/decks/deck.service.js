@@ -8,7 +8,9 @@ import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
   async getDecks() {
-    const decks = await DeckModel.find().populate("userId", "username");
+    const decks = await DeckModel.find()
+      .sort({ createdAt: "desc" })
+      .populate("userId", "username");
 
     const decksWithCount = await Promise.all(
       decks.map(async (deck) => {
