@@ -11,12 +11,14 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
 import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
   const { setLocalStorageUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
         color: "success",
         radius: "full",
       });
+      navigate(`/profile`);
     } catch (error) {
       addToast({
         title: "Error",

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
   addUser,
-  handleGetUserById,
-  handleUpdateUser,
+  handleGetCurrentUser,
+  updateCurrentUser,
   softDeleteUser,
   loginUser,
   changePassword,
@@ -11,14 +11,10 @@ import {
 
 const userRouter = Router();
 
-// GET /api/users/:id
-userRouter.get("/:id", handleGetUserById);
-
-// PUT /api/users/:id
-userRouter.put("/:id", handleUpdateUser);
-
-// POST /api/users
 userRouter.post("/", addUser);
+
+userRouter.get("/me", handleGetCurrentUser);
+userRouter.put("/me", updateCurrentUser);
 
 userRouter.post("/login", loginUser);
 userRouter.post("/refresh-token", refreshToken);
