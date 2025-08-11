@@ -54,7 +54,7 @@ const UserProfile = () => {
     return (
       <div className="text-center">
         <p className="text-xl font-bold">
-          You need to be logged in to access card mode.
+          You need to be logged in to access your profile.
         </p>
         <Button
           color="primary"
