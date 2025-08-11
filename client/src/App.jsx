@@ -14,7 +14,6 @@ const App = () => {
       <Route path="/users/me" element={<UserProfile />} />
       <Route path="/profile" element={<Navigate to="/users/me" replace />} />
 
-      <Route path="/users/me" element={<UserProfile />} />
 
       <Route path="/deck/:id" element={<DeckPage />} />
       <Route path="/deck/create" element={<CreateDeck />} />
