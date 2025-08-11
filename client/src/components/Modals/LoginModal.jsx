@@ -16,7 +16,8 @@ import { LockedIcon, MailIcon } from "@/components/Icons";
 import { loginUser } from "@/api/userAPI";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
-  const { setLocalStorageUser, setIsSignupOpen } = useContext(UserContext);
+  const { setLocalStorageUser, setIsSignupOpen, setIsResetPasswordOpen } =
+    useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,6 +113,17 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
               placeholder="Enter your password"
               type="password"
             />
+            <Button
+              color="danger"
+              variant="light"
+              radius="full"
+              onPress={() => {
+                setIsLoginOpen(false);
+                setIsResetPasswordOpen(true);
+              }}
+            >
+              Forgot password?
+            </Button>
           </ModalBody>
           <ModalFooter>
             <Button

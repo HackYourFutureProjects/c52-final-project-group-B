@@ -23,3 +23,7 @@ export const loginUser = async (body) => {
 export const refreshAccessToken = async (refreshToken) => {
   return apiRequest(`/users/refresh-token`, "POST", { refreshToken });
 };
+
+export const requestPasswordReset = async (email) => {
+  return apiRequest(`/users/forget-password`, "POST", email);
+};

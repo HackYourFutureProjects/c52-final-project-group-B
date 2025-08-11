@@ -46,3 +46,7 @@ export const updatePasswordSchema = z.object({
     .min(8, "New password must be at least 8 characters")
     .max(255, "New password is too long"),
 });
+
+export const forgetPasswordEmailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});

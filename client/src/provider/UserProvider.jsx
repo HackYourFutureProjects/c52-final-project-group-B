@@ -11,6 +11,7 @@ export default function UserProvider({ children }) {
 
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -91,6 +92,8 @@ export default function UserProvider({ children }) {
         setIsSignupOpen,
         isLoginOpen,
         setIsLoginOpen,
+        isResetPasswordOpen,
+        setIsResetPasswordOpen,
         forceLogin,
       }}
     >
