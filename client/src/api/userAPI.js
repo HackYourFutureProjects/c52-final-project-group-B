@@ -5,11 +5,11 @@ export const createUser = async (userData) => {
 };
 
 export const getUserById = async () => {
-  return apiRequest(`/users/me`);
+  return apiRequest(`/users/me`, "GET", null, true); // true = requires authentication
 };
 
 export const updateCurrentUser = async (body) => {
-  return apiRequest(`/users/me`, "PUT", body);
+  return apiRequest(`/users/me`, "PUT", body, true); // true = requires authentication
 };
 
 export const submitUserProgress = async (body) => {
