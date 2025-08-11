@@ -2,7 +2,6 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import UserService from "./user.service.js";
 import {
   registerUserSchema,
-  getUserSchema,
   updateUserSchema,
   userIdParamSchema,
   loginUserSchema,
@@ -11,7 +10,6 @@ import {
 
 const userService = new UserService();
 
-// POST /api/users
 export const addUser = async (req, res) => {
   const { username, email, password, profilePictureUrl } =
     registerUserSchema.parse(req.body);
@@ -26,21 +24,18 @@ export const addUser = async (req, res) => {
   res.status(HTTP_STATUS.CREATED).json(created);
 };
 
-// GET /api/users/:id
-export const handleGetUserById = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = getUserSchema.parse({ userId: id });
-
-  const user = await userService.getUserById(userId);
+export const handleGetCurrentUser = async (req, res) => {
+  const { authorization } = req.headers;
+  const user = await userService.getUserById(authorization);
   res.status(HTTP_STATUS.OK).json(user);
 };
 
-// PUT /api/users/:id
-export const handleUpdateUser = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = getUserSchema.parse({ userId: id });
+export const updateCurrentUser = async (req, res) => {
+  const { authorization } = req.headers;
+  const currentUser = await userService.getUserById(authorization);
+  const userId =
+    currentUser?._id?.toString?.() || currentUser?.id || currentUser?._id;
   const updateData = updateUserSchema.parse(req.body);
-
   const updated = await userService.updateUser(userId, updateData);
   res.status(HTTP_STATUS.OK).json(updated);
 };

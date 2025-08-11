@@ -39,3 +39,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# large archives
+Archive.zip
+client.zip
+server.zip

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { Button, Input } from "@heroui/react";
 import Title from "@/components/Title";
 import UserCard from "@/components/UserCard";
-import { getUserById, updateUser } from "@/api/userAPI";
+import { getUserById, updateCurrentUser } from "@/api/userAPI";
 
 const UserProfile = () => {
-  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
@@ -18,7 +16,7 @@ const UserProfile = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await getUserById(id);
+        const data = await getUserById();
         setUser(data);
         setForm({
           username: data?.username || "",
@@ -30,14 +28,14 @@ const UserProfile = () => {
       }
     };
     load();
-  }, [id]);
+  }, []);
 
   const onChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const onSave = async () => {
     try {
-      const updated = await updateUser(id, form);
+      const updated = await updateCurrentUser(form);
       setUser(updated);
       setIsEditing(false);
     } catch (e) {
@@ -55,8 +53,7 @@ const UserProfile = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: "User (temp)", path: "/user" },
-            { label: "Profile", path: `/users/${id}` },
+            { label: "Profile", path: `/users/${user.id}` },
           ]}
         >
           Profile

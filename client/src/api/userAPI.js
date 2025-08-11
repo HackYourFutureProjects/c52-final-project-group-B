@@ -4,12 +4,12 @@ export const createUser = async (userData) => {
   return apiRequest("/users", "POST", userData);
 };
 
-export const getUserById = async (userId) => {
-  return apiRequest(`/users/${userId}`);
+export const getUserById = async () => {
+  return apiRequest(`/users/me`);
 };
 
-export const updateUser = async (userId, body) => {
-  return apiRequest(`/users/${userId}`, "PUT", body);
+export const updateCurrentUser = async (body) => {
+  return apiRequest(`/users/me`, "PUT", body);
 };
 
 export const submitUserProgress = async (body) => {

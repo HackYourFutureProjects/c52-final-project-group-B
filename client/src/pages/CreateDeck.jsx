@@ -132,7 +132,7 @@ const CreateDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Dashboard`, path: `/dashboard` },
+            { label: `Profile`, path: `/profile` },
             { label: `Create A Deck`, path: `/deck/create` },
           ]}
         >
