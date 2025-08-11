@@ -9,7 +9,7 @@ import { createAndThrowError } from "../util/createAndThrowError.js";
 class DeckService {
   async getDecks() {
     const decks = await DeckModel.find()
-      .sort({ createdAt: "desc" })
+      .sort({ createdAt: -1 })
       .populate("userId", "username");
 
     const decksWithCount = await Promise.all(
