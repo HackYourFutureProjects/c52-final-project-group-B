@@ -131,7 +131,7 @@ const Home = () => {
       </div>
 
       <div className="bg-default-300 mt-20 flex flex-col items-center gap-8 rounded-[35px] py-8 text-center">
-        <h2 className="heading-title text-2xl font-bold">Trending Decks</h2>
+        <h2 className="heading-title text-2xl font-bold">Latest Decks</h2>
         <div className="flex w-full items-center justify-center">
           <Swiper
             modules={[Pagination]}
@@ -141,21 +141,22 @@ const Home = () => {
             }}
             wrapperClass="pb-12"
           >
-            {decks.slice(0, 10).map((deck) => (
-              <SwiperSlide
-                key={deck._id}
-                style={{ width: "auto" }}
-                className="px-4 py-2"
-              >
-                <Deck
-                  deckID={deck._id}
-                  title={deck.title}
-                  description={deck.description}
-                  user={deck.userInfo?.username}
-                  numCards={deck.cardsCount}
-                />
-              </SwiperSlide>
-            ))}
+            {decks &&
+              decks.slice(0, 10).map((deck) => (
+                <SwiperSlide
+                  key={deck._id}
+                  style={{ width: "auto" }}
+                  className="px-4 py-2"
+                >
+                  <Deck
+                    deckID={deck._id}
+                    title={deck.title}
+                    description={deck.description}
+                    user={deck.userInfo?.username}
+                    numCards={deck.cardsCount}
+                  />
+                </SwiperSlide>
+              ))}
           </Swiper>
         </div>
         <Button

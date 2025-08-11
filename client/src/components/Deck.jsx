@@ -22,7 +22,9 @@ const Deck = ({ deckID, title, description, user, numCards }) => {
       onPress={() => navigate(`./deck/${deckID}`)}
     >
       <CardHeader className="flex items-center justify-between gap-3">
-        <p className="heading-title items-center font-bold">{title}</p>
+        <p className="heading-title items-center text-left font-bold">
+          {title}
+        </p>
         <Chip>{numCards} Cards</Chip>
       </CardHeader>
       <CardBody>
