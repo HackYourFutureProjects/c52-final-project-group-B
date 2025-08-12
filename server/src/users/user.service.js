@@ -155,7 +155,7 @@ class UserService {
       emailExists.resetTokenExpiration = Date.now() + 3600000; // 1 hour
       await emailExists.save();
 
-      const resetUrl = `https://c52b.hyf.dev/#/reset-password?token=${resetToken}`;
+      const resetUrl = `https://c52b.hyf.dev/reset-password?token=${resetToken}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
