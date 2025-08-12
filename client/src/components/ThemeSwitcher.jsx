@@ -1,6 +1,6 @@
 import { useTheme } from "@heroui/use-theme";
 import { Button } from "@heroui/react";
-import { DarkModeIcon, LightModeIcon } from "@/components/icons";
+import { DarkModeIcon, LightModeIcon } from "@/components/Icons";
 
 export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme("light");
