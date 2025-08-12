@@ -12,8 +12,8 @@ export default function Navigator() {
         maxWidth="full"
       >
         <NavbarBrand justify="start">
-          <Link className="" href="/">
-            <MemixLogoIcon fill="foreground" size={120} />
+          <Link className="text-default-foreground" href="/">
+            <MemixLogoIcon size={120} />
           </Link>
         </NavbarBrand>
 
