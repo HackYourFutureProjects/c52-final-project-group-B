@@ -9,7 +9,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../util/authUtils.js";
-import resetPasswordEmailTemplate from "../util/resetPasswordEmailTemplate.js";
+import resetPasswordEmailTemplate from "../emails/resetPasswordEmailTemplate.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 
