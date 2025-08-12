@@ -155,7 +155,7 @@ class UserService {
       emailExists.resetTokenExpiration = Date.now() + 3600000; // 1 hour
       await emailExists.save();
 
-      const resetUrl = `https://c52b.hyf.dev/reset-password?token=${resetToken}`;
+      const resetUrl = `https://c52b.hyf.dev/#/reset-password?token=${resetToken}`;
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -182,6 +182,36 @@ class UserService {
         "Failed to send email",
       );
     }
+  }
+
+  async verifyResetToken(token) {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: new Date() },
+    });
+    if (!user) {
+      createAndThrowError(HTTP_STATUS.BAD_REQUEST, "Invalid or expired token");
+    }
+    return { message: "Token is valid" };
+  }
+
+  async resetPassword(token, newPassword) {
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: new Date() },
+    }).select("+password");
+
+    if (!user) {
+      createAndThrowError(HTTP_STATUS.BAD_REQUEST, "Invalid or expired token");
+    }
+
+    const hashed = await hash(newPassword, +process.env.SALT_ROUNDS);
+    user.password = hashed;
+    user.resetToken = undefined;
+    user.resetTokenExpiration = undefined;
+    await user.save();
+
+    return { message: "Password has been reset successfully" };
   }
 }
 export default UserService;

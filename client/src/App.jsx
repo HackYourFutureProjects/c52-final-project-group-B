@@ -5,6 +5,7 @@ import CreateDeck from "@/pages/CreateDeck";
 import CardMode from "@/pages/CardMode";
 import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
+import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
 
       <Route path="/users/me" element={<UserProfile />} />
       <Route path="/profile" element={<Navigate to="/users/me" replace />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route path="/deck/:id" element={<DeckPage />} />
       <Route path="/deck/create" element={<CreateDeck />} />

@@ -50,3 +50,15 @@ export const updatePasswordSchema = z.object({
 export const forgetPasswordEmailSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
+
+export const verifyResetTokenSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token is required"),
+  newPassword: z
+    .string()
+    .min(8, "New password must be at least 8 characters")
+    .max(255, "New password is too long"),
+});
