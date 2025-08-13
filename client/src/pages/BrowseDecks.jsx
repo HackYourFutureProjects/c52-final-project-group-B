@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Title from "@/components/Title";
-import { Form, Input, Select, SelectItem, Avatar, Slider } from "@heroui/react";
+import {
+  Form,
+  Input,
+  Select,
+  SelectItem,
+  Avatar,
+  Slider,
+  Pagination,
+} from "@heroui/react";
 import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
 import languages from "@/data/languages.js";
@@ -17,6 +25,7 @@ const BrowseDecks = () => {
   const numCardsMax = filterParams.get("numCardsMax") || "100";
   const decksPerPage = filterParams.get("decksPerPage") || "20";
   const sortBy = filterParams.get("sortBy") || "most_recent";
+  const page = parseInt(filterParams.get("page")) || 1;
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -173,6 +182,19 @@ const BrowseDecks = () => {
               className="max-w-full"
             />
           ))}
+      </div>
+
+      <div className="mt-20 flex flex-col items-center justify-center">
+        <Pagination
+          showControls
+          radius="full"
+          initialPage={page}
+          total={10}
+          onChange={(page) => updateFilterParams("page", page)}
+        />
+        <p className="text-default-800 mt-2 text-sm">
+          Showing 1-20 of 200 results
+        </p>
       </div>
     </>
   );
