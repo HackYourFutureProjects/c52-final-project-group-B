@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
@@ -18,6 +18,11 @@ import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
   const { setLocalStorageUser } = useContext(UserContext);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -94,10 +99,12 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               endContent={
                 <UserIcon className="text-default pointer-events-none" />
               }
-              label="Username"
+              label="Display Name"
               name="username"
-              placeholder="Enter your username"
+              placeholder="Enter your display name"
               type="text"
+              value={username}
+              onValueChange={setUsername}
             />
             <Input
               isRequired
@@ -111,6 +118,8 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               name="email"
               placeholder="Enter your email"
               type="email"
+              value={email}
+              onValueChange={setEmail}
             />
             <Input
               isRequired
@@ -127,6 +136,30 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               name="password"
               placeholder="Enter your password"
               type="password"
+              value={password}
+              onValueChange={setPassword}
+            />
+            <Input
+              isRequired
+              color="primary"
+              radius="full"
+              variant="bordered"
+              endContent={
+                <LockedIcon
+                  size={28}
+                  className="text-default pointer-events-none"
+                />
+              }
+              label="Confirm Password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              type="password"
+              value={confirmPassword}
+              onValueChange={setConfirmPassword}
+              isInvalid={password !== confirmPassword}
+              errorMessage={() => (
+                <p className="text-danger">Passwords do not match</p>
+              )}
             />
           </ModalBody>
           <ModalFooter>
