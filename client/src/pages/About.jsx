@@ -11,9 +11,9 @@ export default function About() {
             { label: "About", path: "/about" },
           ]}
         >
-          Learn faster. Remember longer.
+          About Memix
         </Title>
-        <p className="mx-auto mt-2 max-w-xl text-black">
+        <p className="mx-auto mt-2 max-w-xl">
           Memix is a friendly flashcard app that helps you study the way you
           like: create focused decks, flip cards, and track what sticks — at
           your own pace.
@@ -46,10 +46,10 @@ export default function About() {
               key={item.step}
               className="bg-default-200 h-full rounded-[25px]"
             >
-              <CardHeader className="font-bold text-black">
+              <CardHeader className="font-bold">
                 Step {item.step}: {item.title}
               </CardHeader>
-              <CardBody className="text-black">{item.desc}</CardBody>
+              <CardBody>{item.desc}</CardBody>
             </Card>
           ))}
         </div>
@@ -70,9 +70,7 @@ export default function About() {
               key={benefit}
               className="bg-default-200 flex h-full items-center justify-center rounded-[25px]"
             >
-              <CardBody className="text-center font-medium text-black">
-                {benefit}
-              </CardBody>
+              <CardBody className="text-center font-medium">{benefit}</CardBody>
             </Card>
           ))}
         </div>
@@ -83,36 +81,16 @@ export default function About() {
           About Us
         </h2>
         <Card className="bg-default-200 rounded-[25px]">
-          <CardBody className="leading-relaxed text-black">
-            We are Cohort 52 – Group B from HackYourFuture, a collective of
-            passionate learners and aspiring developers united by a shared
-            vision. Memix is our final project — born from curiosity,
-            dedication, and the belief that learning should be both accessible
-            and inspiring. Guided by our mentors and enriched by a supportive
-            learning community, we set out to create a tool that empowers people
-            to learn faster, retain knowledge longer, and enjoy the process
-            along the way. This project is more than code; it is a reflection of
-            our commitment to growth, collaboration, and the transformative
-            power of education.
+          <CardBody className="leading-relaxed">
+            We’re Cohort 52 – Group B at HackYourFuture. Over the past weeks
+            we’ve been building Memix together with the support of our mentors.
+            Our goal is simple: make studying feel lighter and more consistent.
+            We focused on the basics—creating decks, flipping cards, and keeping
+            track of what you actually remember—so anyone can learn at their own
+            pace. This project is a snapshot of what we learned as a team and
+            the kind of product we want to keep improving.
           </CardBody>
         </Card>
-      </div>
-
-      <div className="bg-default-300 rounded-[25px] p-6 text-center">
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div>
-            <div className="text-3xl font-black">1,500+</div>
-            <div className="text-black">Active learners</div>
-          </div>
-          <div>
-            <div className="text-3xl font-black">13,000+</div>
-            <div className="text-black">Decks created</div>
-          </div>
-          <div>
-            <div className="text-3xl font-black">57,000+</div>
-            <div className="text-black">Cards studied</div>
-          </div>
-        </div>
       </div>
     </div>
   );
