@@ -88,7 +88,7 @@ const UserProfile = () => {
             <div className="space-y-4">
               <Input
                 name="username"
-                label="Username"
+                label="Displayed name"
                 variant="flat"
                 radius="full"
                 value={form.username}
