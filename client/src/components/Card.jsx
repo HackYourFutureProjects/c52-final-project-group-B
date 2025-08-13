@@ -28,7 +28,7 @@ export const DecksCard = ({
         )}
       >
         <div className="absolute inset-0 size-full backface-hidden">
-          <div className="bg-default-200 flex h-full w-full flex-col items-center justify-between rounded-[35px] p-4 text-black">
+          <div className="bg-default-200 text-default-900 flex h-full w-full flex-col items-center justify-between rounded-[35px] p-4">
             <div className="flex h-full items-center justify-center text-lg font-bold">
               {front}
             </div>
@@ -49,7 +49,7 @@ export const DecksCard = ({
             flipDirection === "vertical" && "rotate-x-180"
           )}
         >
-          <div className="bg-default-200 flex h-full w-full flex-col items-center justify-between rounded-[35px] p-4 text-black">
+          <div className="bg-default-200 text-default-900 flex h-full w-full flex-col items-center justify-between rounded-[35px] p-4">
             <div className="flex h-full items-center justify-center text-lg font-bold">
               {back}
             </div>

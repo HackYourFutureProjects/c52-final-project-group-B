@@ -10,21 +10,23 @@ import {
   Link,
   Chip,
 } from "@heroui/react";
+import cn from "@/util/cn";
 
-const Deck = ({ deckID, title, description, user, numCards }) => {
+const Deck = ({ deckID, title, description, user, numCards, className }) => {
   const navigate = useNavigate();
   return (
     <Card
       isPressable
       shadow="sm"
-      className="min-h-[250px] w-[400px] px-3 py-2"
+      className={cn(
+        "min-h-[250px] max-w-[400px] min-w-[300px] flex-1 px-3 py-2",
+        className
+      )}
       classNames={{ base: "rounded-[35px]" }}
-      onPress={() => navigate(`./deck/${deckID}`)}
+      onPress={() => navigate(`/deck/${deckID}`)}
     >
-      <CardHeader className="flex items-center justify-between gap-3">
-        <p className="heading-title items-center text-left font-bold">
-          {title}
-        </p>
+      <CardHeader className="flex items-start justify-between gap-3">
+        <p className="heading-title text-left font-bold">{title}</p>
         <Chip>{numCards} Cards</Chip>
       </CardHeader>
       <CardBody>
@@ -53,7 +55,7 @@ const Deck = ({ deckID, title, description, user, numCards }) => {
           radius="full"
           size="md"
           variant="solid"
-          href={`./deck/${deckID}`}
+          href={`/deck/${deckID}`}
         >
           <svg
             fill="none"
@@ -79,6 +81,7 @@ Deck.propTypes = {
   description: PropTypes.string.isRequired,
   user: PropTypes.string.isRequired,
   numCards: PropTypes.number.isRequired,
+  className: PropTypes.string,
 };
 
 export default Deck;
