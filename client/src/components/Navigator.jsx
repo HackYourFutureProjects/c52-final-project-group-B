@@ -1,4 +1,11 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Link } from "@heroui/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+  Link,
+} from "@heroui/react";
 import UserAuth from "@/components/UserAuth";
 import { MemixLogoIcon } from "@/components/Icons";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
