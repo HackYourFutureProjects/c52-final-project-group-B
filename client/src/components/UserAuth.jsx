@@ -32,7 +32,7 @@ const UserAuth = () => {
           <Avatar
             isFocusable
             as="button"
-            className="hover:bg-primary cursor-pointer transition-transform"
+            className="hover:bg-primary hover:text-default cursor-pointer transition"
             color="default"
             name={user?.username?.charAt(0) ?? ""}
             size="sm"

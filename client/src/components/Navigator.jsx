@@ -1,6 +1,7 @@
 import { Navbar, NavbarBrand, NavbarContent, Link } from "@heroui/react";
 import UserAuth from "@/components/UserAuth";
 import { MemixLogoIcon } from "@/components/Icons";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 export default function Navigator() {
   return (
@@ -18,6 +19,7 @@ export default function Navigator() {
         </NavbarBrand>
 
         <NavbarContent justify="end">
+          <ThemeSwitcher />
           <UserAuth />
         </NavbarContent>
       </Navbar>
