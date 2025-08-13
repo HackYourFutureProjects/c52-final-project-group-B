@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Title from "@/components/Title";
 import { Form, Input, Select, SelectItem, Avatar, Slider } from "@heroui/react";
 import { getDecks } from "@/api/decksAPI";
@@ -8,6 +9,18 @@ import { SearchIcon } from "@/components/Icons";
 
 const BrowseDecks = () => {
   const [decks, setDecks] = useState(null);
+  const [filterParams, setFilterParams] = useSearchParams();
+  const [search, setSearch] = useState();
+  const [language, setLanguage] = useState();
+  const [numCardsMin, setNumCardsMin] = useState(10);
+  const [numCardsMax, setNumCardsMax] = useState(100);
+
+  useEffect(() => {
+    setSearch(filterParams.get("search") || "");
+    setLanguage(filterParams.get("language") || null);
+    setNumCardsMin(filterParams.get("numCardsMin") || 10);
+    setNumCardsMax(filterParams.get("numCardsMax") || 100);
+  }, [filterParams]);
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -20,6 +33,20 @@ const BrowseDecks = () => {
     };
     fetchDecks();
   }, []);
+
+  const updateFilterParams = (key, value) => {
+    setFilterParams(
+      (filterParams) => {
+        if (value !== null && value !== "") {
+          filterParams.set(key, value);
+        } else {
+          filterParams.delete(key);
+        }
+        return filterParams;
+      },
+      { replace: true }
+    ); // true to avoid history push when updating search params
+  };
 
   return (
     <>
@@ -37,22 +64,29 @@ const BrowseDecks = () => {
       <Form className="mt-20 items-stretch">
         <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
           <Input
-            name="search"
             label="Search Decks"
             type="text"
             radius="full"
             minLength={2}
             maxLength={100}
             endContent={<SearchIcon />}
+            value={search}
+            onChange={(e) => {
+              updateFilterParams("search", e.target.value);
+            }}
           />
-          <div className="flex flex-wrap gap-3 md:flex-nowrap">
+          <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
-              name="language"
               label="Language"
               radius="full"
               /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
               isRequired
+              isClearable
               className="basis-full"
+              selectedKeys={[language]}
+              onChange={(e) => {
+                updateFilterParams("language", e.target.value);
+              }}
             >
               {languages.map((language) => (
                 <SelectItem
@@ -69,15 +103,23 @@ const BrowseDecks = () => {
                 </SelectItem>
               ))}
             </Select>
-            <div className="bg-default-100 flex min-h-13 basis-full items-center rounded-full px-5 shadow-xs">
+            <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
               <Slider
-                defaultValue={[30, 100]}
                 label="Number of Cards"
                 aria-label="Number of Cards"
                 maxValue={300}
                 minValue={0}
                 showTooltip={true}
                 size="sm"
+                value={[numCardsMin, numCardsMax]}
+                onChange={(e) => {
+                  setNumCardsMin(e[0]);
+                  setNumCardsMax(e[1]);
+                }}
+                onChangeEnd={(e) => {
+                  updateFilterParams("numCardsMin", e[0]);
+                  updateFilterParams("numCardsMax", e[1]);
+                }}
               />
             </div>
           </div>
