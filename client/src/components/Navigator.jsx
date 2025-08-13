@@ -41,6 +41,18 @@ export default function Navigator() {
               Library
             </Button>
           </NavbarItem>
+
+          <NavbarItem>
+            <Button
+              as={Link}
+              href="/about"
+              variant="solid"
+              radius="full"
+              className="font-bold"
+            >
+              About
+            </Button>
+          </NavbarItem>
         </NavbarContent>
 
         <NavbarBrand className="flex justify-center" justify="center">
