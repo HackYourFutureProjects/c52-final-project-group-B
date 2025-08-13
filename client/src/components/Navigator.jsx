@@ -8,6 +8,7 @@ import {
   Image,
 } from "@heroui/react";
 import UserAuth from "@/components/UserAuth";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 export default function Navigator() {
   return (
@@ -53,6 +54,7 @@ export default function Navigator() {
         </NavbarBrand>
 
         <NavbarContent justify="end">
+          <ThemeSwitcher />
           <UserAuth />
         </NavbarContent>
       </Navbar>

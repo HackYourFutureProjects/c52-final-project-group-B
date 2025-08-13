@@ -109,7 +109,7 @@ const CreateDeck = () => {
       </div>
 
       <Form className="mt-20 items-stretch" onSubmit={onSubmit}>
-        <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
+        <div className="bg-default-300 flex flex-col gap-3 rounded-[35px] p-8">
           <Input
             name="title"
             label="Enter Deck Title"
@@ -119,8 +119,7 @@ const CreateDeck = () => {
             minLength={2}
             maxLength={100}
             classNames={{
-              inputWrapper:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+              inputWrapper: "px-5",
             }}
           />
           <Textarea
@@ -131,8 +130,7 @@ const CreateDeck = () => {
             minLength={10}
             maxLength={500}
             classNames={{
-              inputWrapper:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 rounded-[25px] px-5",
+              inputWrapper: "rounded-[25px] px-5",
             }}
           />
           <Select
@@ -142,8 +140,7 @@ const CreateDeck = () => {
             /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
             isRequired
             classNames={{
-              trigger:
-                "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+              trigger: "px-5",
             }}
           >
             {languages.map((language) => (
@@ -165,7 +162,7 @@ const CreateDeck = () => {
         <div className="mt-20 flex items-center justify-between">
           <div className="flex flex-col">
             <h3 className="text-xl font-bold">Add cards</h3>
-            <p className="text-gray-500">
+            <p className="text-default-500">
               Below you can add new cards to your deck.
             </p>
           </div>
@@ -183,10 +180,13 @@ const CreateDeck = () => {
                 isIconOnly
                 radius="full"
                 size="lg"
-                className="p-2"
                 onPress={() => setIsPublic(!isPublic)}
               >
-                {isPublic ? <UnlockedIcon /> : <LockedIcon />}
+                {isPublic ? (
+                  <UnlockedIcon size={30} />
+                ) : (
+                  <LockedIcon size={30} />
+                )}
               </Button>
             </Tooltip>
 
@@ -198,13 +198,7 @@ const CreateDeck = () => {
                 closeDelay={0}
                 radius="full"
               >
-                <Button
-                  isIconOnly
-                  radius="full"
-                  size="lg"
-                  className="p-3"
-                  onPress={() => {}}
-                >
+                <Button isIconOnly radius="full" size="lg" onPress={() => {}}>
                   <DeleteIcon />
                 </Button>
               </Tooltip>
@@ -216,7 +210,7 @@ const CreateDeck = () => {
           {cards.map((card, index) => (
             <div
               key={card.id}
-              className="bg-default-200 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
+              className="bg-default-300 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
             >
               <div className="ml-2 text-xl font-bold">{index + 1}.</div>
               <Divider orientation="vertical" className="h-10 w-[2px]" />
@@ -233,8 +227,7 @@ const CreateDeck = () => {
                 minLength={2}
                 maxLength={100}
                 classNames={{
-                  inputWrapper:
-                    "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+                  inputWrapper: "px-5",
                 }}
               />
               <Divider orientation="vertical" className="h-10 w-[2px]" />
@@ -249,8 +242,7 @@ const CreateDeck = () => {
                 minLength={2}
                 maxLength={100}
                 classNames={{
-                  inputWrapper:
-                    "bg-white data-[hover=true]:bg-default-100 data-[focus=true]:bg-default-100 px-5",
+                  inputWrapper: "px-5",
                 }}
               />
               <Divider orientation="vertical" className="h-10 w-[2px]" />
@@ -265,7 +257,6 @@ const CreateDeck = () => {
                   isIconOnly
                   radius="full"
                   size="lg"
-                  className="p-3"
                   onPress={() => removeCard(card.id)}
                 >
                   <DeleteIcon />
@@ -274,7 +265,7 @@ const CreateDeck = () => {
             </div>
           ))}
 
-          <div className="border-default-600 flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
+          <div className="border-default flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
             <Tooltip
               content="Add a new card"
               showArrow={true}
@@ -286,10 +277,9 @@ const CreateDeck = () => {
                 isIconOnly
                 radius="full"
                 size="lg"
-                className="p-3"
                 onPress={() => addCard()}
               >
-                <AddIcon />
+                <AddIcon size={24} />
               </Button>
             </Tooltip>
           </div>
