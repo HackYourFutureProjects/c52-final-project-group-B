@@ -59,7 +59,7 @@ const BrowseDecks = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Browser Decks`, path: `/browse` },
+            { label: `Browse Decks`, path: `/browse` },
           ]}
         >
           Browse Decks
