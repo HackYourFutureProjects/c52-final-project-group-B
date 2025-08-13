@@ -1,4 +1,4 @@
-import { Navbar, NavbarBrand, NavbarContent, Link } from "@heroui/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Link } from "@heroui/react";
 import UserAuth from "@/components/UserAuth";
 import { MemixLogoIcon } from "@/components/Icons";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -17,6 +17,20 @@ export default function Navigator() {
             <MemixLogoIcon size={120} />
           </Link>
         </NavbarBrand>
+
+        <NavbarContent justify="center">
+          <NavbarItem>
+            <Button
+              as={Link}
+              href="/about"
+              variant="solid"
+              radius="full"
+              className="font-bold"
+            >
+              About
+            </Button>
+          </NavbarItem>
+        </NavbarContent>
 
         <NavbarContent justify="end">
           <ThemeSwitcher />
