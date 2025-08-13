@@ -5,6 +5,7 @@ import CreateDeck from "@/pages/CreateDeck";
 import CardMode from "@/pages/CardMode";
 import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
+import BrowseDecks from "@/pages/BrowseDecks";
 
 const App = () => {
   return (
@@ -18,6 +19,8 @@ const App = () => {
       <Route path="/deck/create" element={<CreateDeck />} />
       <Route path="/deck/edit/:id" element={<CreateDeck />} />
       <Route path="/deck/:id/card-mode" element={<CardMode />} />
+
+      <Route path="/browse" element={<BrowseDecks />} />
 
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
