@@ -1,13 +1,6 @@
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Button,
-  Image,
-} from "@heroui/react";
+import { Navbar, NavbarBrand, NavbarContent, Link } from "@heroui/react";
 import UserAuth from "@/components/UserAuth";
+import { MemixLogoIcon } from "@/components/Icons";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 export default function Navigator() {
@@ -15,41 +8,13 @@ export default function Navigator() {
     <>
       <Navbar
         classNames={{
-          base: "rounded-full container mx-auto mt-8 top-8 px-1 bg-default-300/70",
+          base: "rounded-full container mx-auto mt-8 top-8 bg-default-300/40",
         }}
         maxWidth="full"
       >
-        <NavbarContent className="hidden gap-4 sm:flex" justify="start">
-          <NavbarItem>
-            <Button
-              as={Link}
-              href="/"
-              variant="solid"
-              radius="full"
-              className="font-bold"
-            >
-              Home
-            </Button>
-          </NavbarItem>
-          <NavbarItem>
-            <Button
-              as={Link}
-              href="#"
-              variant="solid"
-              radius="full"
-              className="font-bold"
-            >
-              Library
-            </Button>
-          </NavbarItem>
-        </NavbarContent>
-
-        <NavbarBrand className="flex justify-center" justify="center">
-          <Link
-            className="bg-default cursor-pointer rounded-full px-5 py-2"
-            href="/"
-          >
-            <Image alt="Memix Logo" src="/memix-logo.svg" width={100}></Image>
+        <NavbarBrand justify="start">
+          <Link className="text-default-foreground" href="/">
+            <MemixLogoIcon size={120} />
           </Link>
         </NavbarBrand>
 
