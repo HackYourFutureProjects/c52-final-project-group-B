@@ -10,17 +10,13 @@ import { SearchIcon } from "@/components/Icons";
 const BrowseDecks = () => {
   const [decks, setDecks] = useState(null);
   const [filterParams, setFilterParams] = useSearchParams();
-  const [search, setSearch] = useState();
-  const [language, setLanguage] = useState();
-  const [numCardsMin, setNumCardsMin] = useState(10);
-  const [numCardsMax, setNumCardsMax] = useState(100);
 
-  useEffect(() => {
-    setSearch(filterParams.get("search") || "");
-    setLanguage(filterParams.get("language") || null);
-    setNumCardsMin(filterParams.get("numCardsMin") || 10);
-    setNumCardsMax(filterParams.get("numCardsMax") || 100);
-  }, [filterParams]);
+  const search = filterParams.get("search") || "";
+  const language = filterParams.get("language") || "";
+  const numCardsMin = filterParams.get("numCardsMin") || "10";
+  const numCardsMax = filterParams.get("numCardsMax") || "100";
+  const decksPerPage = filterParams.get("decksPerPage") || "20";
+  const sortBy = filterParams.get("sortBy") || "most_recent";
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -32,7 +28,7 @@ const BrowseDecks = () => {
       }
     };
     fetchDecks();
-  }, []);
+  }, [filterParams]);
 
   const updateFilterParams = (key, value) => {
     setFilterParams(
@@ -44,8 +40,8 @@ const BrowseDecks = () => {
         }
         return filterParams;
       },
-      { replace: true }
-    ); // true to avoid history push when updating search params
+      { replace: true } // true is set to avoid history update when changing filter params
+    );
   };
 
   return (
@@ -80,7 +76,6 @@ const BrowseDecks = () => {
               label="Language"
               radius="full"
               /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
-              isRequired
               isClearable
               className="basis-full"
               selectedKeys={[language]}
@@ -111,11 +106,7 @@ const BrowseDecks = () => {
                 minValue={0}
                 showTooltip={true}
                 size="sm"
-                value={[numCardsMin, numCardsMax]}
-                onChange={(e) => {
-                  setNumCardsMin(e[0]);
-                  setNumCardsMax(e[1]);
-                }}
+                defaultValue={[numCardsMin, numCardsMax]}
                 onChangeEnd={(e) => {
                   updateFilterParams("numCardsMin", e[0]);
                   updateFilterParams("numCardsMax", e[1]);
@@ -139,7 +130,11 @@ const BrowseDecks = () => {
           <Select
             label="Sort By"
             radius="full"
-            defaultSelectedKeys={["most_recent"]}
+            disallowEmptySelection
+            defaultSelectedKeys={[sortBy]}
+            onChange={(e) => {
+              updateFilterParams("sortBy", e.target.value);
+            }}
           >
             <SelectItem key={"most_recent"}>Most Recent</SelectItem>
             <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
@@ -151,7 +146,11 @@ const BrowseDecks = () => {
           <Select
             label="Decks per Page"
             radius="full"
-            defaultSelectedKeys={["20"]}
+            disallowEmptySelection
+            defaultSelectedKeys={[decksPerPage]}
+            onChange={(e) => {
+              updateFilterParams("decksPerPage", e.target.value);
+            }}
           >
             <SelectItem key={"5"}>5</SelectItem>
             <SelectItem key={"10"}>10</SelectItem>
