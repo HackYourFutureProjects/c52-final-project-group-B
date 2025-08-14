@@ -9,6 +9,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../util/authUtils.js";
+import resetPasswordEmailTemplate from "../emails/resetPasswordEmailTemplate.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 
@@ -168,7 +169,7 @@ class UserService {
         from: `"Memix" <${process.env.GOOGLE_EMAIL}>`,
         to: email,
         subject: "[Memix] Password Reset Request",
-        html: `Hi ${emailExists.username},<br><br>Someone recently requested a password change for your Memix account. If this was you, you can set a new password here:<br><br>Reset password: <br><a href="${resetUrl}">${resetUrl}</a><br><br> If you don't want to change your password or didn't request this, just ignore and delete this message.<br><br>Thanks,<br>Memix Team`,
+        html: resetPasswordEmailTemplate(emailExists.username, resetUrl),
       });
 
       return { message: "Password reset email sent successfully" };

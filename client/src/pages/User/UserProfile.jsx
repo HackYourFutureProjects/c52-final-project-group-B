@@ -131,40 +131,42 @@ const UserProfile = () => {
             <div className="space-y-4">
               <Input
                 name="username"
-                label="Username"
+                label="Displayed name"
                 variant="flat"
+                radius="full"
                 value={form.username}
                 onChange={onChange}
-                className="rounded-[20px]"
               />
               <Input
                 name="email"
                 label="Email"
                 variant="flat"
+                radius="full"
                 value={form.email}
                 onChange={onChange}
-                className="rounded-[20px]"
               />
               <Input
                 name="profilePictureUrl"
                 label="Profile Picture URL"
                 variant="flat"
+                radius="full"
                 value={form.profilePictureUrl}
                 onChange={onChange}
-                className="rounded-[20px]"
               />
               <div className="mt-4 flex justify-end gap-3">
                 <Button
-                  className="rounded-[20px] font-semibold text-white"
-                  style={{ backgroundColor: "#a8ca0b" }}
+                  className="font-semibold"
+                  color="primary"
+                  radius="full"
                   onPress={onSave}
                 >
                   Save
                 </Button>
                 <Button
-                  className="rounded-[20px] font-semibold text-white"
-                  style={{ backgroundColor: "#a8ca0b" }}
+                  className="font-semibold"
+                  color="secondary"
                   variant="flat"
+                  radius="full"
                   onPress={() => {
                     setIsEditing(false);
                     setForm({
@@ -181,8 +183,9 @@ const UserProfile = () => {
           ) : (
             <div className="mt-4 text-center">
               <Button
-                className="rounded-[20px] px-6 font-semibold text-white"
-                style={{ backgroundColor: "#a8ca0b" }}
+                className="px-6 font-semibold"
+                radius="full"
+                color="primary"
                 onPress={() => setIsEditing(true)}
               >
                 Edit Profile

@@ -15,9 +15,9 @@ const UserCard = ({ user }) => {
         className="mx-auto mb-5 h-24 w-24 rounded-full object-cover"
       />
       <h2 className="text-2xl font-black">{user.username}</h2>
-      <p className="mt-2 text-sm text-black">{user.email}</p>
+      <p className="mt-2 text-sm">{user.email}</p>
       {user.createdAt && (
-        <p className="mt-2 text-sm text-black">
+        <p className="mt-2 text-sm">
           Registered: {new Date(user.createdAt).toLocaleDateString()}
         </p>
       )}
