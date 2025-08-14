@@ -129,7 +129,7 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
             <Button
               color="default"
               radius="full"
-              type="submit"
+              type="button"
               className="w-full"
               onPress={() => {
                 setIsLoginOpen(false);
