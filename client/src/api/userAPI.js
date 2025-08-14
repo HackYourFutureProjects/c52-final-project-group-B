@@ -38,3 +38,7 @@ export const verifyResetToken = async (token) => {
 export const resetPassword = async (body) => {
   return apiRequest(`/users/reset-password`, "POST", body);
 };
+
+export const sendProblemReport = async (reportData) => {
+  return apiRequest(`/users/report-problem`, "POST", reportData, true);
+};

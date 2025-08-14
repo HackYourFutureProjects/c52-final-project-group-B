@@ -62,3 +62,10 @@ export const resetPasswordSchema = z.object({
     .min(8, "New password must be at least 8 characters")
     .max(255, "New password is too long"),
 });
+
+export const reportProblemEmailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  subject: z.string(),
+  description: z.string(),
+  location: z.string(),
+});

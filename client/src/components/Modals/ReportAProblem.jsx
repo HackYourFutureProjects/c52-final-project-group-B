@@ -9,35 +9,41 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Textarea,
 } from "@heroui/react";
-import { requestPasswordReset } from "@/api/userAPI";
+import { sendProblemReport } from "@/api/userAPI";
 import { MailIcon } from "@/components/Icons";
+import { MdOutlineMessage } from "react-icons/md";
 
-const ResetPasswordModal = ({
-  isResetPasswordOpen,
-  setIsResetPasswordOpen,
+const ReportAProblemModal = ({
+  isReportAProblemOpen,
+  setIsReportAProblemOpen,
+  location,
 }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
-      await requestPasswordReset({
+      await sendProblemReport({
         email: data.email,
+        subject: data.subject,
+        description: data.description,
+        location: location,
       });
 
-      setIsResetPasswordOpen(false);
+      setIsReportAProblemOpen(false);
 
       addToast({
         title: "Success",
-        description: "Password reset email sent successfully!",
+        description: "Problem report sent successfully!",
         color: "success",
         radius: "full",
       });
     } catch (error) {
       addToast({
         title: "Error",
-        description: error.message || "Failed to reset password",
+        description: error.message || "Failed to send report",
         color: "danger",
         radius: "full",
       });
@@ -47,7 +53,7 @@ const ResetPasswordModal = ({
   return (
     <Modal
       backdrop="blur"
-      isOpen={isResetPasswordOpen}
+      isOpen={isReportAProblemOpen}
       isDismissable={false}
       isKeyboardDismissDisabled={true}
       motionProps={{
@@ -71,18 +77,32 @@ const ResetPasswordModal = ({
         },
       }}
       placement="center"
-      onOpenChange={setIsResetPasswordOpen}
+      onOpenChange={setIsReportAProblemOpen}
       classNames={{ base: "rounded-[35px] pt-1", closeButton: "m-3" }}
     >
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
           <ModalHeader className="flex flex-col gap-1">
-            Reset Password
-            <p className="text-default-800 text-sm">
-              Please enter your email address to reset your password.
-            </p>
+            Report A Problem
+            <p className="text-default-800 text-sm"></p>
           </ModalHeader>
           <ModalBody>
+            <Input
+              isRequired
+              color="primary"
+              radius="full"
+              variant="bordered"
+              endContent={
+                <MdOutlineMessage
+                  size={24}
+                  className="text-default pointer-events-none"
+                />
+              }
+              label="Subject"
+              name="subject"
+              placeholder="Enter the subject"
+              type="text"
+            />
             <Input
               isRequired
               color="primary"
@@ -96,6 +116,17 @@ const ResetPasswordModal = ({
               placeholder="Enter your email"
               type="email"
             />
+            <Textarea
+              isRequired
+              color="primary"
+              variant="bordered"
+              label="Description"
+              name="description"
+              placeholder="Describe the problem you encountered"
+              classNames={{
+                inputWrapper: "rounded-[25px]",
+              }}
+            />
           </ModalBody>
           <ModalFooter>
             <Button
@@ -104,7 +135,7 @@ const ResetPasswordModal = ({
               type="submit"
               className="w-full"
             >
-              Reset Password
+              Submit Report
             </Button>
           </ModalFooter>
         </Form>
@@ -113,9 +144,10 @@ const ResetPasswordModal = ({
   );
 };
 
-ResetPasswordModal.propTypes = {
-  isResetPasswordOpen: PropTypes.bool.isRequired,
-  setIsResetPasswordOpen: PropTypes.func.isRequired,
+ReportAProblemModal.propTypes = {
+  isReportAProblemOpen: PropTypes.bool.isRequired,
+  setIsReportAProblemOpen: PropTypes.func.isRequired,
+  location: PropTypes.string.isRequired,
 };
 
-export default ResetPasswordModal;
+export default ReportAProblemModal;

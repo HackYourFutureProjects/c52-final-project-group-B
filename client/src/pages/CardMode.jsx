@@ -6,8 +6,9 @@ import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
 import { Button, addToast } from "@heroui/react";
-import { WrongIcon, CorrectIcon } from "@/components/Icons";
+import { WrongIcon, CorrectIcon, FlagIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
+import ReportAProblemModal from "@/components/Modals/ReportAProblem";
 
 const CardMode = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -17,6 +18,7 @@ const CardMode = () => {
   const [cards, setCards] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [progress, setProgress] = useState([]);
+  const [isReportAProblemOpen, setIsReportAProblemOpen] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -152,7 +154,7 @@ const CardMode = () => {
         cards &&
         cards[currentCardIndex] && (
           <>
-            <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
+            <div className="mt-4 flex flex-wrap items-center justify-evenly gap-4">
               <DecksCard
                 key={cards[currentCardIndex]._id}
                 front={cards[currentCardIndex].question}
@@ -185,6 +187,24 @@ const CardMode = () => {
                 <CorrectIcon />
               </Button>
             </div>
+            <div className="mt-10 text-center">
+              <p className="text-default-800 mb-2">
+                If you encounter any issues with this deck, please report it.
+              </p>
+              <Button
+                startContent={<FlagIcon />}
+                radius="full"
+                size="sm"
+                onPress={() => setIsReportAProblemOpen(true)}
+              >
+                Report a problem
+              </Button>
+            </div>
+            <ReportAProblemModal
+              isReportAProblemOpen={isReportAProblemOpen}
+              setIsReportAProblemOpen={setIsReportAProblemOpen}
+              location={window.location.href}
+            />
           </>
         )
       )}

@@ -10,6 +10,7 @@ import {
   verifyRefreshToken,
 } from "../util/authUtils.js";
 import resetPasswordEmailTemplate from "../emails/resetPasswordEmailTemplate.js";
+import reportProblemEmailTemplate from "../emails/reportProblemEmailTemplate.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 
@@ -213,6 +214,32 @@ class UserService {
     await user.save();
 
     return { message: "Password has been reset successfully" };
+  }
+
+  async reportProblemEmail(email, subject, description, location) {
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.GOOGLE_EMAIL,
+          pass: process.env.GOOGLE_APP_PASSWORD,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"Memix" <${process.env.GOOGLE_EMAIL}>`,
+        to: process.env.GOOGLE_EMAIL,
+        subject: "[Memix] Problem Report",
+        html: reportProblemEmailTemplate(email, subject, description, location),
+      });
+
+      return { message: "Problem report email sent successfully" };
+    } catch (error) {
+      createAndThrowError(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        "Failed to send email",
+      );
+    }
   }
 }
 export default UserService;

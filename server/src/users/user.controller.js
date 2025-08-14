@@ -9,6 +9,7 @@ import {
   forgetPasswordEmailSchema,
   verifyResetTokenSchema,
   resetPasswordSchema,
+  reportProblemEmailSchema,
 } from "./user.schema.js";
 
 const userService = new UserService();
@@ -89,5 +90,21 @@ export const verifyResetToken = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = resetPasswordSchema.parse(req.body);
   const result = await userService.resetPassword(token, newPassword);
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const reportProblemEmail = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { email, subject, description, location } =
+    reportProblemEmailSchema.parse(req.body);
+  const result = await userService.reportProblemEmail(
+    email,
+    subject,
+    description,
+    location,
+  );
   res.status(HTTP_STATUS.OK).json(result);
 };
