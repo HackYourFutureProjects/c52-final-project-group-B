@@ -27,7 +27,7 @@ const apiRequest = async (
     const response = await fetch(`/api${endpoint}`, options);
 
     // if token is expired, refresh it and retry the request
-    if (response.status === 400 || response.status === 401) {
+    if (response.status === 401) {
       const newTokens = await refreshAccessToken(user?.refreshToken);
 
       if (newTokens) {

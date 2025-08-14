@@ -143,7 +143,8 @@ const reportProblemEmailTemplate = (problemType, moreInfo, source) => {
                                                   ${source.deckId}<br />
                                                   <strong style="color: #a9b941">
                                                     Card ID:
-                                                  </strong>${source.cardId}
+                                                  </strong>
+                                                  ${source.cardId}
                                                 </p>
                                                 <p
                                                   style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"

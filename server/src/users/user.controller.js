@@ -94,10 +94,6 @@ export const resetPassword = async (req, res) => {
 };
 
 export const reportProblemEmail = async (req, res) => {
-  if (!req.user) {
-    return res.status(HTTP_STATUS.UNAUTHORIZED).json({ error: "Unauthorized" });
-  }
-
   const { problemType, moreInfo, source } = reportProblemEmailSchema.parse(
     req.body,
   );
