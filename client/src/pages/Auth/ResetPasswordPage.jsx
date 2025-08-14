@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { addToast, Button, Input, Spinner } from "@heroui/react";
+import { addToast, Button, Input, Spinner, Form } from "@heroui/react";
 import Title from "@/components/Title";
 import { resetPassword, verifyResetToken } from "@/api/userAPI";
+import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -30,10 +31,10 @@ const ResetPasswordPage = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (password.length < 8) {
+    if (password.length < PASSWORD_MIN_LENGTH) {
       addToast({
         title: "Error",
-        description: "Password must be at least 8 characters",
+        description: `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
         color: "danger",
         radius: "full",
       });
@@ -90,7 +91,7 @@ const ResetPasswordPage = () => {
   return (
     <div className="mx-auto max-w-md p-4">
       <Title>Set a new password</Title>
-      <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+      <Form className="mt-6 space-y-4" onSubmit={onSubmit}>
         <Input
           isRequired
           label="New Password"
@@ -112,7 +113,7 @@ const ResetPasswordPage = () => {
         <Button color="primary" radius="full" type="submit" className="w-full">
           Update Password
         </Button>
-      </form>
+      </Form>
     </div>
   );
 };

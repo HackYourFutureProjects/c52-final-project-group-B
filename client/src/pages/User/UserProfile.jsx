@@ -5,6 +5,7 @@ import Title from "@/components/Title";
 import UserCard from "@/components/UserCard";
 import { getUserById, updateCurrentUser } from "@/api/userAPI";
 import apiRequest from "@/api/index";
+import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const UserProfile = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -59,12 +60,11 @@ const UserProfile = () => {
     try {
       if (
         !passwordForm.currentPassword ||
-        passwordForm.newPassword.length < 8
+        passwordForm.newPassword.length < PASSWORD_MIN_LENGTH
       ) {
         addToast({
           title: "Error",
-          description:
-            "Please enter your current password and a new password (min 8 characters).",
+          description: `Please enter your current password and a new password (min ${PASSWORD_MIN_LENGTH} characters).`,
           color: "danger",
           radius: "full",
         });
