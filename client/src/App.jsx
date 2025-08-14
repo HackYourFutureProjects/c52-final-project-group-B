@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home/Home";
 import About from "@/pages/About";
+import FAQ from "@/pages/FAQ";
 import Terms from "@/pages/Terms";
 import DeckPage from "@/pages/DeckPage";
 import CreateDeck from "@/pages/CreateDeck";
@@ -25,6 +26,7 @@ const App = () => {
       <Route path="/deck/create" element={<CreateDeck />} />
       <Route path="/deck/edit/:id" element={<CreateDeck />} />
       <Route path="/deck/:id/card-mode" element={<CardMode />} />
+      <Route path="/faq" element={<FAQ />} />
 
       <Route path="/browse" element={<BrowseDecks />} />
 
