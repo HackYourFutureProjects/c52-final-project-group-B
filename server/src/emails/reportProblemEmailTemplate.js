@@ -1,4 +1,4 @@
-const reportProblemEmailTemplate = (email, subject, description, location) => {
+const reportProblemEmailTemplate = (problemType, moreInfo, source) => {
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html dir="ltr" lang="en">
@@ -134,34 +134,37 @@ const reportProblemEmailTemplate = (email, subject, description, location) => {
                                                   style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
                                                 >
                                                   <strong style="color: #a9b941">
-                                                    Report Submitted from:
+                                                    Deck Title:
                                                   </strong>
-                                                  <a href="${location}" target="_blank">${location}</a>
+                                                   <a href="https://c52b.hyf.dev/deck/${source.deckId}" target="_blank">${source.deckTitle}</a><br />
+                                                  <strong style="color: #a9b941">
+                                                    Deck ID:
+                                                  </strong>
+                                                  ${source.deckId}<br />
+                                                  <strong style="color: #a9b941">
+                                                    Card ID:
+                                                  </strong>${source.cardId}
                                                 </p>
                                                 <p
                                                   style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
                                                 >
                                                   <strong style="color: #a9b941">
-                                                    User Email:
+                                                    Report Type:
                                                   </strong>
-                                                  <a href="mailto:${email}" target="_blank">${email}</a>
+                                                  ${problemType}
                                                 </p>
-                                                <p
+                                                ${
+                                                  moreInfo &&
+                                                  `<p
                                                   style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
                                                 >
                                                   <strong style="color: #a9b941">
-                                                    Subject:
+                                                    More Information:
                                                   </strong>
-                                                  ${subject}
+                                                  ${moreInfo}
                                                 </p>
-                                                <p
-                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
-                                                >
-                                                  <strong style="color: #a9b941">
-                                                    Description:
-                                                  </strong>
-                                                  ${description}
-                                                </p>
+                                                `
+                                                }
                                               </td>
                                             </tr>
                                           </tbody>

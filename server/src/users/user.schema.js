@@ -64,8 +64,11 @@ export const resetPasswordSchema = z.object({
 });
 
 export const reportProblemEmailSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  subject: z.string(),
-  description: z.string(),
-  location: z.string(),
+  problemType: z.string(),
+  moreInfo: z.string().optional(),
+  source: z.object({
+    deckId: z.string(),
+    deckTitle: z.string(),
+    cardId: z.string(),
+  }),
 });

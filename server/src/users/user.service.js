@@ -216,7 +216,7 @@ class UserService {
     return { message: "Password has been reset successfully" };
   }
 
-  async reportProblemEmail(email, subject, description, location) {
+  async reportProblemEmail(problemType, moreInfo, source) {
     try {
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -230,7 +230,7 @@ class UserService {
         from: `"Memix" <${process.env.GOOGLE_EMAIL}>`,
         to: process.env.GOOGLE_EMAIL,
         subject: "[Memix] Problem Report",
-        html: reportProblemEmailTemplate(email, subject, description, location),
+        html: reportProblemEmailTemplate(problemType, moreInfo, source),
       });
 
       return { message: "Problem report email sent successfully" };

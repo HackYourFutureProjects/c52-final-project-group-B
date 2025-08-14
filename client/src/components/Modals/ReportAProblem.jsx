@@ -9,16 +9,15 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Textarea,
+  Select,
+  SelectItem,
 } from "@heroui/react";
 import { sendProblemReport } from "@/api/userAPI";
-import { MailIcon } from "@/components/Icons";
-import { MdOutlineMessage } from "react-icons/md";
 
 const ReportAProblemModal = ({
   isReportAProblemOpen,
   setIsReportAProblemOpen,
-  location,
+  sourceDetails,
 }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,10 +25,9 @@ const ReportAProblemModal = ({
 
     try {
       await sendProblemReport({
-        email: data.email,
-        subject: data.subject,
-        description: data.description,
-        location: location,
+        problemType: data.problemType,
+        moreInfo: data.moreInfo,
+        source: sourceDetails,
       });
 
       setIsReportAProblemOpen(false);
@@ -87,45 +85,29 @@ const ReportAProblemModal = ({
             <p className="text-default-800 text-sm"></p>
           </ModalHeader>
           <ModalBody>
-            <Input
+            <Select
               isRequired
+              disallowEmptySelection
               color="primary"
               radius="full"
               variant="bordered"
-              endContent={
-                <MdOutlineMessage
-                  size={24}
-                  className="text-default pointer-events-none"
-                />
-              }
-              label="Subject"
-              name="subject"
-              placeholder="Enter the subject"
+              label="Problem Type"
+              placeholder="Select the problem type"
+              name="problemType"
+            >
+              <SelectItem key={"Spelling Mistake"}>Spelling Mistake</SelectItem>
+              <SelectItem key={"Incorrect Answer"}>Incorrect Answer</SelectItem>
+              <SelectItem key={"Blank Card"}>Blank Card</SelectItem>
+              <SelectItem key={"Other Issue"}>Other Issue</SelectItem>
+            </Select>
+            <Input
+              color="primary"
+              radius="full"
+              variant="bordered"
+              label="Additional Information"
+              name="moreInfo"
+              placeholder="Enter any additional information"
               type="text"
-            />
-            <Input
-              isRequired
-              color="primary"
-              radius="full"
-              variant="bordered"
-              endContent={
-                <MailIcon className="text-default pointer-events-none" />
-              }
-              label="Email"
-              name="email"
-              placeholder="Enter your email"
-              type="email"
-            />
-            <Textarea
-              isRequired
-              color="primary"
-              variant="bordered"
-              label="Description"
-              name="description"
-              placeholder="Describe the problem you encountered"
-              classNames={{
-                inputWrapper: "rounded-[25px]",
-              }}
             />
           </ModalBody>
           <ModalFooter>
@@ -147,7 +129,11 @@ const ReportAProblemModal = ({
 ReportAProblemModal.propTypes = {
   isReportAProblemOpen: PropTypes.bool.isRequired,
   setIsReportAProblemOpen: PropTypes.func.isRequired,
-  location: PropTypes.string.isRequired,
+  sourceDetails: PropTypes.shape({
+    deckId: PropTypes.string.isRequired,
+    deckTitle: PropTypes.string.isRequired,
+    cardId: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ReportAProblemModal;

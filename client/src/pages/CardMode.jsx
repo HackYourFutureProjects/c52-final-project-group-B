@@ -203,7 +203,11 @@ const CardMode = () => {
             <ReportAProblemModal
               isReportAProblemOpen={isReportAProblemOpen}
               setIsReportAProblemOpen={setIsReportAProblemOpen}
-              location={window.location.href}
+              sourceDetails={{
+                deckId: deck._id,
+                deckTitle: deck.title,
+                cardId: cards[currentCardIndex]._id,
+              }}
             />
           </>
         )
