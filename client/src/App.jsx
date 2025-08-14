@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home/Home";
 import About from "@/pages/About";
-import Terms from "@/pages/Legal/Terms";
+import Terms from "@/pages/Terms";
 import DeckPage from "@/pages/DeckPage";
 import CreateDeck from "@/pages/CreateDeck";
 import CardMode from "@/pages/CardMode";

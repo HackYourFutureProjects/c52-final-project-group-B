@@ -1,8 +1,9 @@
+// client/src/pages/Legal/Terms.jsx
 import { Link, Card } from "@heroui/react";
 
 const Terms = () => {
   return (
-    <main className="mx-auto max-w-4xl space-y-8 px-4 py-10">
+    <div className="mx-auto max-w-4xl space-y-8 px-4 py-10">
       <header className="space-y-2 text-center">
         <h1 className="text-3xl font-extrabold">Terms of Use</h1>
         <p className="text-foreground-500">Last updated: August 13, 2025</p>
@@ -198,7 +199,7 @@ const Terms = () => {
           </p>
         </section>
       </Card>
-    </main>
+    </div>
   );
 };
 

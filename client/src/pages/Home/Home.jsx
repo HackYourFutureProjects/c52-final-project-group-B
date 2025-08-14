@@ -25,26 +25,28 @@ const Home = () => {
   }, []);
   const activeUsers = useJitterNumber({
     start: 1573,
-    min: 1200,
-    max: 3500,
-    interval: 1800,
-    jitter: 18,
+    min: 1500,
+    max: 1850,
+    interval: 6000, // реже обновляем (медленнее)
+    jitter: 3, // меньший шаг
     persistKey: "stats_active",
   });
+
   const decksCreated = useJitterNumber({
     start: 13238,
     min: 11000,
     max: 25000,
-    interval: 1600,
-    jitter: 40,
+    interval: 5500,
+    jitter: 5,
     persistKey: "stats_decks",
   });
+
   const cardsLearned = useJitterNumber({
     start: 57872,
     min: 50000,
     max: 120000,
-    interval: 1400,
-    jitter: 80,
+    interval: 5200,
+    jitter: 7,
     persistKey: "stats_cards",
   });
 
