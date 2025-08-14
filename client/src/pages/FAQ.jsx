@@ -3,7 +3,7 @@ import Title from "@/components/Title";
 
 export default function FAQ() {
   return (
-    <div id="faq" className="space-y-12">
+    <div className="space-y-12">
       <div className="text-center">
         <Title
           breadcrumbs={[
