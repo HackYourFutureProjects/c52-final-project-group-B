@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
-import { Button, Input } from "@heroui/react";
+import { Button, Input, addToast } from "@heroui/react";
 import Title from "@/components/Title";
 import UserCard from "@/components/UserCard";
 import { getUserById, updateCurrentUser } from "@/api/userAPI";
+import apiRequest from "@/api/index";
+import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const UserProfile = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -15,6 +17,10 @@ const UserProfile = () => {
     username: "",
     email: "",
     profilePictureUrl: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
   });
 
   useEffect(() => {
@@ -47,6 +53,43 @@ const UserProfile = () => {
       setIsEditing(false);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const onPasswordChange = async () => {
+    try {
+      if (
+        !passwordForm.currentPassword ||
+        passwordForm.newPassword.length < PASSWORD_MIN_LENGTH
+      ) {
+        addToast({
+          title: "Error",
+          description: `Please enter your current password and a new password (min ${PASSWORD_MIN_LENGTH} characters).`,
+          color: "danger",
+          radius: "full",
+        });
+        return;
+      }
+      await apiRequest(
+        `/users/${userInfo._id || userInfo.id}/password`,
+        "PUT",
+        passwordForm,
+        true
+      );
+      addToast({
+        title: "Success",
+        description: "Password updated successfully",
+        color: "success",
+        radius: "full",
+      });
+      setPasswordForm({ currentPassword: "", newPassword: "" });
+    } catch (e) {
+      addToast({
+        title: "Error",
+        description: e?.message || "Failed to update password",
+        color: "danger",
+        radius: "full",
+      });
     }
   };
 
@@ -149,6 +192,44 @@ const UserProfile = () => {
               </Button>
             </div>
           )}
+        </div>
+
+        <div className="mt-12">
+          <h3 className="mb-4 text-lg font-bold">Change Password</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Input
+              label="Current Password"
+              type="password"
+              variant="flat"
+              value={passwordForm.currentPassword}
+              onChange={(e) =>
+                setPasswordForm((p) => ({
+                  ...p,
+                  currentPassword: e.target.value,
+                }))
+              }
+              className="rounded-[20px]"
+            />
+            <Input
+              label="New Password"
+              type="password"
+              variant="flat"
+              value={passwordForm.newPassword}
+              onChange={(e) =>
+                setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))
+              }
+              className="rounded-[20px]"
+            />
+          </div>
+          <div className="mt-4 text-right">
+            <Button
+              className="rounded-[20px] font-semibold text-white"
+              style={{ backgroundColor: "#a8ca0b" }}
+              onPress={onPasswordChange}
+            >
+              Update Password
+            </Button>
+          </div>
         </div>
       </div>
     </>

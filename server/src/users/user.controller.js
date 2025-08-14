@@ -7,6 +7,8 @@ import {
   loginUserSchema,
   updatePasswordSchema,
   forgetPasswordEmailSchema,
+  verifyResetTokenSchema,
+  resetPasswordSchema,
 } from "./user.schema.js";
 
 const userService = new UserService();
@@ -75,5 +77,17 @@ export const changePassword = async (req, res) => {
 export const forgetPasswordEmail = async (req, res) => {
   const { email } = forgetPasswordEmailSchema.parse(req.body);
   const result = await userService.forgetPasswordEmail(email);
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const verifyResetToken = async (req, res) => {
+  const { token } = verifyResetTokenSchema.parse(req.query);
+  const result = await userService.verifyResetToken(token);
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = resetPasswordSchema.parse(req.body);
+  const result = await userService.resetPassword(token, newPassword);
   res.status(HTTP_STATUS.OK).json(result);
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useJitterNumber from "@/hooks/useJitterNumber";
 import TEST_ID from "./Home.testid";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/react";
@@ -22,6 +23,32 @@ const Home = () => {
     };
     fetchDecks();
   }, []);
+  const activeUsers = useJitterNumber({
+    start: 1573,
+    min: 1500,
+    max: 1850,
+    interval: 6000, // реже обновляем (медленнее)
+    jitter: 3, // меньший шаг
+    persistKey: "stats_active",
+  });
+
+  const decksCreated = useJitterNumber({
+    start: 13238,
+    min: 11000,
+    max: 25000,
+    interval: 5500,
+    jitter: 5,
+    persistKey: "stats_decks",
+  });
+
+  const cardsLearned = useJitterNumber({
+    start: 57872,
+    min: 50000,
+    max: 120000,
+    interval: 5200,
+    jitter: 7,
+    persistKey: "stats_cards",
+  });
 
   return (
     <>
@@ -115,17 +142,23 @@ const Home = () => {
         </p>
       </div>
 
-      <div className="mt-3 flex flex-row items-stretch justify-center gap-3 text-center">
-        <div className="bg-default-300 flex-1 rounded-[35px] p-8">
-          <h3 className="text-3xl font-black">1,573</h3>
+      <div className="mt-3 grid grid-cols-1 gap-3 text-center md:grid-cols-3">
+        <div className="bg-default-300 rounded-[35px] p-8">
+          <h3 className="text-3xl font-black">
+            {activeUsers.toLocaleString()}
+          </h3>
           <p>Active User</p>
         </div>
-        <div className="bg-default-300 flex-1 rounded-[35px] p-8">
-          <h3 className="text-3xl font-black">13,238</h3>
+        <div className="bg-default-300 rounded-[35px] p-8">
+          <h3 className="text-3xl font-black">
+            {decksCreated.toLocaleString()}
+          </h3>
           <p>Decks Created</p>
         </div>
-        <div className="bg-default-300 flex-1 rounded-[35px] p-8">
-          <h3 className="text-3xl font-black">57,872</h3>
+        <div className="bg-default-300 rounded-[35px] p-8">
+          <h3 className="text-3xl font-black">
+            {cardsLearned.toLocaleString()}
+          </h3>
           <p>Cards Learned</p>
         </div>
       </div>
