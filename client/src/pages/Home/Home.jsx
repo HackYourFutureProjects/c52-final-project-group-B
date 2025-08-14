@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import TEST_ID from "./Home.testid";
 import { Button } from "@heroui/button";
-import { Link, Accordion, AccordionItem } from "@heroui/react";
+import { Link } from "@heroui/react";
 import Deck from "@/components/Deck";
 import Title from "@/components/Title";
 import Marquee from "@/components/Marquee";
@@ -170,53 +170,6 @@ const Home = () => {
         >
           Browse Decks
         </Button>
-      </div>
-
-      <div className="mt-20 flex flex-col gap-8 text-center">
-        <h2 className="heading-title text-2xl font-bold">FAQ</h2>
-        <Accordion
-          showDivider={false}
-          itemClasses={{
-            base: "border-1 border-default rounded-[35px] my-4 px-8 text-left cursor-pointer",
-            title: "font-bold cursor-pointer",
-          }}
-        >
-          <AccordionItem
-            key="1"
-            aria-label="What is Memix used for?"
-            title="What is Memix used for?"
-          >
-            Memix is a flexible flashcard app that helps you learn and remember
-            anything — from school subjects and languages to trivia, reminders,
-            or personal notes.
-          </AccordionItem>
-          <AccordionItem
-            key="2"
-            aria-label="Do I need to study a language to use Memix?"
-            title="Do I need to study a language to use Memix?"
-          >
-            Not at all! Memix is made for any topic. Whether you’re studying
-            math, history, science, or just your grocery list — it’s your tool,
-            your way.
-          </AccordionItem>
-          <AccordionItem
-            key="3"
-            aria-label="Is Memix free to use?"
-            title="Is Memix free to use?"
-          >
-            Yes! Memix is totally a free tool. You can create and study decks
-            without any cost. We believe learning should be accessible to
-            everyone.
-          </AccordionItem>
-          <AccordionItem
-            key="4"
-            aria-label="Can I share decks with friends or students?"
-            title="Can I share decks with friends or students?"
-          >
-            Yes! You can create and share your decks with anyone. It’s perfect
-            for study groups, classrooms, or just learning together.
-          </AccordionItem>
-        </Accordion>
       </div>
     </>
   );
