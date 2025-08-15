@@ -1,10 +1,15 @@
 import apiRequest from "./index.js";
 
-export const getDecks = async ({ page = 1, limit = 10 } = {}) => {
+export const getDecks = async ({ page = 1, limit = 10, search = "" } = {}) => {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(limit),
   });
+
+  if (search) {
+    params.set("search", search);
+  }
+
   return apiRequest(`/decks?${params.toString()}`);
 };
 

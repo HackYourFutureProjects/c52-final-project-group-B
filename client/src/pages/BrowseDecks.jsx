@@ -30,14 +30,20 @@ const BrowseDecks = () => {
   useEffect(() => {
     const fetchDecks = async () => {
       try {
-        const result = await getDecks();
-        setDecks(result);
+        // pass search + pagination to backend
+        const result = await getDecks({
+          page,
+          limit: Number(decksPerPage),
+          search,
+        });
+        setDecks(result.items || []);
       } catch (e) {
         console.error(e);
+        setDecks([]);
       }
     };
     fetchDecks();
-  }, [filterParams]);
+  }, [filterParams]); // keep as colleagues had it
 
   const updateFilterParams = (key, value) => {
     setFilterParams(
@@ -49,7 +55,7 @@ const BrowseDecks = () => {
         }
         return filterParams;
       },
-      { replace: true } // true is set to avoid history update when changing filter params
+      { replace: true } // true is set to avoid history update whengreaeaerganging filter params
     );
   };
 
@@ -59,7 +65,7 @@ const BrowseDecks = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Browse Decks`, path: `/browse` },
+            { label: "Browse Decks", path: "/browse" },
           ]}
         >
           Browse Decks
@@ -78,8 +84,10 @@ const BrowseDecks = () => {
             value={search}
             onChange={(e) => {
               updateFilterParams("search", e.target.value);
+              updateFilterParams("page", "1");
             }}
           />
+
           <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
               label="Language"
@@ -90,6 +98,7 @@ const BrowseDecks = () => {
               selectedKeys={[language]}
               onChange={(e) => {
                 updateFilterParams("language", e.target.value);
+                updateFilterParams("page", "1");
               }}
             >
               {languages.map((language) => (
@@ -107,6 +116,7 @@ const BrowseDecks = () => {
                 </SelectItem>
               ))}
             </Select>
+
             <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
               <Slider
                 label="Number of Cards"
@@ -119,6 +129,7 @@ const BrowseDecks = () => {
                 onChangeEnd={(e) => {
                   updateFilterParams("numCardsMin", e[0]);
                   updateFilterParams("numCardsMax", e[1]);
+                  updateFilterParams("page", "1");
                 }}
               />
             </div>
@@ -135,6 +146,7 @@ const BrowseDecks = () => {
             {decks && `${decks.length} decks found`}
           </p>
         </div>
+
         <div className="flex basis-1/4 items-center gap-3">
           <Select
             label="Sort By"
@@ -143,15 +155,18 @@ const BrowseDecks = () => {
             defaultSelectedKeys={[sortBy]}
             onChange={(e) => {
               updateFilterParams("sortBy", e.target.value);
+              updateFilterParams("page", "1");
             }}
           >
             <SelectItem key={"most_recent"}>Most Recent</SelectItem>
             <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
             <SelectItem key={"num_cards_asc"}>Number of Cards (Asc)</SelectItem>
             <SelectItem key={"num_cards_desc"}>
-              Number of Cards (Desc)
+              {" "}
+              Number of Cards (Desc){" "}
             </SelectItem>
           </Select>
+
           <Select
             label="Decks per Page"
             radius="full"
@@ -159,6 +174,7 @@ const BrowseDecks = () => {
             defaultSelectedKeys={[decksPerPage]}
             onChange={(e) => {
               updateFilterParams("decksPerPage", e.target.value);
+              updateFilterParams("page", "1");
             }}
           >
             <SelectItem key={"5"}>5</SelectItem>
