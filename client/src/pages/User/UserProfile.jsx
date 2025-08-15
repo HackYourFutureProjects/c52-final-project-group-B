@@ -13,7 +13,7 @@ import UserCard from "@/components/UserCard";
 import {
   getUserById,
   updateCurrentUser,
-  deleteUser,
+  deactivateUser,
   activateUser,
 } from "@/api/userAPI";
 import apiRequest from "@/api/index";
@@ -34,7 +34,7 @@ const UserProfile = () => {
     currentPassword: "",
     newPassword: "",
   });
-  const [isConfirmUserDeleteOpen, setIsConfirmUserDeleteOpen] = useState(false);
+  const [isConfirmDeactivateOpen, setIsConfirmDeactivateOpen] = useState(false);
 
   useEffect(() => {
     if (!user && isUserLoaded === true) {
@@ -246,8 +246,8 @@ const UserProfile = () => {
                     showArrow
                     backdrop="blur"
                     placement="top"
-                    isOpen={isConfirmUserDeleteOpen}
-                    onOpenChange={(open) => setIsConfirmUserDeleteOpen(open)}
+                    isOpen={isConfirmDeactivateOpen}
+                    onOpenChange={(open) => setIsConfirmDeactivateOpen(open)}
                   >
                     <PopoverTrigger>
                       <Button
@@ -269,23 +269,23 @@ const UserProfile = () => {
                           radius="full"
                           onPress={async () => {
                             try {
-                              const updatedUser = await deleteUser(
+                              const updatedUser = await deactivateUser(
                                 userInfo._id || userInfo.id
                               );
                               setUserInfo(updatedUser);
-                              setIsConfirmUserDeleteOpen(false);
+                              setIsConfirmDeactivateOpen(false);
                               addToast({
                                 title: "Success",
-                                description: "User deleted successfully",
+                                description: "User deactivated successfully",
                                 color: "success",
                                 radius: "full",
                               });
                             } catch (error) {
-                              setIsConfirmUserDeleteOpen(false);
+                              setIsConfirmDeactivateOpen(false);
                               addToast({
                                 title: "Error",
                                 description:
-                                  error.message || "Failed to delete user",
+                                  error.message || "Failed to deactivate user",
                                 color: "danger",
                                 radius: "full",
                               });
@@ -297,7 +297,7 @@ const UserProfile = () => {
                         <Button
                           className="font-semibold"
                           radius="full"
-                          onPress={() => setIsConfirmUserDeleteOpen(false)}
+                          onPress={() => setIsConfirmDeactivateOpen(false)}
                         >
                           Cancel
                         </Button>

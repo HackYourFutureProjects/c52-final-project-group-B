@@ -3,7 +3,7 @@ import UserService from "./user.service.js";
 import {
   registerUserSchema,
   updateUserSchema,
-  userIdParamSchema,
+  userIdSchema,
   loginUserSchema,
   updatePasswordSchema,
   forgetPasswordEmailSchema,
@@ -44,13 +44,13 @@ export const updateCurrentUser = async (req, res) => {
 };
 
 export const softDeleteUser = async (req, res) => {
-  const { userId } = userIdParamSchema.parse(req.body);
+  const { userId } = userIdSchema.parse(req.body);
   const result = await userService.softDeleteUser(userId);
   res.status(HTTP_STATUS.OK).json(result);
 };
 
 export const activateUser = async (req, res) => {
-  const { userId } = userIdParamSchema.parse(req.body);
+  const { userId } = userIdSchema.parse(req.body);
   const result = await userService.activateUser(userId);
   res.status(HTTP_STATUS.OK).json(result);
 };
@@ -68,7 +68,7 @@ export const refreshToken = async (req, res) => {
 };
 
 export const changePassword = async (req, res) => {
-  const { userId } = userIdParamSchema.parse(req.params);
+  const { userId } = userIdSchema.parse(req.params);
   const { currentPassword, newPassword } = updatePasswordSchema.parse(req.body);
 
   const result = await userService.updatePassword(

@@ -35,7 +35,7 @@ export const updateUserSchema = z.object({
   ),
 });
 
-export const userIdParamSchema = z.object({
+export const userIdSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
 });
 

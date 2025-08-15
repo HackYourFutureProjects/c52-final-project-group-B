@@ -27,7 +27,7 @@ userRouter.post("/forget-password", forgetPasswordEmail);
 userRouter.get("/reset-password/verify", verifyResetToken);
 userRouter.post("/reset-password", resetPassword);
 
-userRouter.delete("/me/delete", softDeleteUser);
-userRouter.put("/me/activate", activateUser);
+userRouter.delete("/deactivate", softDeleteUser);
+userRouter.put("/activate", activateUser);
 
 export default userRouter;

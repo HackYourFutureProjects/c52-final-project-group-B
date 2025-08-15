@@ -39,10 +39,10 @@ export const resetPassword = async (body) => {
   return apiRequest(`/users/reset-password`, "POST", body);
 };
 
-export const deleteUser = async (userId) => {
-  return apiRequest(`/users/me/delete`, "DELETE", { userId }, true);
+export const deactivateUser = async (userId) => {
+  return apiRequest(`/users/deactivate`, "DELETE", { userId }, true);
 };
 
 export const activateUser = async (userId) => {
-  return apiRequest(`/users/me/activate`, "PUT", { userId }, true);
+  return apiRequest(`/users/activate`, "PUT", { userId }, true);
 };
