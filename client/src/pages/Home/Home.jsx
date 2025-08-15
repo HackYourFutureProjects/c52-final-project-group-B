@@ -15,9 +15,10 @@ const Home = () => {
     const fetchDecks = async () => {
       try {
         const result = await getDecks();
-        setDecks(result);
+        setDecks(result.items || []);
       } catch (e) {
         console.error(e);
+        setDecks([]);
       }
     };
     fetchDecks();
