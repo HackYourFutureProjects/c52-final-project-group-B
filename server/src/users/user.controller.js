@@ -44,8 +44,14 @@ export const updateCurrentUser = async (req, res) => {
 };
 
 export const softDeleteUser = async (req, res) => {
-  const { userId } = userIdParamSchema.parse(req.params);
+  const { userId } = userIdParamSchema.parse(req.body);
   const result = await userService.softDeleteUser(userId);
+  res.status(HTTP_STATUS.OK).json(result);
+};
+
+export const activateUser = async (req, res) => {
+  const { userId } = userIdParamSchema.parse(req.body);
+  const result = await userService.activateUser(userId);
   res.status(HTTP_STATUS.OK).json(result);
 };
 

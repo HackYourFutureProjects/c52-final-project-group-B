@@ -56,7 +56,7 @@ export default heroui({
           700: "#0f8341",
           800: "#0b5f30",
           900: "#073c1e",
-          foreground: "#000",
+          foreground: "#fff",
           DEFAULT: "#17c964",
         },
         warning: {
@@ -84,7 +84,7 @@ export default heroui({
           700: "#9e0c3e",
           800: "#73092e",
           900: "#49051d",
-          foreground: "#000",
+          foreground: "#fff",
           DEFAULT: "#f31260",
         },
         background: "#ffffff",

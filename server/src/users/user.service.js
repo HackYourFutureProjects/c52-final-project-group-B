@@ -101,7 +101,19 @@ class UserService {
       createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
     }
 
-    return { message: "User deleted successfully" };
+    return user;
+  }
+
+  async activateUser(userId) {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isDeleted: false },
+      { new: true },
+    );
+    if (!user) {
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "User not found");
+    }
+    return user;
   }
 
   async getUserById(fullToken) {
