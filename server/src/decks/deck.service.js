@@ -7,38 +7,53 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
-  async getDecks({ page = 1, limit = 20 } = {}) {
-    const pageNumber = Math.max(1, Number(page));
-    const pageSize = Math.min(100, Math.max(1, Number(limit)));
+  async getDecks({ page, limit }) {
+    const skip = (page - 1) * limit;
 
-    const [total, decks] = await Promise.all([
-      DeckModel.countDocuments(),
-      DeckModel.find()
-        .sort({ createdAt: -1 })
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize)
-        .populate("userId", "username"),
+    const total = await DeckModel.countDocuments();
+
+    const decksWithCount = await DeckModel.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "cards",
+          localField: "_id",
+          foreignField: "deckId",
+          as: "cards",
+        },
+      },
+      {
+        $addFields: {
+          cardsCount: { $size: "$cards" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      {
+        $unwind: "$userInfo",
+      },
+      {
+        $project: {
+          cards: 0,
+          userId: 0,
+        },
+      },
     ]);
-
-    const decksWithCount = await Promise.all(
-      decks.map(async (deck) => {
-        const deckObj = deck.toObject();
-        deckObj.userInfo = deckObj.userId;
-        delete deckObj.userId;
-
-        const count = await CardModel.countDocuments({ deckId: deck._id });
-        deckObj.cardsCount = count;
-
-        return deckObj;
-      }),
-    );
 
     return {
       items: decksWithCount,
       total,
-      page: pageNumber,
-      limit: pageSize,
-      pages: Math.ceil(total / pageSize),
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
     };
   }
 

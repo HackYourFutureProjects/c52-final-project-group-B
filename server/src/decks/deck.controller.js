@@ -16,7 +16,7 @@ import {
 const deckService = new DeckService();
 
 export const getDecks = async (req, res) => {
-  const { page = 1, limit = 10 } = paginationQuerySchema.parse(req.query);
+  const { page, limit } = paginationQuerySchema.parse(req.query);
   const decks = await deckService.getDecks({ page, limit });
   res.status(HTTP_STATUS.OK).json(decks);
 };
