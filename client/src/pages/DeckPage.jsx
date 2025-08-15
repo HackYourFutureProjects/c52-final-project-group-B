@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Title from "@/components/Title";
 import {
@@ -10,6 +10,11 @@ import {
   DropdownMenu,
   DropdownItem,
   Tooltip,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@heroui/react";
 import {
   CardsIcon,
@@ -20,14 +25,18 @@ import {
   DeleteIcon,
 } from "@/components/Icons";
 import { DecksCard } from "@/components/Card";
-import { getDeckById } from "@/api/decksAPI";
+import { getDeckById, deleteDeck } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
+import { UserContext } from "@/context/UserContext";
+import { addToast } from "@heroui/react";
 
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, forceLogin } = useContext(UserContext);
 
   useEffect(() => {
     const fetchDeckAndCards = async () => {
@@ -43,6 +52,44 @@ const DeckPage = () => {
     };
     fetchDeckAndCards();
   }, [id, navigate]);
+
+  const handleEditDeck = () => {
+    if (!user) {
+      forceLogin();
+      return;
+    }
+    navigate(`/deck/${id}/edit`);
+  };
+
+  const handleDeleteDeck = () => {
+    if (!user) {
+      forceLogin();
+      return;
+    }
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDeleteDeck = async () => {
+    try {
+      await deleteDeck(id);
+      addToast({
+        title: "Success",
+        description: "Deck deleted successfully",
+        color: "success",
+        radius: "full",
+      });
+      navigate("/");
+    } catch (error) {
+      addToast({
+        title: "Error",
+        description: error.message || "Failed to delete deck",
+        color: "danger",
+        radius: "full",
+      });
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
 
   return (
     <>
@@ -101,13 +148,7 @@ const DeckPage = () => {
             closeDelay={0}
             radius="full"
           >
-            <Button
-              isIconOnly
-              radius="full"
-              size="lg"
-              className="p-3"
-              onPress={() => {}}
-            >
+            <Button isIconOnly radius="full" size="lg" className="p-3">
               <BookMarkIcon />
             </Button>
           </Tooltip>
@@ -119,20 +160,14 @@ const DeckPage = () => {
             closeDelay={0}
             radius="full"
           >
-            <Button
-              isIconOnly
-              radius="full"
-              size="lg"
-              className="p-3"
-              onPress={() => {}}
-            >
+            <Button isIconOnly radius="full" size="lg" className="p-3">
               <ShareIcon />
             </Button>
           </Tooltip>
 
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Button as={Link} href="#" isIconOnly radius="full" size="lg">
+              <Button isIconOnly radius="full" size="lg">
                 <MoreIcon size={30} />
               </Button>
             </DropdownTrigger>
@@ -140,7 +175,7 @@ const DeckPage = () => {
               <DropdownItem
                 key="edit"
                 endContent={<PencilIcon size={20} />}
-                href="#"
+                onPress={handleEditDeck}
               >
                 Edit Deck
               </DropdownItem>
@@ -149,6 +184,7 @@ const DeckPage = () => {
                 className="text-danger"
                 color="danger"
                 endContent={<DeleteIcon size={20} />}
+                onPress={handleDeleteDeck}
               >
                 Delete Deck
               </DropdownItem>
@@ -178,6 +214,31 @@ const DeckPage = () => {
             />
           ))}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Delete Deck</ModalHeader>
+          <ModalBody>
+            <p>
+              Are you sure you want to delete &quot;{deck?.title}&quot;? This
+              action cannot be undone.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="default"
+              variant="light"
+              onPress={() => setIsDeleteModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button color="danger" onPress={confirmDeleteDeck}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

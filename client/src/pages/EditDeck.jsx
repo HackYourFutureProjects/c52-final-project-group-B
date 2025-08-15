@@ -17,30 +17,62 @@ import {
   Tooltip,
   Divider,
 } from "@heroui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createDeck } from "@/api/decksAPI";
-import { createCard } from "@/api/cardsAPI";
+import { updateDeck, getDeckById } from "@/api/decksAPI";
+import { createCard, updateCardById, getCardsByDeckId } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
 
-const CreateDeck = () => {
-  const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
+const EditDeck = () => {
+  const [cards, setCards] = useState([]);
   const [isPublic, setIsPublic] = useState(false);
+  const [deck, setDeck] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchDeckAndCards = async () => {
+      try {
+        const deckData = await getDeckById(id);
+        setDeck(deckData);
+        setIsPublic(deckData.isPublic);
+
+        const cardsData = await getCardsByDeckId(id);
+        const formattedCards = cardsData.map((card) => ({
+          id: card._id,
+          question: card.question,
+          answer: card.answer,
+          isNew: false,
+        }));
+        setCards(formattedCards);
+        setIsLoading(false);
+      } catch {
+        addToast({
+          title: "Error",
+          description: "Failed to load deck data",
+          color: "danger",
+          radius: "full",
+        });
+        navigate("/not-found");
+      }
+    };
+    fetchDeckAndCards();
+  }, [id, navigate]);
+
   const addCard = () => {
     const newCard = {
-      id: cards.length + 1,
+      id: `new-${Date.now()}`,
       question: "",
       answer: "",
+      isNew: true,
     };
     setCards([...cards, newCard]);
   };
 
-  const removeCard = (id) => {
+  const removeCard = (cardId) => {
     if (cards.length > 1) {
-      setCards(cards.filter((card) => card.id !== id));
+      setCards(cards.filter((card) => card.id !== cardId));
     } else {
       addToast({
         title: "Error",
@@ -51,9 +83,11 @@ const CreateDeck = () => {
     }
   };
 
-  const updateCard = (id, field, value) => {
+  const updateCard = (cardId, field, value) => {
     setCards(
-      cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
+      cards.map((card) =>
+        card.id === cardId ? { ...card, [field]: value } : card
+      )
     );
   };
 
@@ -62,34 +96,57 @@ const CreateDeck = () => {
     const data = Object.fromEntries(new FormData(e.currentTarget));
 
     try {
-      const createdDeck = await createDeck({
+      await updateDeck(id, {
         title: data.title,
         description: data.description,
         language: data.language,
         isPublic: isPublic,
       });
 
-      const cardPromises = cards.map((card) =>
-        createCard({
-          deckId: createdDeck._id,
-          question: card.question,
-          answer: card.answer,
-        })
-      );
+      const cardPromises = [];
+
+      cards.forEach((card) => {
+        if (card.isNew && card.question && card.answer) {
+          cardPromises.push(
+            createCard({
+              deckId: id,
+              question: card.question,
+              answer: card.answer,
+            })
+          );
+        } else if (!card.isNew && card.question && card.answer) {
+          cardPromises.push(
+            updateCardById(id, card.id, {
+              question: card.question,
+              answer: card.answer,
+            })
+          );
+        }
+      });
 
       await Promise.all(cardPromises);
 
-      navigate(`/deck/${createdDeck._id}`);
+      addToast({
+        title: "Success",
+        description: "Deck updated successfully",
+        color: "success",
+        radius: "full",
+      });
+
+      navigate(`/deck/${id}`);
     } catch (error) {
       addToast({
         title: "Error",
-        description: error.message || "Failed to create deck",
+        description: error.message || "Failed to update deck",
         color: "danger",
         radius: "full",
       });
-      return;
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -97,11 +154,11 @@ const CreateDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Profile`, path: `/profile` },
-            { label: `Create A Deck`, path: `/deck/create` },
+            { label: `Deck: ${deck?.title}`, path: `/deck/${id}` },
+            { label: `Edit Deck`, path: `/deck/${id}/edit` },
           ]}
         >
-          Create A Deck
+          Edit Deck
         </Title>
       </div>
 
@@ -115,6 +172,7 @@ const CreateDeck = () => {
             isRequired
             minLength={2}
             maxLength={100}
+            defaultValue={deck?.title}
             classNames={{
               inputWrapper: "px-5",
             }}
@@ -126,6 +184,7 @@ const CreateDeck = () => {
             isRequired
             minLength={10}
             maxLength={500}
+            defaultValue={deck?.description}
             classNames={{
               inputWrapper: "rounded-[25px] px-5",
             }}
@@ -134,7 +193,7 @@ const CreateDeck = () => {
             name="language"
             label="Language"
             radius="full"
-            /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
+            defaultSelectedKeys={[deck?.language]}
             isRequired
             classNames={{
               trigger: "px-5",
@@ -159,9 +218,9 @@ const CreateDeck = () => {
         </div>
         <div className="mt-20 flex items-center justify-between">
           <div className="flex flex-col">
-            <h3 className="text-xl font-bold">Add cards</h3>
+            <h3 className="text-xl font-bold">Edit cards</h3>
             <p className="text-default-500">
-              Below you can add new cards to your deck.
+              Below you can modify existing cards or add new ones to your deck.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -187,20 +246,6 @@ const CreateDeck = () => {
                 )}
               </Button>
             </Tooltip>
-
-            {id && (
-              <Tooltip
-                content="Delete Deck"
-                showArrow={true}
-                delay={0}
-                closeDelay={0}
-                radius="full"
-              >
-                <Button isIconOnly radius="full" size="lg">
-                  <DeleteIcon />
-                </Button>
-              </Tooltip>
-            )}
           </div>
         </div>
 
@@ -282,7 +327,16 @@ const CreateDeck = () => {
             </Tooltip>
           </div>
         </div>
-        <div className="mt-20 flex justify-center">
+        <div className="mt-20 flex justify-center gap-4">
+          <Button
+            size="lg"
+            radius="full"
+            className="font-bold"
+            color="default"
+            onPress={() => navigate(`/deck/${id}`)}
+          >
+            Cancel
+          </Button>
           <Button
             size="lg"
             radius="full"
@@ -290,7 +344,7 @@ const CreateDeck = () => {
             color="primary"
             type="submit"
           >
-            Save Deck
+            Save Changes
           </Button>
         </div>
       </Form>
@@ -298,4 +352,4 @@ const CreateDeck = () => {
   );
 };
 
-export default CreateDeck;
+export default EditDeck;

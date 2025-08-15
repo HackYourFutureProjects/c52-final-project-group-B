@@ -5,6 +5,7 @@ import FAQ from "@/pages/FAQ";
 import Terms from "@/pages/Terms";
 import DeckPage from "@/pages/DeckPage";
 import CreateDeck from "@/pages/CreateDeck";
+import EditDeck from "@/pages/EditDeck";
 import CardMode from "@/pages/CardMode";
 import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
@@ -24,7 +25,7 @@ const App = () => {
 
       <Route path="/deck/:id" element={<DeckPage />} />
       <Route path="/deck/create" element={<CreateDeck />} />
-      <Route path="/deck/edit/:id" element={<CreateDeck />} />
+      <Route path="/deck/:id/edit" element={<EditDeck />} />
       <Route path="/deck/:id/card-mode" element={<CardMode />} />
       <Route path="/faq" element={<FAQ />} />
 
