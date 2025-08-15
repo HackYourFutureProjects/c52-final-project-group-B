@@ -7,10 +7,18 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
-  async getDecks() {
-    const decks = await DeckModel.find()
-      .sort({ createdAt: -1 })
-      .populate("userId", "username");
+  async getDecks({ page = 1, limit = 20 } = {}) {
+    const pageNumber = Math.max(1, Number(page));
+    const pageSize = Math.min(100, Math.max(1, Number(limit)));
+
+    const [total, decks] = await Promise.all([
+      DeckModel.countDocuments(),
+      DeckModel.find()
+        .sort({ createdAt: -1 })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize)
+        .populate("userId", "username"),
+    ]);
 
     const decksWithCount = await Promise.all(
       decks.map(async (deck) => {
@@ -25,7 +33,13 @@ class DeckService {
       }),
     );
 
-    return decksWithCount;
+    return {
+      items: decksWithCount,
+      total,
+      page: pageNumber,
+      limit: pageSize,
+      pages: Math.ceil(total / pageSize),
+    };
   }
 
   async getDeckById(id) {
