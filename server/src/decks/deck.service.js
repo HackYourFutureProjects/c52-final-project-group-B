@@ -7,15 +7,17 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
-  async getDecks({ page, limit }) {
-    const skip = (page - 1) * limit;
+  async getDecks({ page = 1, limit = 20 } = {}) {
+    const pageNumber = Math.max(1, Number(page));
+    const pageSize = Math.min(100, Math.max(1, Number(limit)));
+    const skip = (pageNumber - 1) * pageSize;
 
     const total = await DeckModel.countDocuments();
 
     const decksWithCount = await DeckModel.aggregate([
       { $sort: { createdAt: -1 } },
       { $skip: skip },
-      { $limit: limit },
+      { $limit: pageSize },
       {
         $lookup: {
           from: "cards",
@@ -37,13 +39,16 @@ class DeckService {
           as: "userInfo",
         },
       },
-      {
-        $unwind: "$userInfo",
-      },
+      { $unwind: "$userInfo" },
       {
         $project: {
           cards: 0,
           userId: 0,
+          "userInfo.email": 0,
+          "userInfo.password": 0,
+          "userInfo.isDeleted": 0,
+          "userInfo.createdAt": 0,
+          "userInfo.updatedAt": 0,
         },
       },
     ]);
@@ -51,9 +56,9 @@ class DeckService {
     return {
       items: decksWithCount,
       total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit),
+      page: pageNumber,
+      limit: pageSize,
+      pages: Math.ceil(total / pageSize),
     };
   }
 
