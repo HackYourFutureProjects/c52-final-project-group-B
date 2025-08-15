@@ -7,25 +7,54 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
-  async getDecks() {
-    const decks = await DeckModel.find()
-      .sort({ createdAt: -1 })
-      .populate("userId", "username");
+  async getDecks({ page, limit }) {
+    const skip = (page - 1) * limit;
 
-    const decksWithCount = await Promise.all(
-      decks.map(async (deck) => {
-        const deckObj = deck.toObject();
-        deckObj.userInfo = deckObj.userId;
-        delete deckObj.userId;
+    const total = await DeckModel.countDocuments();
 
-        const count = await CardModel.countDocuments({ deckId: deck._id });
-        deckObj.cardsCount = count;
+    const decksWithCount = await DeckModel.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "cards",
+          localField: "_id",
+          foreignField: "deckId",
+          as: "cards",
+        },
+      },
+      {
+        $addFields: {
+          cardsCount: { $size: "$cards" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      {
+        $unwind: "$userInfo",
+      },
+      {
+        $project: {
+          cards: 0,
+          userId: 0,
+        },
+      },
+    ]);
 
-        return deckObj;
-      }),
-    );
-
-    return decksWithCount;
+    return {
+      items: decksWithCount,
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit),
+    };
   }
 
   async getDeckById(id) {

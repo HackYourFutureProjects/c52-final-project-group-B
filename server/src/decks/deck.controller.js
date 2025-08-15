@@ -3,6 +3,7 @@ import {
   deckValidationSchema,
   updateDeckSchema,
   createDeckSchema,
+  paginationQuerySchema,
 } from "./deck.schema.js";
 import DeckService from "./deck.service.js";
 
@@ -15,7 +16,8 @@ import {
 const deckService = new DeckService();
 
 export const getDecks = async (req, res) => {
-  const decks = await deckService.getDecks();
+  const { page, limit } = paginationQuerySchema.parse(req.query);
+  const decks = await deckService.getDecks({ page, limit });
   res.status(HTTP_STATUS.OK).json(decks);
 };
 

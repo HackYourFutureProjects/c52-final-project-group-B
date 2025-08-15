@@ -1,7 +1,11 @@
 import apiRequest from "./index.js";
 
-export const getDecks = async () => {
-  return apiRequest("/decks");
+export const getDecks = async ({ page = 1, limit = 10 } = {}) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  return apiRequest(`/decks?${params.toString()}`);
 };
 
 export const getDeckById = async (id) => {
