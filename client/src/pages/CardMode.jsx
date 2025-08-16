@@ -130,7 +130,8 @@ const CardMode = () => {
             { label: "Home", path: ROUTES.HOME },
             { label: `Library`, path: `${ROUTES.DECKS}` },
             { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS?.(id) },
-            { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE?.(id) },
+            { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
+            { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE(id) },
           ]}
         >
           {deck?.title}
