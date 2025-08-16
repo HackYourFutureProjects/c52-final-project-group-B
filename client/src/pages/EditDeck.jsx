@@ -133,7 +133,7 @@ const EditDeck = () => {
         radius: "full",
       });
 
-      navigate(`/deck/${id}`);
+      navigate(`/decks/${id}`);
     } catch (error) {
       addToast({
         title: "Error",
@@ -333,7 +333,7 @@ const EditDeck = () => {
             radius="full"
             className="font-bold"
             color="default"
-            onPress={() => navigate(`/deck/${id}`)}
+            onPress={() => navigate(`/decks/${id}`)}
           >
             Cancel
           </Button>
