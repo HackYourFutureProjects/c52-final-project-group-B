@@ -114,7 +114,7 @@ const CardMode = () => {
         color: "success",
         radius: "full",
       });
-      navigate(ROUTES.DECK_DETAILS?.(id));
+      navigate(ROUTES.DECK_DETAILS(id));
     } catch (e) {
       console.error(e);
     }
