@@ -5,82 +5,44 @@ import { DeckModel } from "./deck.model.js";
 import { CardModel } from "../cards/card.model.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
+import decksFilterPipeline from "./decksFilterPipeline.js";
 
 class DeckService {
-  #escapeRegExp(s = "") {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
-  async getDecks({ page = 1, limit = 20, search = "" } = {}) {
+  async getDecks({
+    page,
+    limit,
+    search,
+    language,
+    minCards,
+    maxCards,
+    sortBy,
+  } = {}) {
     const pageNumber = Math.max(1, Number(page));
     const pageSize = Math.min(100, Math.max(1, Number(limit)));
     const skip = (pageNumber - 1) * pageSize;
 
-    const hasSearch = typeof search === "string" && search.trim() !== "";
-    const escaped = this.#escapeRegExp(search.trim());
-    const regex = new RegExp(escaped, "i");
+    const pipeline = decksFilterPipeline({
+      search,
+      language,
+      minCards,
+      maxCards,
+      sortBy,
+    });
 
-    const matchStage = hasSearch
-      ? {
-          $match: {
-            $or: [
-              { title: { $regex: regex } },
-              { description: { $regex: regex } },
-              { "cards.question": { $regex: regex } },
-              { "cards.answer": { $regex: regex } },
-            ],
-          },
-        }
-      : null;
-
-    const pipeline = [
-      {
-        $lookup: {
-          from: "cards",
-          localField: "_id",
-          foreignField: "deckId",
-          as: "cards",
-        },
+    pipeline.push({
+      $facet: {
+        meta: [{ $count: "total" }],
+        items: [{ $skip: skip }, { $limit: pageSize }],
       },
-      ...(matchStage ? [matchStage] : []),
-      { $addFields: { cardsCount: { $size: "$cards" } } },
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "userInfo",
-        },
-      },
-      { $unwind: "$userInfo" },
-      {
-        $project: {
-          cards: 0,
-          userId: 0,
-          "userInfo.email": 0,
-          "userInfo.password": 0,
-          "userInfo.isDeleted": 0,
-          "userInfo.createdAt": 0,
-          "userInfo.updatedAt": 0,
-        },
-      },
-      { $sort: { createdAt: -1 } },
-      {
-        $facet: {
-          meta: [{ $count: "total" }],
-          items: [{ $skip: skip }, { $limit: pageSize }],
-        },
-      },
-    ];
+    });
 
     const [res] = await DeckModel.aggregate(pipeline);
     const total = res?.meta?.[0]?.total ?? 0;
+    const decks = res?.items ?? [];
 
     return {
-      items: res?.items ?? [],
+      items: decks,
       total,
-      page: pageNumber,
-      limit: pageSize,
       pages: Math.ceil(total / pageSize) || 1,
     };
   }

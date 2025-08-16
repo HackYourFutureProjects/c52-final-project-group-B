@@ -5,20 +5,19 @@ export const getDecks = async ({
   limit = 20,
   search = "",
   language = "",
-  numCardsMin,
-  numCardsMax,
-  sortBy,
+  numCardsMin = 0,
+  numCardsMax = 300,
+  sortBy = "mostRecent",
 } = {}) => {
   const params = new URLSearchParams({
-    page: String(page),
-    limit: String(limit),
-    search,
-    language,
+    page: Number(page),
+    limit: Number(limit),
+    search: String(search),
+    language: String(language),
+    minCards: Number(numCardsMin),
+    maxCards: Number(numCardsMax),
+    sortBy: String(sortBy),
   });
-
-  if (numCardsMin != null) params.set("numCardsMin", String(numCardsMin));
-  if (numCardsMax != null) params.set("numCardsMax", String(numCardsMax));
-  if (sortBy) params.set("sortBy", sortBy);
 
   return apiRequest(`/decks?${params.toString()}`);
 };
