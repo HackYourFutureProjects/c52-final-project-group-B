@@ -56,7 +56,7 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
           radius="full"
           size="md"
           variant="solid"
-          href={ROUTES.DECK_DETAILS?.(deckID)}
+          href={ROUTES.DECK_DETAILS(deckID)}
         >
           <svg
             fill="none"
