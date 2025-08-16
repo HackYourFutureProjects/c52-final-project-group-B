@@ -13,7 +13,7 @@ export const updateDeckSchema = z.object({
 });
 
 export const createDeckSchema = z.object({
-  userId: objectIdSchema,
+  userId: objectIdSchema.optional(),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   language: z.string().min(1, "Language is required"),

@@ -27,5 +27,13 @@ export const getDeckById = async (id) => {
 };
 
 export const createDeck = async (deckData) => {
-  return apiRequest("/decks", "POST", deckData);
+  return apiRequest("/decks", "POST", deckData, true);
+};
+
+export const updateDeck = async (deckId, deckData) => {
+  return apiRequest(`/decks/${deckId}`, "PUT", deckData, true);
+};
+
+export const deleteDeck = async (deckId) => {
+  return apiRequest(`/decks/${deckId}`, "DELETE", null, true);
 };

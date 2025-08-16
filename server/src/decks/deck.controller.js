@@ -36,21 +36,24 @@ export const getDeckById = async (req, res) => {
 };
 
 export const updateDeck = async (req, res) => {
-  const { id } = deckValidationSchema.parse(req.params);
+  const { deckId } = deckValidationSchema.parse(req.params);
   const updatedData = updateDeckSchema.parse(req.body);
-  const deck = await deckService.updateDeck(id, updatedData);
+  const deck = await deckService.updateDeck(deckId, updatedData, req.user.id);
+
   res.status(HTTP_STATUS.OK).json(deck);
 };
 
 export const createDeck = async (req, res) => {
   const deckData = createDeckSchema.parse(req.body);
+  deckData.userId = req.user.id;
   const newDeck = await deckService.createDeck(deckData);
   res.status(HTTP_STATUS.CREATED).json(newDeck);
 };
 
 export const deleteDeck = async (req, res) => {
-  const { id } = deckValidationSchema.parse(req.params);
-  await deckService.deleteDeck(id);
+  const { deckId } = deckValidationSchema.parse(req.params);
+  await deckService.deleteDeck(deckId, req.user.id);
+
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
 };
 
@@ -71,7 +74,8 @@ export const createCard = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
   const rawCardData = { ...req.body, deckId };
   const cardData = createCardSchema.parse(rawCardData);
-  const newCard = await deckService.createDeckCard(cardData);
+  const newCard = await deckService.createDeckCard(cardData, req.user.id);
+
   res.status(HTTP_STATUS.CREATED).json(newCard);
 };
 
@@ -82,12 +86,14 @@ export const updateCardById = async (req, res) => {
     deckId,
     cardId,
     updatedCardData,
+    req.user.id,
   );
   res.status(HTTP_STATUS.OK).json(updatedCard);
 };
 
 export const deleteCardById = async (req, res) => {
   const { deckId, cardId } = cardParamsSchema.parse(req.params);
-  await deckService.deleteCardByDeckAndId(deckId, cardId);
+  await deckService.deleteCardByDeckAndId(deckId, cardId, req.user.id);
+
   res.status(HTTP_STATUS.OK).json({ message: "Card deleted successfully" });
 };
