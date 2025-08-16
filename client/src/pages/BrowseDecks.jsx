@@ -21,6 +21,7 @@ const BrowseDecks = () => {
   const [decks, setDecks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("search") || "";
@@ -28,13 +29,12 @@ const BrowseDecks = () => {
   const numCardsMin = searchParams.get("numCardsMin") || "10";
   const numCardsMax = searchParams.get("numCardsMax") || "100";
   const decksPerPage = searchParams.get("decksPerPage") || "20";
-  const sortBy = searchParams.get("sortBy") || "most_recent";
+  const sortBy = searchParams.get("sortBy") || "mostRecent";
   const page = parseInt(searchParams.get("page") || "1");
 
   const updateSearchParams = (key, value) => {
     setSearchParams(
-      (prev) => {
-        const newParams = new URLSearchParams(prev);
+      (newParams) => {
         if (value !== null && value !== "") {
           newParams.set(key, value);
         } else {
@@ -52,7 +52,7 @@ const BrowseDecks = () => {
       try {
         const result = await getDecks({
           page,
-          limit: Number(decksPerPage),
+          limit: decksPerPage,
           search,
           language,
           numCardsMin,
@@ -61,10 +61,12 @@ const BrowseDecks = () => {
         });
         setDecks(result.items || []);
         setTotalPages(result.pages || 1);
+        setTotalResults(result.total || 0);
       } catch (e) {
         console.error(e);
         setDecks([]);
         setTotalPages(1);
+        setTotalResults(0);
       } finally {
         setIsLoading(false);
       }
@@ -133,8 +135,8 @@ const BrowseDecks = () => {
                 size="sm"
                 defaultValue={[Number(numCardsMin), Number(numCardsMax)]}
                 onChangeEnd={(e) => {
-                  updateSearchParams("numCardsMin", e[0]);
-                  updateSearchParams("numCardsMax", e[1]);
+                  updateSearchParams("numCardsMin", Number(e[0]));
+                  updateSearchParams("numCardsMax", Number(e[1]));
                 }}
               />
             </div>
@@ -148,7 +150,48 @@ const BrowseDecks = () => {
         </div>
       ) : (
         <>
-          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-20 flex items-center justify-between">
+            <div className="flex basis-3/4 flex-col">
+              <h3 className="text-xl font-bold">
+                Browse through our collection of decks
+              </h3>
+              <p className="text-gray-500">
+                {decks && `${totalResults} decks found`}
+              </p>
+            </div>
+            <div className="flex basis-1/4 items-center gap-3">
+              <Select
+                label="Sort By"
+                radius="full"
+                disallowEmptySelection
+                selectedKeys={[sortBy]}
+                onChange={(e) => {
+                  updateSearchParams("sortBy", e.target.value);
+                }}
+              >
+                <SelectItem key={"mostRecent"}>Most Recent</SelectItem>
+                <SelectItem key={"oldest"}>Oldest</SelectItem>
+                <SelectItem key={"numCardsAsc"}>Most Cards</SelectItem>
+                <SelectItem key={"numCardsDesc"}>Least Cards</SelectItem>
+              </Select>
+
+              <Select
+                label="Decks per Page"
+                radius="full"
+                disallowEmptySelection
+                selectedKeys={[decksPerPage]}
+                onChange={(e) => {
+                  updateSearchParams("decksPerPage", e.target.value);
+                }}
+              >
+                <SelectItem key={"5"}>5</SelectItem>
+                <SelectItem key={"10"}>10</SelectItem>
+                <SelectItem key={"20"}>20</SelectItem>
+                <SelectItem key={"50"}>50</SelectItem>
+              </Select>
+            </div>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {decks.map((deck) => (
               <Deck
                 key={deck._id}
@@ -161,49 +204,26 @@ const BrowseDecks = () => {
               />
             ))}
           </div>
-          <div className="flex basis-1/4 items-center gap-3">
-            <Select
-              label="Sort By"
-              radius="full"
-              disallowEmptySelection
-              selectedKeys={[sortBy]}
-              onChange={(e) => {
-                updateSearchParams("sortBy", e.target.value);
-              }}
-            >
-              <SelectItem key={"most_recent"}>Most Recent</SelectItem>
-              <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
-              <SelectItem key={"num_cards_asc"}>
-                Number of Cards (Asc)
-              </SelectItem>
-              <SelectItem key={"num_cards_desc"}>
-                Number of Cards (Desc)
-              </SelectItem>
-            </Select>
 
-            <Select
-              label="Decks per Page"
-              radius="full"
-              disallowEmptySelection
-              selectedKeys={[decksPerPage]}
-              onChange={(e) => {
-                updateSearchParams("decksPerPage", e.target.value);
-              }}
-            >
-              <SelectItem key={"5"}>5</SelectItem>
-              <SelectItem key={"10"}>10</SelectItem>
-              <SelectItem key={"20"}>20</SelectItem>
-              <SelectItem key={"50"}>50</SelectItem>
-            </Select>
-          </div>
           <div className="mt-20 flex flex-col items-center justify-center">
-            <Pagination
-              showControls
-              radius="full"
-              page={page}
-              total={totalPages}
-              onChange={(newPage) => updateSearchParams("page", newPage)}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                showControls
+                radius="full"
+                page={page}
+                total={totalPages}
+                onChange={(newPage) => updateSearchParams("page", newPage)}
+              />
+            )}
+            <p className="text-default-800 mt-2 text-sm">
+              {(() => {
+                const limitNum = Number(decksPerPage);
+                const start = (page - 1) * limitNum + 1;
+                const end = Math.min(page * limitNum, totalResults);
+                if (!decks) return null;
+                return `Showing ${start}-${end} of ${totalResults} results`;
+              })()}
+            </p>
           </div>
         </>
       )}

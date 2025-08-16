@@ -24,4 +24,10 @@ export const paginationQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(20),
   search: z.string().trim().max(100).optional().default(""),
+  language: z.string().trim().max(100).optional().default(""),
+  minCards: z.coerce.number().int().min(0).optional().default(0),
+  maxCards: z.coerce.number().int().min(0).optional().default(300),
+  sortBy: z
+    .enum(["mostRecent", "oldest", "numCardsAsc", "numCardsDesc"])
+    .default("mostRecent"),
 });

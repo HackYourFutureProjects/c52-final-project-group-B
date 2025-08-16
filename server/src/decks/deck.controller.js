@@ -15,8 +15,17 @@ import {
 const deckService = new DeckService();
 
 export const getDecks = async (req, res) => {
-  const { page, limit, search } = paginationQuerySchema.parse(req.query);
-  const decks = await deckService.getDecks({ page, limit, search });
+  const { page, limit, search, language, minCards, maxCards, sortBy } =
+    paginationQuerySchema.parse(req.query);
+  const decks = await deckService.getDecks({
+    page,
+    limit,
+    search,
+    language,
+    minCards,
+    maxCards,
+    sortBy,
+  });
   res.status(HTTP_STATUS.OK).json(decks);
 };
 
