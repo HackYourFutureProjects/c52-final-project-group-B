@@ -8,6 +8,7 @@ import { DecksCard } from "@/components/Card";
 import { Button, addToast } from "@heroui/react";
 import { WrongIcon, CorrectIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
+import { ROUTES } from "@/routes/paths";
 
 const CardMode = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -44,7 +45,7 @@ const CardMode = () => {
           setCurrentCardIndex(0);
         }
       } catch {
-        navigate("/not-found");
+        navigate(ROUTES.NOT_FOUND);
       }
     };
     fetchDeckAndCards();
@@ -113,7 +114,7 @@ const CardMode = () => {
         color: "success",
         radius: "full",
       });
-      navigate(`/deck/${id}`);
+      navigate(ROUTES.DECK_DETAILS?.(id));
     } catch (e) {
       console.error(e);
     }
@@ -126,10 +127,10 @@ const CardMode = () => {
       <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: `Library`, path: `/library` },
-            { label: `${deck?.title}`, path: `/deck/${id}` },
-            { label: `Card Mode`, path: `/deck/card-mode/${id}` },
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Library`, path: `${ROUTES.DECKS}` },
+            { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS?.(id) },
+            { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE?.(id) },
           ]}
         >
           {deck?.title}

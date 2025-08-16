@@ -11,6 +11,7 @@ import { UserContext } from "@/context/UserContext";
 import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
 import ResetPasswordModal from "./Modals/ResetPasswordModal";
+import { ROUTES } from "@/routes/paths";
 
 const UserAuth = () => {
   const {
@@ -52,7 +53,10 @@ const UserAuth = () => {
             >
               Logged in as @{user.username}
             </DropdownItem>
-            <DropdownItem key="profile" onPress={() => navigate("/profile")}>
+            <DropdownItem
+              key="profile"
+              onPress={() => navigate(ROUTES.PROFILE)}
+            >
               Profile
             </DropdownItem>
             <DropdownItem

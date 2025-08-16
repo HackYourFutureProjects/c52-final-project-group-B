@@ -14,6 +14,7 @@ import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
 import languages from "@/data/languages.js";
 import { SearchIcon } from "@/components/Icons";
+import { ROUTES } from "@/routes/paths";
 
 const BrowseDecks = () => {
   const [decks, setDecks] = useState(null);
@@ -30,7 +31,7 @@ const BrowseDecks = () => {
   useEffect(() => {
     const fetchDecks = async () => {
       try {
-        const result = await getDecks();
+        const result = await getDecks({ page, limit: Number(decksPerPage) });
         setDecks(result);
       } catch (e) {
         console.error(e);
@@ -41,15 +42,16 @@ const BrowseDecks = () => {
 
   const updateFilterParams = (key, value) => {
     setFilterParams(
-      (filterParams) => {
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
         if (value !== null && value !== "") {
-          filterParams.set(key, value);
+          newParams.set(key, value);
         } else {
-          filterParams.delete(key);
+          newParams.delete(key);
         }
-        return filterParams;
+        return newParams;
       },
-      { replace: true } // true is set to avoid history update when changing filter params
+      { replace: true }
     );
   };
 
@@ -58,8 +60,8 @@ const BrowseDecks = () => {
       <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: `Browse Decks`, path: `/browse` },
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Browse Decks`, path: ROUTES.BROWSE },
           ]}
         >
           Browse Decks
@@ -132,7 +134,7 @@ const BrowseDecks = () => {
             Browse through our collection of decks
           </h3>
           <p className="text-gray-500">
-            {decks && `${decks.length} decks found`}
+            {decks && `${decks.total} decks found`}
           </p>
         </div>
         <div className="flex basis-1/4 items-center gap-3">
@@ -170,30 +172,35 @@ const BrowseDecks = () => {
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {decks &&
-          decks.map((deck) => (
-            <Deck
-              key={deck._id}
-              deckID={deck._id}
-              title={deck.title}
-              description={deck.description}
-              user={deck.userInfo?.username}
-              numCards={deck.cardsCount}
-              className="max-w-full"
-            />
-          ))}
+        {decks?.items?.map((deck) => (
+          <Deck
+            key={deck._id}
+            deckID={deck._id}
+            title={deck.title}
+            description={deck.description}
+            user={deck.userInfo?.username}
+            numCards={deck.cardsCount}
+            className="max-w-full"
+          />
+        ))}
       </div>
 
       <div className="mt-20 flex flex-col items-center justify-center">
         <Pagination
           showControls
           radius="full"
-          initialPage={page}
-          total={10}
-          onChange={(page) => updateFilterParams("page", page)}
+          page={page}
+          total={decks?.pages ?? 1}
+          onChange={(newPage) => updateFilterParams("page", newPage)}
         />
         <p className="text-default-800 mt-2 text-sm">
-          Showing 1-20 of 200 results
+          {(() => {
+            const limitNum = Number(decksPerPage);
+            const start = (page - 1) * limitNum + 1;
+            const end = Math.min(page * limitNum, decks?.total ?? 0);
+            if (!decks) return null;
+            return `Showing ${start}-${end} of ${decks.total} results`;
+          })()}
         </p>
       </div>
     </>

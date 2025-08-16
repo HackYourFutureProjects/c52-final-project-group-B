@@ -1,5 +1,6 @@
 import { Accordion, AccordionItem, Card } from "@heroui/react";
 import Title from "@/components/Title";
+import { ROUTES } from "@/routes/paths";
 
 export default function FAQ() {
   return (
@@ -7,8 +8,8 @@ export default function FAQ() {
       <div className="text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: "FAQ", path: "/faq" },
+            { label: "Home", path: ROUTES.HOME },
+            { label: "FAQ", path: ROUTES.FAQ },
           ]}
         >
           Frequently Asked Questions

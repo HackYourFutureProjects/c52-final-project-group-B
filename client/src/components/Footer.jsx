@@ -1,5 +1,6 @@
 // src/components/Footer.jsx
 import { Link, Divider, Tooltip } from "@heroui/react";
+import { ROUTES } from "@/routes/paths";
 import { MemixLogoIcon } from "@/components/Icons";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
@@ -8,7 +9,7 @@ const Footer = () => {
     <footer className="bg-default-200 mt-12 p-6 md:p-8">
       <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-6 text-center md:gap-10">
         <Link
-          href="/faq"
+          href={ROUTES.FAQ}
           underline="hover"
           color="foreground"
           className="text-foreground font-semibold hover:opacity-80"
@@ -17,7 +18,7 @@ const Footer = () => {
         </Link>
         <Divider orientation="vertical" className="hidden h-5 md:block" />
         <Link
-          href="/about"
+          href={ROUTES.ABOUT}
           underline="hover"
           color="foreground"
           className="text-foreground font-semibold hover:opacity-80"
@@ -35,7 +36,7 @@ const Footer = () => {
         </Link>
         <Divider orientation="vertical" className="hidden h-5 md:block" />
         <Link
-          href="/terms"
+          href={ROUTES.TERMS}
           underline="hover"
           color="foreground"
           className="text-foreground font-semibold hover:opacity-80"
@@ -91,7 +92,7 @@ const Footer = () => {
       </nav>
       <Divider className="mx-auto my-6 max-w-6xl" />
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <Link href="/" className="text-default-foreground">
+        <Link href={ROUTES.HOME} className="text-default-foreground">
           <MemixLogoIcon width={160} height={49} />
         </Link>
         <p className="text-foreground text-right text-base font-semibold md:text-lg">

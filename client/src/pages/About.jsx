@@ -1,5 +1,6 @@
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import Title from "@/components/Title";
+import { ROUTES } from "@/routes/paths";
 
 export default function About() {
   return (
@@ -7,8 +8,8 @@ export default function About() {
       <div className="text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: "About", path: "/about" },
+            { label: "Home", path: ROUTES.HOME },
+            { label: "About", path: ROUTES.ABOUT },
           ]}
         >
           About Memix

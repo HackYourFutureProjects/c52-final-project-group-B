@@ -22,26 +22,66 @@ import {
 import { DecksCard } from "@/components/Card";
 import { getDeckById } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
+import { ROUTES } from "@/routes/paths";
 
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDeckAndCards = async () => {
-      try {
-        const getDeck = await getDeckById(id);
-        setDeck(getDeck);
+    let isCancelled = false;
 
-        const getCards = await getCardsByDeckId(id);
-        setCards(getCards);
-      } catch {
-        navigate("/not-found");
+    const fetchDeckAndCards = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const [deckResult, cardsResult] = await Promise.allSettled([
+          getDeckById(id),
+          getCardsByDeckId(id),
+        ]);
+
+        if (isCancelled) return;
+
+        if (deckResult.status === "fulfilled" && deckResult.value) {
+          setDeck(deckResult.value);
+        } else {
+          navigate(ROUTES.NOT_FOUND);
+          return;
+        }
+
+        if (
+          cardsResult.status === "fulfilled" &&
+          Array.isArray(cardsResult.value)
+        ) {
+          setCards(cardsResult.value);
+        } else {
+          setCards([]);
+        }
+      } catch (e) {
+        if (!isCancelled) {
+          setError(e?.message || "Failed to load deck");
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
-    fetchDeckAndCards();
+
+    if (id) {
+      fetchDeckAndCards();
+    } else {
+      navigate(ROUTES.NOT_FOUND);
+    }
+
+    return () => {
+      isCancelled = true;
+    };
   }, [id, navigate]);
 
   return (
@@ -49,25 +89,36 @@ const DeckPage = () => {
       <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: `Library`, path: `/library` },
-            { label: `${deck?.title}`, path: `/deck/${id}` },
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Library`, path: ROUTES.DECKS },
+            {
+              label: `${deck?.title || (isLoading ? "Loading..." : "Deck")}`,
+              path: `${ROUTES.DECK_DETAILS?.(id)}`,
+            },
           ]}
         >
-          {deck?.title}
+          {deck?.title || (isLoading ? "Loading..." : "")}
         </Title>
+        {error && <p className="text-danger mt-2 text-sm">{error}</p>}
       </div>
       <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
         <h3 className="text-xl font-bold">Description</h3>
-        <p>{deck?.description}</p>
+        <p>
+          {deck?.description ||
+            (isLoading
+              ? "Fetching deck details..."
+              : "No description available.")}
+        </p>
       </div>
       <div className="mt-3 flex items-stretch justify-center gap-3">
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Your Progress</h3>
           <Progress
             showValueLabel={true}
-            maxValue={deck?.cardsCount}
-            label={`${deck?.progress || 0}/${deck?.cardsCount || 0} cards`}
+            maxValue={
+              deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
+            }
+            label={`${deck?.progress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
             value={deck?.progress || 0}
             classNames={{
               label: "text-sm text-gray-500",
@@ -80,7 +131,7 @@ const DeckPage = () => {
           <h3 className="text-xl font-bold">Languages</h3>
           <div className="flex gap-2 capitalize">
             <Button radius="full" as={Link} href="#">
-              {deck?.language}
+              {deck?.language || (isLoading ? "..." : "unknown")}
             </Button>
           </div>
         </div>
@@ -89,7 +140,9 @@ const DeckPage = () => {
       <div className="mt-20 flex items-center justify-between">
         <div className="flex flex-col">
           <h3 className="text-xl font-bold">
-            This Deck has {deck?.cardsCount} cards
+            This Deck has{" "}
+            {deck?.cardsCount ?? (Array.isArray(cards) ? cards.length : 0)}{" "}
+            cards
           </h3>
           <p className="text-gray-500">Start learning using the card mode!</p>
         </div>
@@ -160,7 +213,7 @@ const DeckPage = () => {
       <div className="mt-3 flex items-center justify-between">
         <Button
           as={Link}
-          href={`/deck/${id}/card-mode`}
+          href={ROUTES.DECK_CARD_MODE?.(id)}
           className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
           startContent={<CardsIcon />}
         >
@@ -169,14 +222,19 @@ const DeckPage = () => {
       </div>
 
       <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
-        {cards &&
+        {Array.isArray(cards) && cards.length > 0 ? (
           cards.map((card) => (
             <DecksCard
               key={card._id}
               front={card.question}
               back={card.answer}
             />
-          ))}
+          ))
+        ) : (
+          <p className="text-gray-500">
+            {isLoading ? "Loading cards..." : "No cards in this deck yet."}
+          </p>
+        )}
       </div>
     </>
   );

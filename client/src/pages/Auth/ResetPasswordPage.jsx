@@ -4,6 +4,7 @@ import { addToast, Button, Input, Spinner, Form } from "@heroui/react";
 import Title from "@/components/Title";
 import { resetPassword, verifyResetToken } from "@/api/userAPI";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
+import { ROUTES } from "@/routes/paths";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -57,7 +58,7 @@ const ResetPasswordPage = () => {
         color: "success",
         radius: "full",
       });
-      navigate("/");
+      navigate(ROUTES.HOME);
     } catch (e) {
       addToast({
         title: "Error",
@@ -81,7 +82,11 @@ const ResetPasswordPage = () => {
       <div className="mx-auto max-w-md p-4 text-center">
         <Title>Reset Password</Title>
         <p className="mt-4">This reset link is invalid or has expired.</p>
-        <Button className="mt-6" color="primary" onPress={() => navigate("/")}>
+        <Button
+          className="mt-6"
+          color="primary"
+          onPress={() => navigate(ROUTES.HOME)}
+        >
           Go Home
         </Button>
       </div>
