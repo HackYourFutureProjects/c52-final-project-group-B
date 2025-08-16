@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Tooltip,
+  Spinner,
 } from "@heroui/react";
 import {
   CardsIcon,
@@ -101,6 +102,7 @@ const DeckPage = () => {
         </Title>
         {error && <p className="text-danger mt-2 text-sm">{error}</p>}
       </div>
+
       <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
         <h3 className="text-xl font-bold">Description</h3>
         <p>
@@ -110,6 +112,7 @@ const DeckPage = () => {
               : "No description available.")}
         </p>
       </div>
+
       <div className="mt-3 flex items-stretch justify-center gap-3">
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Your Progress</h3>
@@ -127,6 +130,7 @@ const DeckPage = () => {
             }}
           />
         </div>
+
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Languages</h3>
           <div className="flex gap-2 capitalize">
@@ -146,6 +150,7 @@ const DeckPage = () => {
           </h3>
           <p className="text-gray-500">Start learning using the card mode!</p>
         </div>
+
         <div className="flex items-center gap-3">
           <Tooltip
             content="Save Deck"
@@ -231,9 +236,13 @@ const DeckPage = () => {
             />
           ))
         ) : (
-          <p className="text-gray-500">
-            {isLoading ? "Loading cards..." : "No cards in this deck yet."}
-          </p>
+          <div className="flex w-full justify-center py-10">
+            {isLoading ? (
+              <Spinner size="lg" color="primary" />
+            ) : (
+              <p className="text-gray-500">No cards in this deck yet.</p>
+            )}
+          </div>
         )}
       </div>
     </>

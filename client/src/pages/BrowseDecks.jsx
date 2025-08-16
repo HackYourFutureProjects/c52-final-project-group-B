@@ -9,6 +9,7 @@ import {
   Avatar,
   Slider,
   Pagination,
+  Spinner,
 } from "@heroui/react";
 import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
@@ -28,13 +29,18 @@ const BrowseDecks = () => {
   const sortBy = filterParams.get("sortBy") || "most_recent";
   const page = parseInt(filterParams.get("page")) || 1;
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchDecks = async () => {
+      setIsLoading(true);
       try {
         const result = await getDecks({ page, limit: Number(decksPerPage) });
         setDecks(result);
       } catch (e) {
         console.error(e);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchDecks();
@@ -78,21 +84,16 @@ const BrowseDecks = () => {
             maxLength={100}
             endContent={<SearchIcon />}
             value={search}
-            onChange={(e) => {
-              updateFilterParams("search", e.target.value);
-            }}
+            onChange={(e) => updateFilterParams("search", e.target.value)}
           />
           <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
               label="Language"
               radius="full"
-              /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
               isClearable
               className="basis-full"
               selectedKeys={[language]}
-              onChange={(e) => {
-                updateFilterParams("language", e.target.value);
-              }}
+              onChange={(e) => updateFilterParams("language", e.target.value)}
             >
               {languages.map((language) => (
                 <SelectItem
@@ -143,9 +144,7 @@ const BrowseDecks = () => {
             radius="full"
             disallowEmptySelection
             defaultSelectedKeys={[sortBy]}
-            onChange={(e) => {
-              updateFilterParams("sortBy", e.target.value);
-            }}
+            onChange={(e) => updateFilterParams("sortBy", e.target.value)}
           >
             <SelectItem key={"most_recent"}>Most Recent</SelectItem>
             <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
@@ -159,9 +158,7 @@ const BrowseDecks = () => {
             radius="full"
             disallowEmptySelection
             defaultSelectedKeys={[decksPerPage]}
-            onChange={(e) => {
-              updateFilterParams("decksPerPage", e.target.value);
-            }}
+            onChange={(e) => updateFilterParams("decksPerPage", e.target.value)}
           >
             <SelectItem key={"5"}>5</SelectItem>
             <SelectItem key={"10"}>10</SelectItem>
@@ -171,38 +168,46 @@ const BrowseDecks = () => {
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {decks?.items?.map((deck) => (
-          <Deck
-            key={deck._id}
-            deckID={deck._id}
-            title={deck.title}
-            description={deck.description}
-            user={deck.userInfo?.username}
-            numCards={deck.cardsCount}
-            className="max-w-full"
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="flex w-full justify-center py-20">
+          <Spinner size="lg" color="primary" />
+        </div>
+      ) : (
+        <>
+          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {decks?.items?.map((deck) => (
+              <Deck
+                key={deck._id}
+                deckID={deck._id}
+                title={deck.title}
+                description={deck.description}
+                user={deck.userInfo?.username}
+                numCards={deck.cardsCount}
+                className="max-w-full"
+              />
+            ))}
+          </div>
 
-      <div className="mt-20 flex flex-col items-center justify-center">
-        <Pagination
-          showControls
-          radius="full"
-          page={page}
-          total={decks?.pages ?? 1}
-          onChange={(newPage) => updateFilterParams("page", newPage)}
-        />
-        <p className="text-default-800 mt-2 text-sm">
-          {(() => {
-            const limitNum = Number(decksPerPage);
-            const start = (page - 1) * limitNum + 1;
-            const end = Math.min(page * limitNum, decks?.total ?? 0);
-            if (!decks) return null;
-            return `Showing ${start}-${end} of ${decks.total} results`;
-          })()}
-        </p>
-      </div>
+          <div className="mt-20 flex flex-col items-center justify-center">
+            <Pagination
+              showControls
+              radius="full"
+              page={page}
+              total={decks?.pages ?? 1}
+              onChange={(newPage) => updateFilterParams("page", newPage)}
+            />
+            <p className="text-default-800 mt-2 text-sm">
+              {(() => {
+                const limitNum = Number(decksPerPage);
+                const start = (page - 1) * limitNum + 1;
+                const end = Math.min(page * limitNum, decks?.total ?? 0);
+                if (!decks) return null;
+                return `Showing ${start}-${end} of ${decks.total} results`;
+              })()}
+            </p>
+          </div>
+        </>
+      )}
     </>
   );
 };
