@@ -9,6 +9,7 @@ import Marquee from "@/components/Marquee";
 import { getDecks } from "@/api/decksAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
+import { ROUTES } from "@/routes/paths";
 
 const Home = () => {
   const [decks, setDecks] = useState([]);
@@ -24,6 +25,7 @@ const Home = () => {
     };
     fetchDecks();
   }, []);
+
   const activeUsers = useJitterNumber({
     start: 1573,
     min: 1500,
@@ -74,7 +76,7 @@ const Home = () => {
               variant="ghost"
               color="default"
               radius="full"
-              href="#"
+              href={ROUTES.DECKS}
               className="font-bold"
             >
               Browse Decks
@@ -84,7 +86,7 @@ const Home = () => {
               variant="ghost"
               color="primary"
               radius="full"
-              href="/deck/create"
+              href={ROUTES.DECK_CREATE}
               className="font-bold"
             >
               Create A Deck
@@ -199,7 +201,7 @@ const Home = () => {
           color="primary"
           radius="full"
           size="lg"
-          href="#"
+          href={ROUTES.BROWSE}
           className="font-bold"
         >
           Browse Decks

@@ -6,8 +6,10 @@ import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
 import { Button, addToast } from "@heroui/react";
-import { WrongIcon, CorrectIcon } from "@/components/Icons";
+import { WrongIcon, CorrectIcon, FlagIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
+import { ROUTES } from "@/routes/paths";
+import ReportAProblemModal from "@/components/Modals/ReportAProblem";
 
 const CardMode = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -17,6 +19,7 @@ const CardMode = () => {
   const [cards, setCards] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [progress, setProgress] = useState([]);
+  const [isReportAProblemOpen, setIsReportAProblemOpen] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -44,7 +47,7 @@ const CardMode = () => {
           setCurrentCardIndex(0);
         }
       } catch {
-        navigate("/not-found");
+        navigate(ROUTES.NOT_FOUND);
       }
     };
     fetchDeckAndCards();
@@ -113,7 +116,7 @@ const CardMode = () => {
         color: "success",
         radius: "full",
       });
-      navigate(`/deck/${id}`);
+      navigate(ROUTES.DECK_DETAILS(id));
     } catch (e) {
       console.error(e);
     }
@@ -126,10 +129,11 @@ const CardMode = () => {
       <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: `Library`, path: `/library` },
-            { label: `${deck?.title}`, path: `/deck/${id}` },
-            { label: `Card Mode`, path: `/deck/card-mode/${id}` },
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Library`, path: `${ROUTES.DECKS}` },
+            { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS?.(id) },
+            { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
+            { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE(id) },
           ]}
         >
           {deck?.title}
@@ -152,7 +156,7 @@ const CardMode = () => {
         cards &&
         cards[currentCardIndex] && (
           <>
-            <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
+            <div className="mt-4 flex flex-wrap items-center justify-evenly gap-4">
               <DecksCard
                 key={cards[currentCardIndex]._id}
                 front={cards[currentCardIndex].question}
@@ -185,6 +189,28 @@ const CardMode = () => {
                 <CorrectIcon />
               </Button>
             </div>
+            <div className="mt-10 text-center">
+              <p className="text-default-800 mb-2">
+                If you encounter any issues with this deck, please report it.
+              </p>
+              <Button
+                startContent={<FlagIcon />}
+                radius="full"
+                size="sm"
+                onPress={() => setIsReportAProblemOpen(true)}
+              >
+                Report a problem
+              </Button>
+            </div>
+            <ReportAProblemModal
+              isReportAProblemOpen={isReportAProblemOpen}
+              setIsReportAProblemOpen={setIsReportAProblemOpen}
+              sourceDetails={{
+                deckId: deck._id,
+                deckTitle: deck.title,
+                cardId: cards[currentCardIndex]._id,
+              }}
+            />
           </>
         )
       )}

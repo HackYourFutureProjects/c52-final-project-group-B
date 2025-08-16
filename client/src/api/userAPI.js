@@ -38,3 +38,15 @@ export const verifyResetToken = async (token) => {
 export const resetPassword = async (body) => {
   return apiRequest(`/users/reset-password`, "POST", body);
 };
+
+export const deactivateUser = async (userId) => {
+  return apiRequest(`/users/deactivate`, "DELETE", { userId }, true);
+};
+
+export const activateUser = async (userId) => {
+  return apiRequest(`/users/activate`, "PUT", { userId }, true);
+};
+
+export const sendProblemReport = async (reportData) => {
+  return apiRequest(`/users/report-problem`, "POST", reportData, true);
+};

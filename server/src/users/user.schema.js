@@ -35,7 +35,7 @@ export const updateUserSchema = z.object({
   ),
 });
 
-export const userIdParamSchema = z.object({
+export const userIdSchema = z.object({
   userId: z.string().regex(/^[a-f\d]{24}$/i, "Invalid user ID format"),
 });
 
@@ -61,4 +61,14 @@ export const resetPasswordSchema = z.object({
     .string()
     .min(8, "New password must be at least 8 characters")
     .max(255, "New password is too long"),
+});
+
+export const reportProblemEmailSchema = z.object({
+  problemType: z.string(),
+  moreInfo: z.string().optional(),
+  source: z.object({
+    deckId: z.string(),
+    deckTitle: z.string(),
+    cardId: z.string(),
+  }),
 });

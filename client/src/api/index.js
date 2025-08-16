@@ -36,6 +36,13 @@ const apiRequest = async (
 
         const res = await fetch(`/api${endpoint}`, options);
 
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(
+            errorData.message || "Request failed after token refresh"
+          );
+        }
+
         return await res.json();
       }
       throw new Error("Session expired, please log in again.");

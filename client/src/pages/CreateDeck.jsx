@@ -22,6 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createDeck } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
+import { ROUTES } from "@/routes/paths";
 
 const CreateDeck = () => {
   const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
@@ -79,7 +80,7 @@ const CreateDeck = () => {
 
       await Promise.all(cardPromises);
 
-      navigate(`/deck/${createdDeck._id}`);
+      navigate(ROUTES.DECK_DETAILS(createdDeck._id));
     } catch (error) {
       addToast({
         title: "Error",

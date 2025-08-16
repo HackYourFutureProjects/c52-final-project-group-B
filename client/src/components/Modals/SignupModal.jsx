@@ -62,6 +62,8 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
     <Modal
       backdrop="blur"
       isOpen={isSignupOpen}
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
       motionProps={{
         variants: {
           enter: {

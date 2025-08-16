@@ -685,3 +685,26 @@ export const SearchIcon = ({
 };
 
 SearchIcon.propTypes = IconPropTypes;
+
+export const FlagIcon = ({
+  fill = "currentColor",
+  size,
+  height,
+  width,
+  ...props
+}) => {
+  return (
+    <svg
+      fill={fill}
+      viewBox="0 0 24 24"
+      height={size || height || 24}
+      width={size || width || 24}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M18.383,4.318c-0.374-0.155-0.804-0.069-1.09,0.217c-1.264,1.263-3.321,1.264-4.586,0c-2.045-2.043-5.37-2.043-7.414,0  C5.105,4.722,5,4.977,5,5.242v13c0,0.552,0.447,1,1,1s1-0.448,1-1v-4.553c1.271-0.997,3.121-0.911,4.293,0.26  c2.045,2.043,5.371,2.043,7.414,0C18.895,13.761,19,13.507,19,13.242v-8C19,4.837,18.756,4.473,18.383,4.318z" />
+    </svg>
+  );
+};
+
+FlagIcon.propTypes = IconPropTypes;

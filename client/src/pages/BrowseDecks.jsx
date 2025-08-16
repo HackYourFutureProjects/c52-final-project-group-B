@@ -9,57 +9,76 @@ import {
   Avatar,
   Slider,
   Pagination,
+  Spinner,
 } from "@heroui/react";
 import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
 import languages from "@/data/languages.js";
 import { SearchIcon } from "@/components/Icons";
+import { ROUTES } from "@/routes/paths";
 
 const BrowseDecks = () => {
-  const [decks, setDecks] = useState(null);
-  const [filterParams, setFilterParams] = useSearchParams();
+  const [decks, setDecks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const search = filterParams.get("search") || "";
-  const language = filterParams.get("language") || "";
-  const numCardsMin = filterParams.get("numCardsMin") || "10";
-  const numCardsMax = filterParams.get("numCardsMax") || "100";
-  const decksPerPage = filterParams.get("decksPerPage") || "20";
-  const sortBy = filterParams.get("sortBy") || "most_recent";
-  const page = parseInt(filterParams.get("page")) || 1;
+  const search = searchParams.get("search") || "";
+  const language = searchParams.get("language") || "";
+  const numCardsMin = searchParams.get("numCardsMin") || "10";
+  const numCardsMax = searchParams.get("numCardsMax") || "100";
+  const decksPerPage = searchParams.get("decksPerPage") || "20";
+  const sortBy = searchParams.get("sortBy") || "most_recent";
+  const page = parseInt(searchParams.get("page") || "1");
+
+  const updateSearchParams = (key, value) => {
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
+        if (value !== null && value !== "") {
+          newParams.set(key, value);
+        } else {
+          newParams.delete(key);
+        }
+        return newParams;
+      },
+      { replace: true }
+    );
+  };
 
   useEffect(() => {
     const fetchDecks = async () => {
+      setIsLoading(true);
       try {
-        const result = await getDecks();
-        setDecks(result);
+        const result = await getDecks({
+          page,
+          limit: Number(decksPerPage),
+          search,
+          language,
+          numCardsMin,
+          numCardsMax,
+          sortBy,
+        });
+        setDecks(result.items || []);
+        setTotalPages(result.pages || 1);
       } catch (e) {
         console.error(e);
+        setDecks([]);
+        setTotalPages(1);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchDecks();
-  }, [filterParams]);
-
-  const updateFilterParams = (key, value) => {
-    setFilterParams(
-      (filterParams) => {
-        if (value !== null && value !== "") {
-          filterParams.set(key, value);
-        } else {
-          filterParams.delete(key);
-        }
-        return filterParams;
-      },
-      { replace: true } // true is set to avoid history update when changing filter params
-    );
-  };
+  }, [searchParams]);
 
   return (
     <>
       <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
-            { label: "Home", path: "/" },
-            { label: `Browse Decks`, path: `/browse` },
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Browse Decks`, path: ROUTES.BROWSE },
           ]}
         >
           Browse Decks
@@ -76,37 +95,34 @@ const BrowseDecks = () => {
             maxLength={100}
             endContent={<SearchIcon />}
             value={search}
-            onChange={(e) => {
-              updateFilterParams("search", e.target.value);
-            }}
+            onChange={(e) => updateSearchParams("search", e.target.value)}
           />
+
           <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
               label="Language"
               radius="full"
-              /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
               isClearable
               className="basis-full"
               selectedKeys={[language]}
-              onChange={(e) => {
-                updateFilterParams("language", e.target.value);
-              }}
+              onChange={(e) => updateSearchParams("language", e.target.value)}
             >
-              {languages.map((language) => (
+              {languages.map((lang) => (
                 <SelectItem
-                  key={language.key}
+                  key={lang.key}
                   startContent={
                     <Avatar
-                      alt={language.label}
+                      alt={lang.label}
                       className="h-6 w-6"
-                      src={`https://flagcdn.com/${language.code}.svg`}
+                      src={`https://flagcdn.com/${lang.code}.svg`}
                     />
                   }
                 >
-                  {language.label}
+                  {lang.label}
                 </SelectItem>
               ))}
             </Select>
+
             <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
               <Slider
                 label="Number of Cards"
@@ -115,10 +131,10 @@ const BrowseDecks = () => {
                 minValue={0}
                 showTooltip={true}
                 size="sm"
-                defaultValue={[numCardsMin, numCardsMax]}
+                defaultValue={[Number(numCardsMin), Number(numCardsMax)]}
                 onChangeEnd={(e) => {
-                  updateFilterParams("numCardsMin", e[0]);
-                  updateFilterParams("numCardsMax", e[1]);
+                  updateSearchParams("numCardsMin", e[0]);
+                  updateSearchParams("numCardsMax", e[1]);
                 }}
               />
             </div>
@@ -126,76 +142,71 @@ const BrowseDecks = () => {
         </div>
       </Form>
 
-      <div className="mt-20 flex items-center justify-between">
-        <div className="flex basis-3/4 flex-col">
-          <h3 className="text-xl font-bold">
-            Browse through our collection of decks
-          </h3>
-          <p className="text-gray-500">
-            {decks && `${decks.length} decks found`}
-          </p>
+      {isLoading ? (
+        <div className="flex w-full justify-center py-20">
+          <Spinner size="lg" color="primary" />
         </div>
-        <div className="flex basis-1/4 items-center gap-3">
-          <Select
-            label="Sort By"
-            radius="full"
-            disallowEmptySelection
-            defaultSelectedKeys={[sortBy]}
-            onChange={(e) => {
-              updateFilterParams("sortBy", e.target.value);
-            }}
-          >
-            <SelectItem key={"most_recent"}>Most Recent</SelectItem>
-            <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
-            <SelectItem key={"num_cards_asc"}>Number of Cards (Asc)</SelectItem>
-            <SelectItem key={"num_cards_desc"}>
-              Number of Cards (Desc)
-            </SelectItem>
-          </Select>
-          <Select
-            label="Decks per Page"
-            radius="full"
-            disallowEmptySelection
-            defaultSelectedKeys={[decksPerPage]}
-            onChange={(e) => {
-              updateFilterParams("decksPerPage", e.target.value);
-            }}
-          >
-            <SelectItem key={"5"}>5</SelectItem>
-            <SelectItem key={"10"}>10</SelectItem>
-            <SelectItem key={"20"}>20</SelectItem>
-            <SelectItem key={"50"}>50</SelectItem>
-          </Select>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {decks.map((deck) => (
+              <Deck
+                key={deck._id}
+                deckID={deck._id}
+                title={deck.title}
+                description={deck.description}
+                user={deck.userInfo?.username}
+                numCards={deck.cardsCount}
+                className="max-w-full"
+              />
+            ))}
+          </div>
+          <div className="flex basis-1/4 items-center gap-3">
+            <Select
+              label="Sort By"
+              radius="full"
+              disallowEmptySelection
+              selectedKeys={[sortBy]}
+              onChange={(e) => {
+                updateSearchParams("sortBy", e.target.value);
+              }}
+            >
+              <SelectItem key={"most_recent"}>Most Recent</SelectItem>
+              <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
+              <SelectItem key={"num_cards_asc"}>
+                Number of Cards (Asc)
+              </SelectItem>
+              <SelectItem key={"num_cards_desc"}>
+                Number of Cards (Desc)
+              </SelectItem>
+            </Select>
 
-      <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {decks &&
-          decks.map((deck) => (
-            <Deck
-              key={deck._id}
-              deckID={deck._id}
-              title={deck.title}
-              description={deck.description}
-              user={deck.userInfo?.username}
-              numCards={deck.cardsCount}
-              className="max-w-full"
+            <Select
+              label="Decks per Page"
+              radius="full"
+              disallowEmptySelection
+              selectedKeys={[decksPerPage]}
+              onChange={(e) => {
+                updateSearchParams("decksPerPage", e.target.value);
+              }}
+            >
+              <SelectItem key={"5"}>5</SelectItem>
+              <SelectItem key={"10"}>10</SelectItem>
+              <SelectItem key={"20"}>20</SelectItem>
+              <SelectItem key={"50"}>50</SelectItem>
+            </Select>
+          </div>
+          <div className="mt-20 flex flex-col items-center justify-center">
+            <Pagination
+              showControls
+              radius="full"
+              page={page}
+              total={totalPages}
+              onChange={(newPage) => updateSearchParams("page", newPage)}
             />
-          ))}
-      </div>
-
-      <div className="mt-20 flex flex-col items-center justify-center">
-        <Pagination
-          showControls
-          radius="full"
-          initialPage={page}
-          total={10}
-          onChange={(page) => updateFilterParams("page", page)}
-        />
-        <p className="text-default-800 mt-2 text-sm">
-          Showing 1-20 of 200 results
-        </p>
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

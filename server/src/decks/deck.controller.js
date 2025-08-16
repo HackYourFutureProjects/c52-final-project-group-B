@@ -6,7 +6,6 @@ import {
   paginationQuerySchema,
 } from "./deck.schema.js";
 import DeckService from "./deck.service.js";
-
 import {
   cardParamsSchema,
   createCardSchema,
@@ -16,8 +15,8 @@ import {
 const deckService = new DeckService();
 
 export const getDecks = async (req, res) => {
-  const { page, limit } = paginationQuerySchema.parse(req.query);
-  const decks = await deckService.getDecks({ page, limit });
+  const { page, limit, search } = paginationQuerySchema.parse(req.query);
+  const decks = await deckService.getDecks({ page, limit, search });
   res.status(HTTP_STATUS.OK).json(decks);
 };
 
@@ -30,8 +29,8 @@ export const getDeckById = async (req, res) => {
 export const updateDeck = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
   const updatedData = updateDeckSchema.parse(req.body);
-
   const deck = await deckService.updateDeck(deckId, updatedData, req.user.id);
+  
   res.status(HTTP_STATUS.OK).json(deck);
 };
 
@@ -39,15 +38,13 @@ export const createDeck = async (req, res) => {
   const deckData = createDeckSchema.parse(req.body);
   deckData.userId = req.user.id;
   const newDeck = await deckService.createDeck(deckData);
-
   res.status(HTTP_STATUS.CREATED).json(newDeck);
 };
 
 export const deleteDeck = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
-
   await deckService.deleteDeck(deckId, req.user.id);
-
+  
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
 };
 
@@ -66,12 +63,7 @@ export const getCardById = async (req, res) => {
 
 export const createCard = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
-
-  const rawCardData = {
-    ...req.body,
-    deckId,
-  };
-
+  const rawCardData = { ...req.body, deckId };
   const cardData = createCardSchema.parse(rawCardData);
   const newCard = await deckService.createDeckCard(cardData, req.user.id);
 
@@ -81,20 +73,17 @@ export const createCard = async (req, res) => {
 export const updateCardById = async (req, res) => {
   const { deckId, cardId } = cardParamsSchema.parse(req.params);
   const updatedCardData = updateCardSchema.parse(req.body);
-
   const updatedCard = await deckService.updateCard(
     deckId,
     cardId,
     updatedCardData,
     req.user.id,
   );
-
   res.status(HTTP_STATUS.OK).json(updatedCard);
 };
 
 export const deleteCardById = async (req, res) => {
   const { deckId, cardId } = cardParamsSchema.parse(req.params);
-
   await deckService.deleteCardByDeckAndId(deckId, cardId, req.user.id);
 
   res.status(HTTP_STATUS.OK).json({ message: "Card deleted successfully" });

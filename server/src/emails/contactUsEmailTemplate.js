@@ -1,4 +1,4 @@
-const resetPasswordEmailTemplate = (name, link) => {
+const contactUsEmailTemplate = (name, email, subject, message) => {
   return `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html dir="ltr" lang="en">
@@ -30,7 +30,7 @@ const resetPasswordEmailTemplate = (name, link) => {
                   "
                   data-skip-in-text="true"
                 >
-                  Memix - Password Reset Request
+                  Memix - Contact Form Submission
                 </div>
                 <table
                   align="center"
@@ -112,88 +112,67 @@ const resetPasswordEmailTemplate = (name, link) => {
                                         <h1
                                           style="color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;font-size:20px;font-weight:bold;margin-bottom:15px"
                                         >
-                                          Password Reset Request
+                                          Contact us form Submission
                                         </h1>
                                         <p
                                           style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:24px 0;margin-bottom:14px;margin-top:24px;margin-right:0;margin-left:0"
                                         >
-                                          Hello <b>${name}</b>,<br />Someone
-                                          recently requested a password change for
-                                          your Memix account. If this was you, you
-                                          can set a new password here:
+                                          Someone has submitted a contact us form on
+                                          Memix. Here are the details:
                                         </p>
                                         <table
-                                          align="center"
                                           width="100%"
                                           border="0"
                                           cellpadding="0"
                                           cellspacing="0"
                                           role="presentation"
-                                          style="
-                                            display: flex;
-                                            align-items: center;
-                                            justify-content: center;
-                                          "
                                         >
                                           <tbody>
                                             <tr>
                                               <td>
+                                                ${
+                                                  name &&
+                                                  `
                                                 <p
-                                                  style="font-size:14px;line-height:24px;color:#333;padding-bottom:20px;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0;font-weight:bold;text-align:center;margin-top:0;margin-bottom:0;margin-left:0;margin-right:0"
+                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
                                                 >
-                                                  <a
-                                                    href="${link}"
-                                                    style="
-                                                      color: #333;
-                                                      text-decoration: underline;
-                                                      font-size: 14px;
-                                                      text-decoration-line: none;
-                                                      background-color: #e7fe55;
-                                                      padding: 10px 30px;
-                                                      border-radius: 35px;
-                                                    "
-                                                    >Password Reset</a
+                                                  <strong style="color: #a9b941">
+                                                    Name:
+                                                  </strong>
+                                                  ${name}
+                                                </p>
+                                                `
+                                                }
+                                                <p
+                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
+                                                >
+                                                  <strong style="color: #a9b941">
+                                                    Email:
+                                                  </strong>
+                                                  <a href="mailto:${email}"
+                                                    >${email}</a
                                                   >
                                                 </p>
                                                 <p
-                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;text-align:center;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
+                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
                                                 >
-                                                  (This link is valid for 1 hour)
+                                                  <strong style="color: #a9b941">
+                                                    Subject:
+                                                  </strong>
+                                                  ${subject}
+                                                </p>
+                                                <p
+                                                  style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
+                                                >
+                                                  <strong style="color: #a9b941">
+                                                    Message:
+                                                  </strong>
+                                                  ${message}
                                                 </p>
                                               </td>
                                             </tr>
                                           </tbody>
                                         </table>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                                <hr
-                                  style="
-                                    width: 100%;
-                                    border: none;
-                                    border-top: 1px solid #eaeaea;
-                                  "
-                                />
-                                <table
-                                  align="center"
-                                  width="100%"
-                                  border="0"
-                                  cellpadding="0"
-                                  cellspacing="0"
-                                  role="presentation"
-                                  style="padding: 25px 35px"
-                                >
-                                  <tbody>
-                                    <tr>
-                                      <td>
-                                        <p
-                                          style="font-size:14px;line-height:24px;color:#333;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif;margin:0px;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:0px"
-                                        >
-                                          If you don't want to change your password
-                                          or didn't request this, just ignore and
-                                          delete this message.
-                                        </p>
                                       </td>
                                     </tr>
                                   </tbody>
@@ -224,7 +203,8 @@ const resetPasswordEmailTemplate = (name, link) => {
         </table>
       </body>
     </html>
+
   `;
 };
 
-export default resetPasswordEmailTemplate;
+export default contactUsEmailTemplate;
