@@ -83,7 +83,7 @@ const CreateDeck = () => {
 
       await Promise.all(cardPromises);
 
-      navigate(ROUTES.DECK_DETAILS?.(createdDeck._id));
+      navigate(ROUTES.DECK_DETAILS(createdDeck._id));
     } catch (error) {
       addToast({
         title: "Error",
