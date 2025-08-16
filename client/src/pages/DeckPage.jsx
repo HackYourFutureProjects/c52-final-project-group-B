@@ -94,7 +94,7 @@ const DeckPage = () => {
             { label: `Library`, path: ROUTES.DECKS },
             {
               label: `${deck?.title || (isLoading ? "Loading..." : "Deck")}`,
-              path: `${ROUTES.DECK_DETAILS?.(id)}`,
+              path: `${ROUTES.DECK_DETAILS(id)}`,
             },
           ]}
         >
