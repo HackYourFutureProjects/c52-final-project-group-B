@@ -99,7 +99,7 @@ const DeckPage = () => {
       forceLogin();
       return;
     }
-    navigate(`/deck/${id}/edit`);
+    navigate(`/decks/${id}/edit`);
   };
 
   const handleDeleteDeck = () => {
