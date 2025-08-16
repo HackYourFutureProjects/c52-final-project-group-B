@@ -30,14 +30,20 @@ const BrowseDecks = () => {
   useEffect(() => {
     const fetchDecks = async () => {
       try {
-        const result = await getDecks();
-        setDecks(result);
+        // pass search + pagination to backend
+        const result = await getDecks({
+          page,
+          limit: Number(decksPerPage),
+          search,
+        });
+        setDecks(result.items || []);
       } catch (e) {
         console.error(e);
+        setDecks([]);
       }
     };
     fetchDecks();
-  }, [filterParams]);
+  }, [filterParams]); // keep as colleagues had it
 
   const updateFilterParams = (key, value) => {
     setFilterParams(
@@ -59,7 +65,7 @@ const BrowseDecks = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Browse Decks`, path: `/browse` },
+            { label: "Browse Decks", path: "/browse" },
           ]}
         >
           Browse Decks
@@ -80,6 +86,7 @@ const BrowseDecks = () => {
               updateFilterParams("search", e.target.value);
             }}
           />
+
           <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
               label="Language"
@@ -107,6 +114,7 @@ const BrowseDecks = () => {
                 </SelectItem>
               ))}
             </Select>
+
             <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
               <Slider
                 label="Number of Cards"
@@ -135,6 +143,7 @@ const BrowseDecks = () => {
             {decks && `${decks.length} decks found`}
           </p>
         </div>
+
         <div className="flex basis-1/4 items-center gap-3">
           <Select
             label="Sort By"
@@ -152,6 +161,7 @@ const BrowseDecks = () => {
               Number of Cards (Desc)
             </SelectItem>
           </Select>
+
           <Select
             label="Decks per Page"
             radius="full"

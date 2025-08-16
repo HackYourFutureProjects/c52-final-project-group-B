@@ -11,7 +11,9 @@ import {
   forgetPasswordEmail,
   verifyResetToken,
   resetPassword,
+  reportProblemEmail,
 } from "./user.controller.js";
+import { authenticate } from "../middlewares/auth.js";
 
 const userRouter = Router();
 
@@ -22,6 +24,7 @@ userRouter.put("/me", updateCurrentUser);
 
 userRouter.post("/login", loginUser);
 userRouter.post("/refresh-token", refreshToken);
+
 userRouter.put("/:userId/password", changePassword);
 userRouter.post("/forget-password", forgetPasswordEmail);
 userRouter.get("/reset-password/verify", verifyResetToken);
@@ -29,5 +32,7 @@ userRouter.post("/reset-password", resetPassword);
 
 userRouter.delete("/deactivate", softDeleteUser);
 userRouter.put("/activate", activateUser);
+
+userRouter.post("/report-problem", authenticate, reportProblemEmail);
 
 export default userRouter;

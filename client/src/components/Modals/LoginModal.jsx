@@ -55,6 +55,8 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
     <Modal
       backdrop="blur"
       isOpen={isLoginOpen}
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
       motionProps={{
         variants: {
           enter: {

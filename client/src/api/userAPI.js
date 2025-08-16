@@ -45,4 +45,7 @@ export const deactivateUser = async (userId) => {
 
 export const activateUser = async (userId) => {
   return apiRequest(`/users/activate`, "PUT", { userId }, true);
+
+export const sendProblemReport = async (reportData) => {
+  return apiRequest(`/users/report-problem`, "POST", reportData, true);
 };

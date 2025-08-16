@@ -10,6 +10,7 @@ import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import BrowseDecks from "@/pages/BrowseDecks";
+import Support from "@/pages/Support";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/support" element={<Support />} />
 
       <Route path="/users/me" element={<UserProfile />} />
       <Route path="/profile" element={<Navigate to="/users/me" replace />} />
