@@ -16,35 +16,33 @@ class DeckService {
     const pageSize = Math.min(100, Math.max(1, Number(limit)));
     const skip = (pageNumber - 1) * pageSize;
 
-    const hasSearch = typeof search === "string" && search.trim().length > 0;
-    const regex = hasSearch
-      ? new RegExp(this.#escapeRegExp(search.trim()), "i")
+    const hasSearch = typeof search === "string" && search.trim() !== "";
+    const escaped = this.#escapeRegExp(search.trim());
+    const regex = new RegExp(escaped, "i");
+
+    const matchStage = hasSearch
+      ? {
+          $match: {
+            $or: [
+              { title: { $regex: regex } },
+              { description: { $regex: regex } },
+              { "cards.question": { $regex: regex } },
+              { "cards.answer": { $regex: regex } },
+            ],
+          },
+        }
       : null;
 
-    const [agg] = await DeckModel.aggregate([
+    const pipeline = [
       {
         $lookup: {
           from: "cards",
           localField: "_id",
           foreignField: "deckId",
           as: "cards",
-          pipeline: [{ $project: { question: 1, answer: 1 } }],
         },
       },
-      ...(hasSearch
-        ? [
-            {
-              $match: {
-                $or: [
-                  { title: { $regex: regex } },
-                  { description: { $regex: regex } },
-                  { "cards.question": { $regex: regex } },
-                  { "cards.answer": { $regex: regex } },
-                ],
-              },
-            },
-          ]
-        : []),
+      ...(matchStage ? [matchStage] : []),
       { $addFields: { cardsCount: { $size: "$cards" } } },
       {
         $lookup: {
@@ -66,27 +64,24 @@ class DeckService {
           "userInfo.updatedAt": 0,
         },
       },
+      { $sort: { createdAt: -1 } },
       {
         $facet: {
-          items: [
-            { $sort: { createdAt: -1 } },
-            { $skip: skip },
-            { $limit: pageSize },
-          ],
-          total: [{ $count: "count" }],
+          meta: [{ $count: "total" }],
+          items: [{ $skip: skip }, { $limit: pageSize }],
         },
       },
-    ]);
+    ];
 
-    const items = agg?.items ?? [];
-    const total = agg?.total?.[0]?.count ?? 0;
+    const [res] = await DeckModel.aggregate(pipeline);
+    const total = res?.meta?.[0]?.total ?? 0;
 
     return {
-      items,
+      items: res?.items ?? [],
       total,
       page: pageNumber,
       limit: pageSize,
-      pages: Math.ceil(total / pageSize),
+      pages: Math.ceil(total / pageSize) || 1,
     };
   }
 
