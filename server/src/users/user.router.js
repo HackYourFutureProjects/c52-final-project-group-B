@@ -4,6 +4,7 @@ import {
   handleGetCurrentUser,
   updateCurrentUser,
   softDeleteUser,
+  activateUser,
   loginUser,
   changePassword,
   refreshToken,
@@ -29,7 +30,8 @@ userRouter.post("/forget-password", forgetPasswordEmail);
 userRouter.get("/reset-password/verify", verifyResetToken);
 userRouter.post("/reset-password", resetPassword);
 
-userRouter.delete("/:userId", softDeleteUser);
+userRouter.delete("/deactivate", softDeleteUser);
+userRouter.put("/activate", activateUser);
 
 userRouter.post("/report-problem", authenticate, reportProblemEmail);
 
