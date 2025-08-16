@@ -7,17 +7,33 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 
 class DeckService {
-  async getDecks({ page = 1, limit = 20 } = {}) {
+  #escapeRegExp(s = "") {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  async getDecks({ page = 1, limit = 20, search = "" } = {}) {
     const pageNumber = Math.max(1, Number(page));
     const pageSize = Math.min(100, Math.max(1, Number(limit)));
     const skip = (pageNumber - 1) * pageSize;
 
-    const total = await DeckModel.countDocuments();
+    const hasSearch = typeof search === "string" && search.trim() !== "";
+    const escaped = this.#escapeRegExp(search.trim());
+    const regex = new RegExp(escaped, "i");
 
-    const decksWithCount = await DeckModel.aggregate([
-      { $sort: { createdAt: -1 } },
-      { $skip: skip },
-      { $limit: pageSize },
+    const matchStage = hasSearch
+      ? {
+          $match: {
+            $or: [
+              { title: { $regex: regex } },
+              { description: { $regex: regex } },
+              { "cards.question": { $regex: regex } },
+              { "cards.answer": { $regex: regex } },
+            ],
+          },
+        }
+      : null;
+
+    const pipeline = [
       {
         $lookup: {
           from: "cards",
@@ -26,11 +42,8 @@ class DeckService {
           as: "cards",
         },
       },
-      {
-        $addFields: {
-          cardsCount: { $size: "$cards" },
-        },
-      },
+      ...(matchStage ? [matchStage] : []),
+      { $addFields: { cardsCount: { $size: "$cards" } } },
       {
         $lookup: {
           from: "users",
@@ -51,14 +64,24 @@ class DeckService {
           "userInfo.updatedAt": 0,
         },
       },
-    ]);
+      { $sort: { createdAt: -1 } },
+      {
+        $facet: {
+          meta: [{ $count: "total" }],
+          items: [{ $skip: skip }, { $limit: pageSize }],
+        },
+      },
+    ];
+
+    const [res] = await DeckModel.aggregate(pipeline);
+    const total = res?.meta?.[0]?.total ?? 0;
 
     return {
-      items: decksWithCount,
+      items: res?.items ?? [],
       total,
       page: pageNumber,
       limit: pageSize,
-      pages: Math.ceil(total / pageSize),
+      pages: Math.ceil(total / pageSize) || 1,
     };
   }
 
@@ -72,7 +95,6 @@ class DeckService {
 
     const count = await CardModel.countDocuments({ deckId: deck._id });
     deckObj.cardsCount = count;
-
     return deckObj;
   }
 
@@ -81,13 +103,11 @@ class DeckService {
       new: true,
       runValidators: true,
     });
-
     if (!updatedDeck) {
       const error = new Error("Deck not found");
       error.status = HTTP_STATUS.NOT_FOUND;
       throw error;
     }
-
     return updatedDeck;
   }
 
@@ -98,17 +118,13 @@ class DeckService {
   async deleteDeck(id) {
     const session = await mongoose.startSession();
     session.startTransaction();
-
     try {
       const deleted = await DeckModel.findByIdAndDelete(id).session(session);
-
       if (!deleted) {
         await session.abortTransaction();
         createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
       }
-
       await CardModel.deleteMany({ deckId: id }).session(session);
-
       await session.commitTransaction();
       return deleted;
     } catch (err) {
@@ -121,23 +137,16 @@ class DeckService {
 
   async getCardsByDeckId(id) {
     const deck = await DeckModel.findById(id);
-
     if (!deck) createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
-
     const cards = await CardModel.find({ deckId: id });
     return cards;
   }
 
   async getCardByDeckAndCardId(deckId, cardId) {
-    const card = await CardModel.findOne({
-      _id: cardId,
-      deckId: deckId,
-    });
-
+    const card = await CardModel.findOne({ _id: cardId, deckId: deckId });
     if (!card) {
       createAndThrowError(HTTP_STATUS.NOT_FOUND, "Card not found");
     }
-
     return card;
   }
 
@@ -151,11 +160,9 @@ class DeckService {
       { $set: data },
       { new: true },
     );
-
     if (!updatedCard) {
       createAndThrowError(HTTP_STATUS.NOT_FOUND, "Card not found");
     }
-
     return updatedCard;
   }
 
@@ -164,7 +171,6 @@ class DeckService {
       _id: cardId,
       deckId: deckId,
     });
-
     if (!deleted) {
       createAndThrowError(
         HTTP_STATUS.NOT_FOUND,
