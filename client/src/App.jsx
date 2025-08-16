@@ -22,7 +22,7 @@ const App = () => {
       <Route path={ROUTES.TERMS} element={<Terms />} />
       <Route path="/support" element={<Support />} />
       <Route path={ROUTES.FAQ} element={<FAQ />} />
-      
+
       <Route path={ROUTES.USER_PROFILE} element={<UserProfile />} />
       <Route
         path={ROUTES.PROFILE}
@@ -35,7 +35,7 @@ const App = () => {
       <Route path={ROUTES.DECKS + "/:id"} element={<DeckPage />} />
       <Route path={ROUTES.DECKS + "/:id/edit"} element={<EditDeck />} />
       <Route path={ROUTES.DECKS + "/:id/card-mode"} element={<CardMode />} />
-        
+
       <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

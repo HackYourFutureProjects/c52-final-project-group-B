@@ -38,7 +38,7 @@ const DeckPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, forceLogin } = useContext(UserContext);

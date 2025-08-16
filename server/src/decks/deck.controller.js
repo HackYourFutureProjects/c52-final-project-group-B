@@ -30,7 +30,7 @@ export const updateDeck = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
   const updatedData = updateDeckSchema.parse(req.body);
   const deck = await deckService.updateDeck(deckId, updatedData, req.user.id);
-  
+
   res.status(HTTP_STATUS.OK).json(deck);
 };
 
@@ -44,7 +44,7 @@ export const createDeck = async (req, res) => {
 export const deleteDeck = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
   await deckService.deleteDeck(deckId, req.user.id);
-  
+
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
 };
 
