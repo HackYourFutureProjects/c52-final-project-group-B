@@ -55,7 +55,7 @@ const BrowseDecks = () => {
         }
         return filterParams;
       },
-      { replace: true } // true is set to avoid history update whengreaeaerganging filter params
+      { replace: true } // true is set to avoid history update when changing filter params
     );
   };
 
@@ -84,7 +84,6 @@ const BrowseDecks = () => {
             value={search}
             onChange={(e) => {
               updateFilterParams("search", e.target.value);
-              updateFilterParams("page", "1");
             }}
           />
 
@@ -98,7 +97,6 @@ const BrowseDecks = () => {
               selectedKeys={[language]}
               onChange={(e) => {
                 updateFilterParams("language", e.target.value);
-                updateFilterParams("page", "1");
               }}
             >
               {languages.map((language) => (
@@ -129,7 +127,6 @@ const BrowseDecks = () => {
                 onChangeEnd={(e) => {
                   updateFilterParams("numCardsMin", e[0]);
                   updateFilterParams("numCardsMax", e[1]);
-                  updateFilterParams("page", "1");
                 }}
               />
             </div>
@@ -155,15 +152,13 @@ const BrowseDecks = () => {
             defaultSelectedKeys={[sortBy]}
             onChange={(e) => {
               updateFilterParams("sortBy", e.target.value);
-              updateFilterParams("page", "1");
             }}
           >
             <SelectItem key={"most_recent"}>Most Recent</SelectItem>
             <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
             <SelectItem key={"num_cards_asc"}>Number of Cards (Asc)</SelectItem>
             <SelectItem key={"num_cards_desc"}>
-              {" "}
-              Number of Cards (Desc){" "}
+              Number of Cards (Desc)
             </SelectItem>
           </Select>
 
@@ -174,7 +169,6 @@ const BrowseDecks = () => {
             defaultSelectedKeys={[decksPerPage]}
             onChange={(e) => {
               updateFilterParams("decksPerPage", e.target.value);
-              updateFilterParams("page", "1");
             }}
           >
             <SelectItem key={"5"}>5</SelectItem>
