@@ -11,6 +11,7 @@ import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import BrowseDecks from "@/pages/BrowseDecks";
 import { ROUTES } from "@/routes/paths";
+import Support from "@/pages/Support";
 
 const App = () => {
   return (
@@ -18,7 +19,10 @@ const App = () => {
       <Route path={ROUTES.HOME} element={<Home />} />
       <Route path={ROUTES.ABOUT} element={<About />} />
       <Route path={ROUTES.TERMS} element={<Terms />} />
-
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/support" element={<Support />} />
       <Route path={ROUTES.USER_PROFILE} element={<UserProfile />} />
       <Route
         path={ROUTES.PROFILE}

@@ -54,6 +54,7 @@ const BrowseDecks = () => {
           page,
           limit: Number(decksPerPage),
           search,
+
           language,
           numCardsMin,
           numCardsMax,
@@ -63,11 +64,16 @@ const BrowseDecks = () => {
       } catch (e) {
         console.error(e);
         setDecks([]);
+
       } finally {
         setIsLoading(false);
       }
     };
 
+      }
+    };
+    fetchDecks();
+  }, [filterParams]); // keep as colleagues had it
     fetchDecks();
   }, [searchParams]);
 
@@ -78,6 +84,7 @@ const BrowseDecks = () => {
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
             { label: `Browse Decks`, path: ROUTES.BROWSE },
+            { label: "Home", path: "/" },
           ]}
         >
           Browse Decks
@@ -96,6 +103,7 @@ const BrowseDecks = () => {
             value={search}
             onChange={(e) => updateSearchParams("search", e.target.value)}
           />
+
           <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
             <Select
               label="Language"
@@ -120,6 +128,7 @@ const BrowseDecks = () => {
                 </SelectItem>
               ))}
             </Select>
+
             <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
               <Slider
                 label="Number of Cards"
@@ -158,7 +167,40 @@ const BrowseDecks = () => {
               />
             ))}
           </div>
+        <div className="flex basis-1/4 items-center gap-3">
+          <Select
+            label="Sort By"
+            radius="full"
+            disallowEmptySelection
+            defaultSelectedKeys={[sortBy]}
+            onChange={(e) => {
+              updateFilterParams("sortBy", e.target.value);
+            }}
+          >
+            <SelectItem key={"most_recent"}>Most Recent</SelectItem>
+            <SelectItem key={"alphabetical"}>Alphabetical</SelectItem>
+            <SelectItem key={"num_cards_asc"}>Number of Cards (Asc)</SelectItem>
+            <SelectItem key={"num_cards_desc"}>
+              Number of Cards (Desc)
+            </SelectItem>
+          </Select>
 
+          <Select
+            label="Decks per Page"
+            radius="full"
+            disallowEmptySelection
+            defaultSelectedKeys={[decksPerPage]}
+            onChange={(e) => {
+              updateFilterParams("decksPerPage", e.target.value);
+            }}
+          >
+            <SelectItem key={"5"}>5</SelectItem>
+            <SelectItem key={"10"}>10</SelectItem>
+            <SelectItem key={"20"}>20</SelectItem>
+            <SelectItem key={"50"}>50</SelectItem>
+          </Select>
+        </div>
+      </div>
           <div className="mt-20 flex flex-col items-center justify-center">
             <Pagination
               showControls
