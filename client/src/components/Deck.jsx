@@ -24,7 +24,7 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
         className
       )}
       classNames={{ base: "rounded-[35px]" }}
-      onPress={() => navigate(ROUTES.DECK_DETAILS?.(deckID))}
+      onPress={() => navigate(ROUTES.DECK_DETAILS(deckID))}
     >
       <CardHeader className="flex items-start justify-between gap-3">
         <p className="heading-title text-left font-bold">{title}</p>
@@ -56,7 +56,7 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
           radius="full"
           size="md"
           variant="solid"
-          href={ROUTES.DECK_DETAILS?.(deckID)}
+          href={ROUTES.DECK_DETAILS(deckID)}
         >
           <svg
             fill="none"
