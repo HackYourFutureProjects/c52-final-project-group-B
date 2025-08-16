@@ -98,37 +98,73 @@ class DeckService {
     return deckObj;
   }
 
-  async updateDeck(id, updatedData) {
-    const updatedDeck = await DeckModel.findByIdAndUpdate(id, updatedData, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updatedDeck) {
+  async updateDeck(id, updatedData, userId) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const existingDeck = await DeckModel.findById(id);
+
+    if (!existingDeck) {
       const error = new Error("Deck not found");
       error.status = HTTP_STATUS.NOT_FOUND;
       throw error;
     }
+
+    const updatedDeck = await DeckModel.findOneAndUpdate(
+      { _id: id, userId: userObjectId },
+      updatedData,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updatedDeck) {
+      const error = new Error(
+        "Deck not found or you don't have permission to update it",
+      );
+      error.status = HTTP_STATUS.NOT_FOUND;
+      throw error;
+    }
+
     return updatedDeck;
   }
 
   async createDeck(data) {
+    if (data.userId) {
+      data.userId = new mongoose.Types.ObjectId(data.userId);
+    }
     return await DeckModel.create(data);
   }
 
-  async deleteDeck(id) {
+  async deleteDeck(id, userId) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const existingDeck = await DeckModel.findById(id);
+
+    if (!existingDeck) {
+      createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
+    }
+
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const deleted = await DeckModel.findByIdAndDelete(id).session(session);
+      const deleted = await DeckModel.findOneAndDelete({
+        _id: id,
+        userId: userObjectId,
+      }).session(session);
+
       if (!deleted) {
         await session.abortTransaction();
-        createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
+        createAndThrowError(
+          HTTP_STATUS.NOT_FOUND,
+          "Deck not found or you don't have permission to delete it",
+        );
       }
       await CardModel.deleteMany({ deckId: id }).session(session);
       await session.commitTransaction();
       return deleted;
     } catch (err) {
-      await session.abortTransaction();
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
       throw err;
     } finally {
       session.endSession();
@@ -150,11 +186,33 @@ class DeckService {
     return card;
   }
 
-  async createDeckCard(cardData) {
+  async createDeckCard(cardData, userId) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const deck = await DeckModel.findOne({
+      _id: cardData.deckId,
+      userId: userObjectId,
+    });
+    if (!deck) {
+      createAndThrowError(
+        HTTP_STATUS.NOT_FOUND,
+        "Deck not found or you don't have permission to add cards to it",
+      );
+    }
     return await CardModel.create(cardData);
   }
 
-  async updateCard(deckId, cardId, data) {
+  async updateCard(deckId, cardId, data, userId) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const deck = await DeckModel.findOne({ _id: deckId, userId: userObjectId });
+    if (!deck) {
+      createAndThrowError(
+        HTTP_STATUS.NOT_FOUND,
+        "Deck not found or you don't have permission to modify cards in it",
+      );
+    }
+
     const updatedCard = await CardModel.findOneAndUpdate(
       { _id: cardId, deckId },
       { $set: data },
@@ -166,7 +224,17 @@ class DeckService {
     return updatedCard;
   }
 
-  async deleteCardByDeckAndId(deckId, cardId) {
+  async deleteCardByDeckAndId(deckId, cardId, userId) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const deck = await DeckModel.findOne({ _id: deckId, userId: userObjectId });
+    if (!deck) {
+      createAndThrowError(
+        HTTP_STATUS.NOT_FOUND,
+        "Deck not found or you don't have permission to delete cards from it",
+      );
+    }
+
     const deleted = await CardModel.findOneAndDelete({
       _id: cardId,
       deckId: deckId,
