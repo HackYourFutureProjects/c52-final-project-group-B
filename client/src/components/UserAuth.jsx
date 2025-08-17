@@ -12,7 +12,6 @@ import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
 import ResetPasswordModal from "./Modals/ResetPasswordModal";
 import { ROUTES } from "@/routes/paths";
-import { Link } from "@heroui/react";
 
 const UserAuth = () => {
   const {
