@@ -12,6 +12,7 @@ import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
 import ResetPasswordModal from "./Modals/ResetPasswordModal";
 import { ROUTES } from "@/routes/paths";
+import { Link } from "@heroui/react";
 
 const UserAuth = () => {
   const {
@@ -59,6 +60,14 @@ const UserAuth = () => {
             >
               Profile
             </DropdownItem>
+
+            <DropdownItem
+              key="myDecks"
+              onPress={() => navigate(ROUTES.MY_DECKS)}
+            >
+              My Decks
+            </DropdownItem>
+
             <DropdownItem
               key="logout"
               color="danger"

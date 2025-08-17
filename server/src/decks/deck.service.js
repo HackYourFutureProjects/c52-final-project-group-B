@@ -47,6 +47,89 @@ class DeckService {
     };
   }
 
+  async getMyDecks(
+    userId,
+    { page, limit, search, language, minCards, maxCards, sortBy } = {},
+  ) {
+    const pageNumber = Math.max(1, Number(page));
+    const pageSize = Math.min(100, Math.max(1, Number(limit)));
+    const skip = (pageNumber - 1) * pageSize;
+
+    const escapeRegExp = (s = "") => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = {
+      userId: new mongoose.Types.ObjectId(userId),
+    };
+    if (language && language.trim() !== "") {
+      match.language = language.trim();
+    }
+
+    const pipeline = [
+      { $match: match },
+      {
+        $lookup: {
+          from: "cards",
+          localField: "_id",
+          foreignField: "deckId",
+          as: "cards",
+        },
+      },
+      { $addFields: { cardsCount: { $size: "$cards" } } },
+    ];
+
+    if (typeof minCards === "number" || typeof maxCards === "number") {
+      pipeline.push({
+        $match: {
+          cardsCount: {
+            $gte: Number.isFinite(minCards) ? minCards : 0,
+            $lte: Number.isFinite(maxCards) ? maxCards : 300,
+          },
+        },
+      });
+    }
+
+    if (search && search.trim() !== "") {
+      const regex = new RegExp(escapeRegExp(search.trim()), "i");
+      pipeline.push({
+        $match: {
+          $or: [
+            { title: { $regex: regex } },
+            { description: { $regex: regex } },
+            { "cards.question": { $regex: regex } },
+            { "cards.answer": { $regex: regex } },
+          ],
+        },
+      });
+    }
+
+    // Sort options (fix ascending/descending semantics)
+    const sortOptions = {
+      mostRecent: { createdAt: -1 },
+      oldest: { createdAt: 1 },
+      numCardsAsc: { cardsCount: 1 },
+      numCardsDesc: { cardsCount: -1 },
+    };
+    pipeline.push({ $sort: sortOptions[sortBy] || sortOptions.mostRecent });
+
+    pipeline.push({
+      $project: {
+        cards: 0,
+        userId: 0,
+      },
+    });
+
+    pipeline.push({
+      $facet: {
+        meta: [{ $count: "total" }],
+        items: [{ $skip: skip }, { $limit: pageSize }],
+      },
+    });
+
+    const [res] = await DeckModel.aggregate(pipeline);
+    const total = res?.meta?.[0]?.total ?? 0;
+    const decks = res?.items ?? [];
+    return { items: decks, total, pages: Math.ceil(total / pageSize) || 1 };
+  }
+
   async getDeckById(id) {
     const deck = await DeckModel.findById(id).populate("userId", "username");
     if (!deck) createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
