@@ -78,7 +78,7 @@ const Home = () => {
               variant="ghost"
               color="default"
               radius="full"
-              href={ROUTES.DECKS}
+              href={ROUTES.BROWSE}
               className="font-bold"
             >
               Browse Decks
