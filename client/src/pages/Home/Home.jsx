@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import useJitterNumber from "@/hooks/useJitterNumber";
 import TEST_ID from "./Home.testid";
 import { Button } from "@heroui/button";
@@ -10,9 +10,11 @@ import { getDecks } from "@/api/decksAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { ROUTES } from "@/routes/paths";
+import { UserContext } from "@/context/UserContext";
 
 const Home = () => {
   const [decks, setDecks] = useState([]);
+  const { user } = useContext(UserContext);
   useEffect(() => {
     const fetchDecks = async () => {
       try {
@@ -81,16 +83,18 @@ const Home = () => {
             >
               Browse Decks
             </Button>
-            <Button
-              as={Link}
-              variant="ghost"
-              color="primary"
-              radius="full"
-              href={ROUTES.DECK_CREATE}
-              className="font-bold"
-            >
-              Create A Deck
-            </Button>
+            {user && (
+              <Button
+                as={Link}
+                variant="ghost"
+                color="primary"
+                radius="full"
+                href={ROUTES.DECK_CREATE}
+                className="font-bold"
+              >
+                Create A Deck
+              </Button>
+            )}
           </div>
         </div>
         <div className="pointer-events-none flex basis-3/5 items-center justify-center overflow-hidden rounded-[35px] select-none">
