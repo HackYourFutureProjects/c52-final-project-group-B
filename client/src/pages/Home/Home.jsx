@@ -30,8 +30,8 @@ const Home = () => {
     start: 1573,
     min: 1500,
     max: 1850,
-    interval: 6000, // реже обновляем (медленнее)
-    jitter: 3, // меньший шаг
+    interval: 6000,
+    jitter: 3,
     persistKey: "stats_active",
   });
 

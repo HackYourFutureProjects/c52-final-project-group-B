@@ -42,6 +42,12 @@ const DeckPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, forceLogin } = useContext(UserContext);
+  const isOwner =
+    user &&
+    deck &&
+    deck.userInfo &&
+    user.userid ===
+      (typeof deck.userInfo === "object" ? deck.userInfo._id : deck.userInfo);
 
   useEffect(() => {
     let isCancelled = false;
@@ -223,31 +229,36 @@ const DeckPage = () => {
             </Button>
           </Tooltip>
 
-          <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <Button isIconOnly radius="full" size="lg">
-                <MoreIcon size={30} />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Dropdown menu with icons" variant="faded">
-              <DropdownItem
-                key="edit"
-                endContent={<PencilIcon size={20} />}
-                onPress={handleEditDeck}
+          {isOwner && (
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Button isIconOnly radius="full" size="lg">
+                  <MoreIcon size={30} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Dropdown menu with icons"
+                variant="faded"
               >
-                Edit Deck
-              </DropdownItem>
-              <DropdownItem
-                key="delete"
-                className="text-danger"
-                color="danger"
-                endContent={<DeleteIcon size={20} />}
-                onPress={handleDeleteDeck}
-              >
-                Delete Deck
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+                <DropdownItem
+                  key="edit"
+                  endContent={<PencilIcon size={20} />}
+                  onPress={handleEditDeck}
+                >
+                  Edit Deck
+                </DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  endContent={<DeleteIcon size={20} />}
+                  onPress={handleDeleteDeck}
+                >
+                  Delete Deck
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          )}
         </div>
       </div>
 
