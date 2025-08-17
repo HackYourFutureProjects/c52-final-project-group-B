@@ -20,8 +20,13 @@ import apiRequest from "@/api/index";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const UserProfile = () => {
-  const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
-    useContext(UserContext);
+  const {
+    user,
+    isUserLoaded,
+    setIsLoginOpen,
+    forceLogin,
+    setLocalStorageUser,
+  } = useContext(UserContext);
 
   const [userInfo, setUserInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -64,6 +69,12 @@ const UserProfile = () => {
       const updated = await updateCurrentUser(form);
       setUserInfo(updated);
       setIsEditing(false);
+      setLocalStorageUser({
+        ...user,
+        username: updated.username,
+        profilePictureUrl: updated.profilePictureUrl,
+        email: updated.email,
+      });
     } catch (e) {
       console.error(e);
     }

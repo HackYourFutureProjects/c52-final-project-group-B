@@ -5,15 +5,23 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Avatar,
   Button,
   Link,
   Chip,
 } from "@heroui/react";
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths";
+import UserAvatar from "@/components/UserAvatar";
 
-const Deck = ({ deckID, title, description, user, numCards, className }) => {
+const Deck = ({
+  deckID,
+  title,
+  description,
+  user,
+  userProfilePictureUrl,
+  numCards,
+  className,
+}) => {
   const navigate = useNavigate();
   return (
     <Card
@@ -34,14 +42,8 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
         <p>{description}</p>
       </CardBody>
       <CardFooter className="justify-between">
-        <div className="flex gap-3">
-          <Avatar
-            color="primary"
-            radius="full"
-            size="md"
-            name="A"
-            classNames={{ base: "bg-transparent border-2 text-primary" }}
-          />
+        <div className="flex items-center gap-3">
+          <UserAvatar src={userProfilePictureUrl} alt={user} size={32} />
           <div className="flex flex-col items-start justify-center">
             <h4 className="text-default-700 text-xs leading-none font-semibold">
               Created by
@@ -77,10 +79,11 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
 };
 
 Deck.propTypes = {
-  deckID: PropTypes.number.isRequired,
+  deckID: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   user: PropTypes.string.isRequired,
+  userProfilePictureUrl: PropTypes.string,
   numCards: PropTypes.number.isRequired,
   className: PropTypes.string,
 };

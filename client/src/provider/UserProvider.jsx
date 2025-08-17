@@ -2,32 +2,35 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
-import { refreshAccessToken } from "@/api/userAPI";
+import { refreshAccessToken, getUserById } from "@/api/userAPI";
 import { addToast } from "@heroui/react";
 import { ROUTES } from "@/routes/paths";
 
 export default function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getLocalStorageUser = localStorage.getItem("user");
-    if (getLocalStorageUser) {
-      const localUser = JSON.parse(getLocalStorageUser);
-      setUser({
-        userid: localUser.userid || "",
-        username: localUser.username || "",
-        accessToken: localUser.accessToken || "",
-        refreshToken: localUser.refreshToken || "",
-      });
-    }
-    setIsUserLoaded(true);
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserById();
+        setUser({
+          userid: userData.userid,
+          username: userData.username,
+          profilePictureUrl: userData.profilePictureUrl || "",
+          accessToken: userData.accessToken || "",
+          refreshToken: userData.refreshToken || "",
+        });
+      } catch {
+        setUser(null);
+      }
+      setIsUserLoaded(true);
+    };
+    fetchUser();
   }, []);
 
   const setLocalStorageUser = (userData) => {
@@ -35,6 +38,7 @@ export default function UserProvider({ children }) {
     setUser({
       userid: userData.userid || "",
       username: userData.username || "",
+      profilePictureUrl: userData.profilePictureUrl || "",
       accessToken: userData.accessToken || "",
       refreshToken: userData.refreshToken || "",
     });
@@ -102,6 +106,7 @@ export default function UserProvider({ children }) {
     </UserContext.Provider>
   );
 }
+
 UserProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

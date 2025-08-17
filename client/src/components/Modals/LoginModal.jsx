@@ -13,7 +13,7 @@ import {
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { LockedIcon, MailIcon } from "@/components/Icons";
-import { loginUser } from "@/api/userAPI";
+import { loginUser, getUserById } from "@/api/userAPI";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
   const { setLocalStorageUser, setIsSignupOpen, setIsResetPasswordOpen } =
@@ -22,19 +22,29 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-
     try {
       const response = await loginUser({
         email: data.email,
         password: data.password,
       });
-
       if (response.accessToken) {
-        setLocalStorageUser(response);
+        setLocalStorageUser({
+          userid: response.userid,
+          username: response.username,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+          profilePictureUrl: "",
+        });
+        const userProfile = await getUserById();
+        setLocalStorageUser({
+          userid: userProfile.userid,
+          username: userProfile.username,
+          profilePictureUrl: userProfile.profilePictureUrl || "",
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        });
       }
-
       setIsLoginOpen(false);
-
       addToast({
         title: "Success",
         description: "You have successfully logged in!",
@@ -62,18 +72,12 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
           enter: {
             y: 0,
             opacity: 1,
-            transition: {
-              duration: 0.3,
-              ease: "easeOut",
-            },
+            transition: { duration: 0.3, ease: "easeOut" },
           },
           exit: {
             y: -20,
             opacity: 0,
-            transition: {
-              duration: 0.2,
-              ease: "easeIn",
-            },
+            transition: { duration: 0.2, ease: "easeIn" },
           },
         },
       }}
@@ -84,7 +88,6 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
           <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
-
           <ModalBody>
             <Input
               isRequired

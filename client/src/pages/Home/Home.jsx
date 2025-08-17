@@ -104,6 +104,7 @@ const Home = () => {
                     title={deck.title}
                     description={deck.description}
                     user={deck.userInfo?.username}
+                    userProfilePictureUrl={deck.userInfo?.profilePictureUrl}
                     numCards={deck.cardsCount}
                   />
                 ))}
@@ -118,6 +119,7 @@ const Home = () => {
                     title={deck.title}
                     description={deck.description}
                     user={deck.userInfo?.username}
+                    userProfilePictureUrl={deck.userInfo?.profilePictureUrl}
                     numCards={deck.cardsCount}
                   />
                 ))}
@@ -189,6 +191,7 @@ const Home = () => {
                     title={deck.title}
                     description={deck.description}
                     user={deck.userInfo?.username}
+                    userProfilePictureUrl={deck.userInfo?.profilePictureUrl}
                     numCards={deck.cardsCount}
                   />
                 </SwiperSlide>

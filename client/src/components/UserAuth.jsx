@@ -5,13 +5,13 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Avatar,
 } from "@heroui/react";
 import { UserContext } from "@/context/UserContext";
 import SignupModal from "@/components/Modals/SignupModal";
 import LoginModal from "@/components/Modals/LoginModal";
 import ResetPasswordModal from "./Modals/ResetPasswordModal";
 import { ROUTES } from "@/routes/paths";
+import UserAvatar from "@/components/UserAvatar";
 
 const UserAuth = () => {
   const {
@@ -30,13 +30,13 @@ const UserAuth = () => {
     <>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Avatar
-            isFocusable
-            as="button"
+          <UserAvatar
+            src={user?.profilePictureUrl}
+            alt={user?.username}
+            size={36}
             className="hover:bg-primary hover:text-default cursor-pointer transition"
-            color="default"
-            name={user?.username?.charAt(0) ?? ""}
-            size="sm"
+            as="button"
+            isFocusable
           />
         </DropdownTrigger>
         {user ? (
@@ -78,14 +78,11 @@ const UserAuth = () => {
           </DropdownMenu>
         )}
       </Dropdown>
-
       <LoginModal isLoginOpen={isLoginOpen} setIsLoginOpen={setIsLoginOpen} />
-
       <SignupModal
         isSignupOpen={isSignupOpen}
         setIsSignupOpen={setIsSignupOpen}
       />
-
       <ResetPasswordModal
         isResetPasswordOpen={isResetPasswordOpen}
         setIsResetPasswordOpen={setIsResetPasswordOpen}
