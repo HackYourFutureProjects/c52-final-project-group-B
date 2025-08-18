@@ -88,7 +88,6 @@ const CreateDeck = () => {
         });
         setImportedCards("");
         setIsImportOpen(false);
-        console.log(filteredData);
       },
     });
   };
