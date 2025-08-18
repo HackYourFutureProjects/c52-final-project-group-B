@@ -90,7 +90,10 @@ Deck.propTypes = {
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    userInfo: PropTypes.string.isRequired,
+    userInfo: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      profilePictureUrl: PropTypes.string,
+    }).isRequired,
     cardsCount: PropTypes.number.isRequired,
   }).isRequired,
   className: PropTypes.string,
