@@ -32,14 +32,9 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
         password: data.password,
       });
 
-      console.log("test1");
-
       if (response.accessToken) {
-        console.log("test2");
         setLocalStorageUser(response);
       }
-
-      console.log("test3");
 
       setIsLoginOpen(false);
 
