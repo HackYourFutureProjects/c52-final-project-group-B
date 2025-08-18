@@ -7,9 +7,7 @@ export const authenticate = (req, res, next) => {
   const token = authHeader?.split(" ")[1];
 
   if (!token) {
-    return next(
-      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Token required"),
-    );
+    return next(createAndThrowError(HTTP_STATUS.BAD_REQUEST, "Token required"));
   }
 
   try {

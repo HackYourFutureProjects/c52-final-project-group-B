@@ -140,6 +140,10 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               type="password"
               value={password}
               onValueChange={setPassword}
+              isInvalid={password.length < 6 && password !== ""}
+              errorMessage={
+                <span>Password must be at least 6 characters long</span>
+              }
             />
             <Input
               isRequired
