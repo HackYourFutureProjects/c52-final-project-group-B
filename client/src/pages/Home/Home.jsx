@@ -102,28 +102,14 @@ const Home = () => {
             {decks.length > 0 && (
               <Marquee>
                 {decks.slice(0, 2).map((deck) => (
-                  <Deck
-                    key={deck._id}
-                    deckID={deck._id}
-                    title={deck.title}
-                    description={deck.description}
-                    user={deck.userInfo?.username}
-                    numCards={deck.cardsCount}
-                  />
+                  <Deck key={deck._id} deck={deck} />
                 ))}
               </Marquee>
             )}
             {decks.length > 2 && (
               <Marquee reverse>
                 {decks.slice(2, 5).map((deck) => (
-                  <Deck
-                    key={deck._id}
-                    deckID={deck._id}
-                    title={deck.title}
-                    description={deck.description}
-                    user={deck.userInfo?.username}
-                    numCards={deck.cardsCount}
-                  />
+                  <Deck key={deck._id} deck={deck} />
                 ))}
               </Marquee>
             )}
@@ -188,13 +174,7 @@ const Home = () => {
                   style={{ width: "auto" }}
                   className="px-4 py-2"
                 >
-                  <Deck
-                    deckID={deck._id}
-                    title={deck.title}
-                    description={deck.description}
-                    user={deck.userInfo?.username}
-                    numCards={deck.cardsCount}
-                  />
+                  <Deck deck={deck} />
                 </SwiperSlide>
               ))}
           </Swiper>

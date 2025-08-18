@@ -20,7 +20,7 @@ import apiRequest from "@/api/index";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const UserProfile = () => {
-  const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
+  const { user, isUserLoaded, updateUser, setIsLoginOpen, forceLogin } =
     useContext(UserContext);
 
   const [userInfo, setUserInfo] = useState(null);
@@ -62,6 +62,7 @@ const UserProfile = () => {
   const onSave = async () => {
     try {
       const updated = await updateCurrentUser(form);
+      updateUser(updated);
       setUserInfo(updated);
       setIsEditing(false);
     } catch (e) {

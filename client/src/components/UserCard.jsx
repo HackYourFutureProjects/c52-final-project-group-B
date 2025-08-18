@@ -1,18 +1,17 @@
 import PropTypes from "prop-types";
-import { Card } from "@heroui/react";
+import { Card, Avatar } from "@heroui/react";
 
 const UserCard = ({ user }) => {
   if (!user) return null;
 
   return (
-    <Card className="bg-default-100 rounded-[35px] p-8 text-center shadow-md">
-      <img
-        src={
-          user.profilePictureUrl ||
-          "https://meyersroman.com/wp-content/uploads/2024/08/Blank-Avatar-Placeholder.png"
-        }
-        alt="avatar"
-        className="mx-auto mb-5 h-24 w-24 rounded-full object-cover"
+    <Card className="bg-default-100 flex flex-col items-center justify-between rounded-[35px] p-8 text-center shadow-md">
+      <Avatar
+        showFallback
+        color="primary"
+        src={user?.profilePictureUrl}
+        size="sm"
+        className="mb-5 h-24 w-24 text-2xl"
       />
       <h2 className="text-2xl font-black">{user.username}</h2>
       <p className="mt-2 text-sm">{user.email}</p>

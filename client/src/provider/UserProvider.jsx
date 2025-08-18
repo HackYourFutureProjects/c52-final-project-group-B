@@ -23,6 +23,7 @@ export default function UserProvider({ children }) {
       setUser({
         userid: localUser.userid || "",
         username: localUser.username || "",
+        profilePictureUrl: localUser.profilePictureUrl || "",
         accessToken: localUser.accessToken || "",
         refreshToken: localUser.refreshToken || "",
       });
@@ -35,10 +36,27 @@ export default function UserProvider({ children }) {
     setUser({
       userid: userData.userid || "",
       username: userData.username || "",
-      accessToken: userData.accessToken || "",
-      refreshToken: userData.refreshToken || "",
+      profilePictureUrl: userData.profilePictureUrl || "",
+      accessToken: userData.accessToken,
+      refreshToken: userData.refreshToken,
     });
     setIsUserLoaded(true);
+  };
+
+  const updateUser = (userData) => {
+    const getLocalStorageUser = localStorage.getItem("user");
+    if (getLocalStorageUser) {
+      const localUser = JSON.parse(getLocalStorageUser);
+      const updatedUser = {
+        userid: localUser.userid || "",
+        username: userData.username || "",
+        profilePictureUrl: userData.profilePictureUrl || "",
+        accessToken: localUser.accessToken || "",
+        refreshToken: localUser.refreshToken || "",
+      };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    }
   };
 
   const logoutUser = () => {
@@ -87,6 +105,7 @@ export default function UserProvider({ children }) {
         user,
         isUserLoaded,
         setLocalStorageUser,
+        updateUser,
         logoutUser,
         refreshToken,
         isSignupOpen,
