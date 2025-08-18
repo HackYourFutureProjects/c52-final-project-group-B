@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import UserProgress from "./userProgress.model.js";
+import { CardModel } from "../cards/card.model.js";
 
 export async function submitUserProgress(userId, results) {
   const cardObjectIds = results.map(
@@ -47,4 +48,17 @@ export async function submitUserProgress(userId, results) {
   await Promise.all(updates);
 
   return { success: true };
+}
+
+export async function getUserProgress(deckId, userId) {
+  const cards = await CardModel.find({ deckId });
+  const cardIds = cards.map((card) => card._id);
+
+  const progress = await UserProgress.find({
+    userId: new mongoose.Types.ObjectId(userId),
+    cardId: { $in: cardIds },
+    isLearned: true,
+  });
+
+  return progress.length;
 }

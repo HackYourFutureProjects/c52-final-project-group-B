@@ -28,6 +28,7 @@ import {
 } from "@/components/Icons";
 import { DecksCard } from "@/components/Card";
 import { getDeckById, deleteDeck } from "@/api/decksAPI";
+import { getUserProgress } from "@/api/userAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import { UserContext } from "@/context/UserContext";
 import { ROUTES } from "@/routes/paths.js";
@@ -35,13 +36,15 @@ import { ROUTES } from "@/routes/paths.js";
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
+  const [userProgress, setUserProgress] = useState(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, forceLogin, setIsLoginOpen } = useContext(UserContext);
+  const { user, isUserLoaded, forceLogin, setIsLoginOpen } =
+    useContext(UserContext);
   const isOwner =
     user &&
     deck &&
@@ -99,6 +102,21 @@ const DeckPage = () => {
       isCancelled = true;
     };
   }, [id, navigate]);
+
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      try {
+        const progress = await getUserProgress(id);
+        setUserProgress(progress);
+      } catch (error) {
+        setError(error.message || "Failed to load user progress");
+      }
+    };
+
+    if (id && user && isUserLoaded) {
+      fetchUserProgress();
+    }
+  }, [id, user, isUserLoaded]);
 
   const handleEditDeck = () => {
     if (!user) {
@@ -175,8 +193,8 @@ const DeckPage = () => {
               maxValue={
                 deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
               }
-              label={`${deck?.progress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
-              value={deck?.progress || 0}
+              label={`${userProgress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
+              value={userProgress || 0}
               classNames={{
                 label: "text-sm text-gray-500",
                 value: "text-sm text-gray-500",
@@ -184,16 +202,14 @@ const DeckPage = () => {
               }}
             />
           ) : (
-            <>
-              <Button
-                onPress={() => {
-                  setIsLoginOpen(true);
-                }}
-                className="mt-2"
-              >
-                Log in to see your progress
-              </Button>
-            </>
+            <Button
+              onPress={() => {
+                setIsLoginOpen(true);
+              }}
+              radius="full"
+            >
+              Log in to see your progress
+            </Button>
           )}
         </div>
 
