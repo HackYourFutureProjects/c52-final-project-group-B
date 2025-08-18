@@ -11,7 +11,7 @@ import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import BrowseDecks from "@/pages/BrowseDecks";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 import Support from "@/pages/Support";
 
 const App = () => {
@@ -32,9 +32,9 @@ const App = () => {
 
       <Route path={ROUTES.BROWSE} element={<BrowseDecks />} />
       <Route path={ROUTES.DECK_CREATE} element={<CreateDeck />} />
-      <Route path={ROUTES.DECKS + "/:id"} element={<DeckPage />} />
-      <Route path={ROUTES.DECKS + "/:id/edit"} element={<EditDeck />} />
-      <Route path={ROUTES.DECKS + "/:id/card-mode"} element={<CardMode />} />
+      <Route path={ROUTES.DECK_DETAILS(":id")} element={<DeckPage />} />
+      <Route path={ROUTES.DECK_EDIT(":id")} element={<EditDeck />} />
+      <Route path={ROUTES.DECK_CARD_MODE(":id")} element={<CardMode />} />
 
       <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
       <Route path="*" element={<NotFound />} />

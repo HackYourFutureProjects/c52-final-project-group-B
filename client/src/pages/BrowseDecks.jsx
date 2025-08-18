@@ -15,7 +15,7 @@ import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
 import languages from "@/data/languages.js";
 import { SearchIcon } from "@/components/Icons";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const BrowseDecks = () => {
   const [decks, setDecks] = useState([]);

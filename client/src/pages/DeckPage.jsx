@@ -30,7 +30,7 @@ import { DecksCard } from "@/components/Card";
 import { getDeckById, deleteDeck } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import { UserContext } from "@/context/UserContext";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
