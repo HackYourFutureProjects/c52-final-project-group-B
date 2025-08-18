@@ -51,8 +51,15 @@ class UserService {
 
   async loginUser(email, password) {
     const user = await User.findOne({ email }).select("+password");
-    if (!user || user.isDeleted) {
+    if (!user) {
       createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+    }
+
+    if (user.isDeleted) {
+      createAndThrowError(
+        HTTP_STATUS.UNAUTHORIZED,
+        "Your account is deactivated, please contact support",
+      );
     }
 
     const passwordMatches = await compare(password, user.password);

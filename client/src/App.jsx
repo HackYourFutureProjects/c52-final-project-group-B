@@ -11,7 +11,8 @@ import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import BrowseDecks from "@/pages/BrowseDecks";
-import { ROUTES } from "@/routes/paths.js";
+import MyDecks from "@/pages/MyDecks";
+import { ROUTES } from "@/routes/paths";
 import Support from "@/pages/Support";
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
 
       <Route path={ROUTES.BROWSE} element={<BrowseDecks />} />
+      <Route path={ROUTES.MY_DECKS} element={<MyDecks />} />
       <Route path={ROUTES.DECK_CREATE} element={<CreateDeck />} />
       <Route path={ROUTES.DECK_DETAILS(":id")} element={<DeckPage />} />
       <Route path={ROUTES.DECK_EDIT(":id")} element={<EditDeck />} />

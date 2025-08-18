@@ -223,7 +223,7 @@ const CreateDeck = () => {
                   updateCard(card.id, "question", e.target.value)
                 }
                 isRequired
-                minLength={2}
+                minLength={1}
                 maxLength={100}
                 classNames={{
                   inputWrapper: "px-5",
@@ -238,7 +238,7 @@ const CreateDeck = () => {
                 value={card.answer}
                 onChange={(e) => updateCard(card.id, "answer", e.target.value)}
                 isRequired
-                minLength={2}
+                minLength={1}
                 maxLength={100}
                 classNames={{
                   inputWrapper: "px-5",

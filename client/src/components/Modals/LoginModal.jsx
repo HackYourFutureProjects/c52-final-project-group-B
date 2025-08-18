@@ -10,7 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@heroui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/context/UserContext";
 import { LockedIcon, MailIcon } from "@/components/Icons";
 import { loginUser } from "@/api/userAPI";
@@ -18,6 +18,9 @@ import { loginUser } from "@/api/userAPI";
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
   const { setLocalStorageUser, setIsSignupOpen, setIsResetPasswordOpen } =
     useContext(UserContext);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,6 +101,8 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
               name="email"
               placeholder="Enter your email"
               type="email"
+              value={email}
+              onValueChange={setEmail}
             />
             <Input
               isRequired
@@ -114,6 +119,12 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
               name="password"
               placeholder="Enter your password"
               type="password"
+              value={password}
+              onValueChange={setPassword}
+              isInvalid={password.length < 6 && password !== ""}
+              errorMessage={
+                <span>Password must be at least 6 characters long</span>
+              }
             />
             <Button
               color="danger"

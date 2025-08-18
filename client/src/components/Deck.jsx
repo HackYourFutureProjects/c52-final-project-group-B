@@ -39,7 +39,7 @@ const Deck = ({ deck, className }) => {
         <Chip>{numCards} Cards</Chip>
       </CardHeader>
       <CardBody>
-        <p>{description}</p>
+        <p className="line-clamp-3">{description}</p>
       </CardBody>
       <CardFooter className="justify-between">
         <div className="flex gap-3">

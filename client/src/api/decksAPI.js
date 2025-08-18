@@ -22,6 +22,10 @@ export const getDecks = async ({
   return apiRequest(`/decks?${params.toString()}`);
 };
 
+export const getMyDecks = async (params = {}) => {
+  const qs = new URLSearchParams(params).toString();
+  return apiRequest(`/decks/mine${qs ? `?${qs}` : ""}`, "GET", null, true);
+};
 export const getDeckById = async (id) => {
   return apiRequest(`/decks/${id}`);
 };

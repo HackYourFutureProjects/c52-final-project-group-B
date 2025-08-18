@@ -60,6 +60,14 @@ const UserAuth = () => {
             >
               Profile
             </DropdownItem>
+
+            <DropdownItem
+              key="myDecks"
+              onPress={() => navigate(ROUTES.MY_DECKS)}
+            >
+              My Decks
+            </DropdownItem>
+
             <DropdownItem
               key="logout"
               color="danger"

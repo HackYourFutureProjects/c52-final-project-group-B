@@ -10,12 +10,7 @@ import {
 } from "@heroui/react";
 import Title from "@/components/Title";
 import UserCard from "@/components/UserCard";
-import {
-  getUserById,
-  updateCurrentUser,
-  deactivateUser,
-  activateUser,
-} from "@/api/userAPI";
+import { getUserById, updateCurrentUser, deactivateUser } from "@/api/userAPI";
 import apiRequest from "@/api/index";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
@@ -195,119 +190,79 @@ const UserProfile = () => {
               </div>
             </div>
           ) : (
-            <>
-              {userInfo.isDeleted && (
-                <div className="text-danger text-center">
-                  Your account is currently deactivated. To reactivate it,
-                  please click the button below.
-                </div>
-              )}
-
-              <div className="mt-4 flex items-center justify-center gap-4">
-                <Button
-                  className="px-6 font-semibold"
-                  radius="full"
-                  color="primary"
-                  onPress={() => setIsEditing(true)}
-                >
-                  Edit Profile
-                </Button>
-                {userInfo.isDeleted ? (
+            <div className="mt-4 flex items-center justify-center gap-4">
+              <Button
+                className="px-6 font-semibold"
+                radius="full"
+                color="primary"
+                onPress={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </Button>
+              <Popover
+                showArrow
+                backdrop="blur"
+                placement="top"
+                isOpen={isConfirmDeactivateOpen}
+                onOpenChange={(open) => setIsConfirmDeactivateOpen(open)}
+              >
+                <PopoverTrigger>
                   <Button
                     className="px-6 font-semibold"
                     radius="full"
-                    color="success"
-                    onPress={async () => {
-                      try {
-                        const updatedUser = await activateUser(
-                          userInfo._id || userInfo.id
-                        );
-                        setUserInfo(updatedUser);
-                        addToast({
-                          title: "Success",
-                          description: "User activated successfully",
-                          color: "success",
-                          radius: "full",
-                        });
-                      } catch (error) {
-                        addToast({
-                          title: "Error",
-                          description:
-                            error.message || "Failed to activate user",
-                          color: "danger",
-                          radius: "full",
-                        });
-                      }
-                    }}
+                    color="danger"
                   >
-                    Activate Account
+                    Deactivate Account
                   </Button>
-                ) : (
-                  <Popover
-                    showArrow
-                    backdrop="blur"
-                    placement="top"
-                    isOpen={isConfirmDeactivateOpen}
-                    onOpenChange={(open) => setIsConfirmDeactivateOpen(open)}
-                  >
-                    <PopoverTrigger>
-                      <Button
-                        className="px-6 font-semibold"
-                        radius="full"
-                        color="danger"
-                      >
-                        Deactivate Account
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="flex w-[240px] p-6 text-center">
-                      <p className="text-danger font-bold">
-                        Are you sure you want to deactivate your account?
-                      </p>
-                      <div className="mt-4 flex gap-4">
-                        <Button
-                          className="font-semibold"
-                          color="danger"
-                          radius="full"
-                          onPress={async () => {
-                            try {
-                              const updatedUser = await deactivateUser(
-                                userInfo._id || userInfo.id
-                              );
-                              setUserInfo(updatedUser);
-                              setIsConfirmDeactivateOpen(false);
-                              addToast({
-                                title: "Success",
-                                description: "User deactivated successfully",
-                                color: "success",
-                                radius: "full",
-                              });
-                            } catch (error) {
-                              setIsConfirmDeactivateOpen(false);
-                              addToast({
-                                title: "Error",
-                                description:
-                                  error.message || "Failed to deactivate user",
-                                color: "danger",
-                                radius: "full",
-                              });
-                            }
-                          }}
-                        >
-                          Confirm
-                        </Button>
-                        <Button
-                          className="font-semibold"
-                          radius="full"
-                          onPress={() => setIsConfirmDeactivateOpen(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                )}
-              </div>
-            </>
+                </PopoverTrigger>
+                <PopoverContent className="flex w-[240px] p-6 text-center">
+                  <p className="text-danger font-bold">
+                    Are you sure you want to deactivate your account?
+                  </p>
+                  <div className="mt-4 flex gap-4">
+                    <Button
+                      className="font-semibold"
+                      color="danger"
+                      radius="full"
+                      onPress={async () => {
+                        try {
+                          const updatedUser = await deactivateUser(
+                            userInfo._id || userInfo.id
+                          );
+                          setUserInfo(updatedUser);
+                          setIsConfirmDeactivateOpen(false);
+                          logoutUser();
+                          addToast({
+                            title: "Success",
+                            description: "User deactivated successfully",
+                            color: "success",
+                            radius: "full",
+                          });
+                        } catch (error) {
+                          setIsConfirmDeactivateOpen(false);
+                          addToast({
+                            title: "Error",
+                            description:
+                              error.message || "Failed to deactivate user",
+                            color: "danger",
+                            radius: "full",
+                          });
+                        }
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                    <Button
+                      className="font-semibold"
+                      radius="full"
+                      onPress={() => setIsConfirmDeactivateOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           )}
         </div>
 
@@ -340,8 +295,9 @@ const UserProfile = () => {
           </div>
           <div className="mt-4 text-right">
             <Button
-              className="rounded-[20px] font-semibold text-white"
-              style={{ backgroundColor: "#a8ca0b" }}
+              color="primary"
+              radius="full"
+              className="font-semibold"
               onPress={onPasswordChange}
             >
               Update Password
