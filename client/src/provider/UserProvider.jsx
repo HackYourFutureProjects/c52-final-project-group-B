@@ -38,7 +38,8 @@ export default function UserProvider({ children }) {
       username: userData.username || "",
       profilePictureUrl: userData.profilePictureUrl || "",
       accessToken: userData.accessToken,
-      refreshToken: userData.refreshToken,
+      accessToken: userData.accessToken || "",
+      refreshToken: userData.refreshToken || "",
     });
     setIsUserLoaded(true);
   };
