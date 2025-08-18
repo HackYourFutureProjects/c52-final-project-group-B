@@ -5,15 +5,19 @@ export const createUser = async (userData) => {
 };
 
 export const getUserById = async () => {
-  return apiRequest(`/users/me`, "GET", null, true); // true = requires authentication
+  return apiRequest(`/users/me`, "GET", null, true);
 };
 
 export const updateCurrentUser = async (body) => {
-  return apiRequest(`/users/me`, "PUT", body, true); // true = requires authentication
+  return apiRequest(`/users/me`, "PUT", body, true);
 };
 
 export const submitUserProgress = async (body) => {
-  return apiRequest(`/user-progress/submit`, "POST", body, true); // true = requires authentication
+  return apiRequest(`/user-progress/submit`, "POST", body, true);
+};
+
+export const getUserProgress = async (deckId) => {
+  return apiRequest(`/user-progress/${deckId}`, "GET", null, true);
 };
 
 export const loginUser = async (body) => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { objectIdSchema } from "../constants/shared.js";
 
 export const userProgressSubmitSchema = z.object({
   userId: z.string().min(1),
@@ -10,4 +11,8 @@ export const userProgressSubmitSchema = z.object({
       }),
     )
     .min(1),
+});
+
+export const deckValidationSchema = z.object({
+  deckId: objectIdSchema,
 });

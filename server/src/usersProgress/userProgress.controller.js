@@ -1,5 +1,9 @@
-import { userProgressSubmitSchema } from "./userProgress.schema.js";
-import { submitUserProgress } from "./userProgress.service.js";
+import { HTTP_STATUS } from "../constants/httpStatus.js";
+import {
+  userProgressSubmitSchema,
+  deckValidationSchema,
+} from "./userProgress.schema.js";
+import { submitUserProgress, getUserProgress } from "./userProgress.service.js";
 
 export function handleSubmitUserProgress(req, res, next) {
   if (!req.user) {
@@ -23,3 +27,9 @@ export function handleSubmitUserProgress(req, res, next) {
     })
     .catch(next);
 }
+
+export const handleGetUserProgress = async (req, res) => {
+  const { deckId } = deckValidationSchema.parse(req.params);
+  const progress = await getUserProgress(deckId, req.user.id);
+  res.status(HTTP_STATUS.OK).json(progress);
+};
