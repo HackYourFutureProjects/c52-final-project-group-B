@@ -43,6 +43,7 @@ class UserService {
     return {
       userid: publicFields._id,
       username: publicFields.username,
+      profilePictureUrl: publicFields.profilePictureUrl || "",
       accessToken,
       refreshToken,
     };
@@ -72,6 +73,7 @@ class UserService {
     return {
       userid: user._id,
       username: user.username,
+      profilePictureUrl: user.profilePictureUrl || "",
       accessToken,
       refreshToken,
     };
@@ -94,6 +96,7 @@ class UserService {
     return {
       userid: user._id,
       username: user.username,
+      profilePictureUrl: user.profilePictureUrl || "",
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
     };

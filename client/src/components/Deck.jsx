@@ -13,7 +13,15 @@ import {
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
 
-const Deck = ({ deckID, title, description, user, numCards, className }) => {
+const Deck = ({ deck, className }) => {
+  const {
+    _id: deckID,
+    title,
+    description,
+    userInfo: user,
+    cardsCount: numCards,
+  } = deck;
+
   const navigate = useNavigate();
   return (
     <Card
@@ -36,17 +44,18 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
       <CardFooter className="justify-between">
         <div className="flex gap-3">
           <Avatar
+            showFallback
+            isBordered
             color="primary"
             radius="full"
             size="md"
-            name="A"
-            classNames={{ base: "bg-transparent border-2 text-primary" }}
+            src={user.profilePictureUrl}
           />
           <div className="flex flex-col items-start justify-center">
             <h4 className="text-default-700 text-xs leading-none font-semibold">
               Created by
             </h4>
-            <h5 className="text-primary tracking-tight">{user}</h5>
+            <h5 className="text-primary tracking-tight">{user.username}</h5>
           </div>
         </div>
         <Button
@@ -77,11 +86,16 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
 };
 
 Deck.propTypes = {
-  deckID: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  user: PropTypes.string.isRequired,
-  numCards: PropTypes.number.isRequired,
+  deck: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    userInfo: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      profilePictureUrl: PropTypes.string,
+    }).isRequired,
+    cardsCount: PropTypes.number.isRequired,
+  }).isRequired,
   className: PropTypes.string,
 };
 

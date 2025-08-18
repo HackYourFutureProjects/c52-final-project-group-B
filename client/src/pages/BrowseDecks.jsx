@@ -193,15 +193,7 @@ const BrowseDecks = () => {
           </div>
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {decks.map((deck) => (
-              <Deck
-                key={deck._id}
-                deckID={deck._id}
-                title={deck.title}
-                description={deck.description}
-                user={deck.userInfo?.username}
-                numCards={deck.cardsCount}
-                className="max-w-full"
-              />
+              <Deck key={deck._id} deck={deck} className="max-w-full" />
             ))}
           </div>
 

@@ -32,10 +32,11 @@ const UserAuth = () => {
         <DropdownTrigger>
           <Avatar
             isFocusable
-            as="button"
+            showFallback
             className="hover:bg-primary hover:text-default cursor-pointer transition"
             color="default"
             name={user?.username?.charAt(0) ?? ""}
+            src={user?.profilePictureUrl}
             size="sm"
           />
         </DropdownTrigger>
