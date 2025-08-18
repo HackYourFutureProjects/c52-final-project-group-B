@@ -8,7 +8,7 @@ import { DecksCard } from "@/components/Card";
 import { Button, addToast } from "@heroui/react";
 import { WrongIcon, CorrectIcon, FlagIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 import ReportAProblemModal from "@/components/Modals/ReportAProblem";
 
 const CardMode = () => {

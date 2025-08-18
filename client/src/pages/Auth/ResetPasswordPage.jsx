@@ -4,7 +4,7 @@ import { addToast, Button, Input, Spinner, Form } from "@heroui/react";
 import Title from "@/components/Title";
 import { resetPassword, verifyResetToken } from "@/api/userAPI";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();

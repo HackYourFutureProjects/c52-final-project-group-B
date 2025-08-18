@@ -11,7 +11,7 @@ import {
   Chip,
 } from "@heroui/react";
 import cn from "@/util/cn";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const Deck = ({ deckID, title, description, user, numCards, className }) => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const Deck = ({ deckID, title, description, user, numCards, className }) => {
         <Chip>{numCards} Cards</Chip>
       </CardHeader>
       <CardBody>
-        <p>{description}</p>
+        <p className="line-clamp-3">{description}</p>
       </CardBody>
       <CardFooter className="justify-between">
         <div className="flex gap-3">

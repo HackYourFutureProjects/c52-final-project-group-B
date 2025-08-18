@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import Title from "@/components/Title";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 export default function About() {
   return (
