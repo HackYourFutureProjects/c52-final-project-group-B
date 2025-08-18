@@ -96,7 +96,6 @@ const Home = () => {
               </Button>
             ) : (
               <Button
-                as="Button"
                 variant="ghost"
                 color="primary"
                 radius="full"
