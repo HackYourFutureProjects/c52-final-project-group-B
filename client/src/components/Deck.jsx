@@ -1,4 +1,6 @@
 import PropTypes from "prop-types";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -14,6 +16,7 @@ import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
 
 const Deck = ({ deck, className }) => {
+  const { user: currentUser } = useContext(UserContext);
   const {
     _id: deckID,
     title,
@@ -49,13 +52,17 @@ const Deck = ({ deck, className }) => {
             color="primary"
             radius="full"
             size="md"
-            src={user.profilePictureUrl}
+            src={
+              user?.profilePictureUrl || currentUser?.profilePictureUrl || ""
+            }
           />
           <div className="flex flex-col items-start justify-center">
             <h4 className="text-default-700 text-xs leading-none font-semibold">
               Created by
             </h4>
-            <h5 className="text-primary tracking-tight">{user.username}</h5>
+            <h5 className="text-primary tracking-tight">
+              {user?.username || currentUser?.username || "You"}
+            </h5>
           </div>
         </div>
         <Button
