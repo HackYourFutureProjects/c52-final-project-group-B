@@ -1,6 +1,6 @@
 import { Accordion, AccordionItem, Card } from "@heroui/react";
 import Title from "@/components/Title";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 export default function FAQ() {
   return (

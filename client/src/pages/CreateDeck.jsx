@@ -22,7 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createDeck } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const CreateDeck = () => {
   const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);

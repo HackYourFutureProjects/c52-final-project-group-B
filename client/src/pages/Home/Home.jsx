@@ -9,7 +9,7 @@ import Marquee from "@/components/Marquee";
 import { getDecks } from "@/api/decksAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 import { UserContext } from "@/context/UserContext";
 
 const Home = () => {

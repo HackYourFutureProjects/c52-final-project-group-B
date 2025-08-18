@@ -11,7 +11,7 @@ import {
   Chip,
 } from "@heroui/react";
 import cn from "@/util/cn";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 const Deck = ({ deckID, title, description, user, numCards, className }) => {
   const navigate = useNavigate();

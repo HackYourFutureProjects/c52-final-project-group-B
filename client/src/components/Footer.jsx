@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import { Link, Divider, Tooltip } from "@heroui/react";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 import { MemixLogoIcon } from "@/components/Icons";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 

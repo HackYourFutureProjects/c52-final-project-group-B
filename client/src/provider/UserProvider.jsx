@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
 import { refreshAccessToken } from "@/api/userAPI";
 import { addToast } from "@heroui/react";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 
 export default function UserProvider({ children }) {
   const [user, setUser] = useState(null);

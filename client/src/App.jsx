@@ -11,7 +11,7 @@ import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
 import BrowseDecks from "@/pages/BrowseDecks";
-import { ROUTES } from "@/routes/paths";
+import { ROUTES } from "@/routes/paths.js";
 import Support from "@/pages/Support";
 
 const App = () => {
