@@ -37,7 +37,6 @@ export default function UserProvider({ children }) {
       userid: userData.userid || "",
       username: userData.username || "",
       profilePictureUrl: userData.profilePictureUrl || "",
-      accessToken: userData.accessToken,
       accessToken: userData.accessToken || "",
       refreshToken: userData.refreshToken || "",
     });
