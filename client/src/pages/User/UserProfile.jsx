@@ -15,8 +15,14 @@ import apiRequest from "@/api/index";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
 
 const UserProfile = () => {
-  const { user, isUserLoaded, updateUser, setIsLoginOpen, forceLogin } =
-    useContext(UserContext);
+  const {
+    user,
+    isUserLoaded,
+    updateUser,
+    setIsLoginOpen,
+    forceLogin,
+    logoutUser,
+  } = useContext(UserContext);
 
   const [userInfo, setUserInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
