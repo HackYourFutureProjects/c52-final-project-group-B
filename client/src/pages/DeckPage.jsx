@@ -41,7 +41,7 @@ const DeckPage = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, forceLogin } = useContext(UserContext);
+  const { user, forceLogin, setIsLoginOpen } = useContext(UserContext);
   const isOwner =
     user &&
     deck &&
@@ -169,19 +169,32 @@ const DeckPage = () => {
       <div className="mt-3 flex items-stretch justify-center gap-3">
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Your Progress</h3>
-          <Progress
-            showValueLabel={true}
-            maxValue={
-              deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
-            }
-            label={`${deck?.progress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
-            value={deck?.progress || 0}
-            classNames={{
-              label: "text-sm text-gray-500",
-              value: "text-sm text-gray-500",
-              track: "bg-primary/20",
-            }}
-          />
+          {user ? (
+            <Progress
+              showValueLabel={true}
+              maxValue={
+                deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
+              }
+              label={`${deck?.progress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
+              value={deck?.progress || 0}
+              classNames={{
+                label: "text-sm text-gray-500",
+                value: "text-sm text-gray-500",
+                track: "bg-primary/20",
+              }}
+            />
+          ) : (
+            <>
+              <Button
+                onPress={() => {
+                  setIsLoginOpen(true);
+                }}
+                className="mt-2"
+              >
+                Log in to see your progress
+              </Button>
+            </>
+          )}
         </div>
 
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
