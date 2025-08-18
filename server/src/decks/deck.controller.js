@@ -28,7 +28,20 @@ export const getDecks = async (req, res) => {
   });
   res.status(HTTP_STATUS.OK).json(decks);
 };
-
+export const getMyDecks = async (req, res) => {
+  const { page, limit, search, language, minCards, maxCards, sortBy } =
+    paginationQuerySchema.parse(req.query);
+  const decks = await deckService.getMyDecks(req.user.id, {
+    page,
+    limit,
+    search,
+    language,
+    minCards,
+    maxCards,
+    sortBy,
+  });
+  res.status(HTTP_STATUS.OK).json(decks);
+};
 export const getDeckById = async (req, res) => {
   const { deckId } = deckValidationSchema.parse(req.params);
   const deck = await deckService.getDeckById(deckId);

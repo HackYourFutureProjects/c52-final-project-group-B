@@ -3,6 +3,7 @@ import { authenticate } from "../middlewares/auth.js";
 
 import {
   getDecks,
+  getMyDecks,
   createDeck,
   getDeckById,
   updateDeck,
@@ -17,6 +18,7 @@ import {
 const deckRouter = Router();
 
 deckRouter.get("/", getDecks);
+deckRouter.get("/mine", authenticate, getMyDecks);
 deckRouter.post("/", authenticate, createDeck);
 deckRouter.get("/:deckId", getDeckById);
 deckRouter.put("/:deckId", authenticate, updateDeck);

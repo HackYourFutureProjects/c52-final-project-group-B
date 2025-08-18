@@ -4,6 +4,7 @@ export const ROUTES = {
   TERMS: "/terms",
   FAQ: "/faq",
   DECKS: "/decks",
+  MY_DECKS: "/decks/mine",
   DECK_CREATE: "/decks/create",
   DECK_DETAILS: (id) => `/decks/${id}`,
   DECK_EDIT: (id) => `/decks/${id}/edit`,
