@@ -53,12 +53,8 @@ const QuizMode = () => {
           setProgress(parsed.results || []);
           setCurrentCardIndex(validIndex);
         }
-      } catch {
-        addToast({
-          title: "Error",
-          description: "Failed to load quiz data. Please try again later.",
-          status: "error",
-        });
+      } catch (e) {
+        console.error(e);
         navigate(ROUTES.NOT_FOUND);
       }
     };
@@ -66,7 +62,7 @@ const QuizMode = () => {
   }, [id, user, isUserLoaded]);
 
   useEffect(() => {
-    if (cards && progress && currentCardIndex === 0) {
+    if (user && isUserLoaded && cards && progress && currentCardIndex === 0) {
       setCurrentCardIndex(randomCard());
     }
   }, [cards]);

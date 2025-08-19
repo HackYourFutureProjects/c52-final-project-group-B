@@ -46,7 +46,8 @@ const CardMode = () => {
         } else {
           setCurrentCardIndex(0);
         }
-      } catch {
+      } catch (e) {
+        console.error(e);
         navigate(ROUTES.NOT_FOUND);
       }
     };
