@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import {
   addUser,
   handleGetCurrentUser,
@@ -15,12 +16,17 @@ import {
 } from "./user.controller.js";
 import { authenticate } from "../middlewares/auth.js";
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
 const userRouter = Router();
 
 userRouter.post("/", addUser);
 
 userRouter.get("/me", handleGetCurrentUser);
-userRouter.put("/me", updateCurrentUser);
+userRouter.put("/me", upload.single("avatar"), updateCurrentUser);
 
 userRouter.post("/login", loginUser);
 userRouter.post("/refresh-token", refreshToken);

@@ -13,6 +13,21 @@ import resetPasswordEmailTemplate from "../emails/resetPasswordEmailTemplate.js"
 import reportProblemEmailTemplate from "../emails/reportProblemEmailTemplate.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import sharp from "sharp";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  { auth: { persistSession: false } },
+);
+
+export async function toAvatarWebp512(buffer) {
+  return sharp(buffer)
+    .resize(512, 512, { fit: "cover" })
+    .webp({ quality: 85 })
+    .toBuffer();
+}
 
 class UserService {
   async createUser(username, email, password) {
@@ -160,11 +175,36 @@ class UserService {
     return { message: "Password updated successfully" };
   }
 
-  async updateUser(userId, updateData) {
-    return await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
-      runValidators: true,
-    });
+  async updateUser(userId, updateData, avatarFile) {
+    if (avatarFile) {
+      if (!avatarFile.mimetype?.startsWith("image/")) {
+        throw new Error("Invalid file type");
+      }
+
+      const buf = await sharp(avatarFile.buffer)
+        .resize(512, 512, { fit: "cover" })
+        .webp({ quality: 85 })
+        .toBuffer();
+
+      const objectPath = `${userId}/${crypto.randomUUID()}.webp`;
+
+      const { error: uploadErr } = await supabase.storage
+        .from("avatars")
+        .upload(objectPath, buf, {
+          contentType: "image/webp",
+          upsert: false,
+          cacheControl: "31536000, immutable",
+        });
+      if (uploadErr) throw uploadErr;
+
+      const { data } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(objectPath);
+
+      updateData.profilePictureUrl = data.publicUrl;
+    }
+
+    return User.findByIdAndUpdate(userId, updateData, { new: true });
   }
 
   async forgetPasswordEmail(email) {

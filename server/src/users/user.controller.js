@@ -40,7 +40,7 @@ export const updateCurrentUser = async (req, res) => {
   const userId =
     currentUser?._id?.toString?.() || currentUser?.id || currentUser?._id;
   const updateData = updateUserSchema.parse(req.body);
-  const updated = await userService.updateUser(userId, updateData);
+  const updated = await userService.updateUser(userId, updateData, req.file);
   res.status(HTTP_STATUS.OK).json(updated);
 };
 
