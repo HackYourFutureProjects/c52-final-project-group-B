@@ -9,6 +9,7 @@ export const ROUTES = {
   DECK_DETAILS: (id) => `/decks/${id}`,
   DECK_EDIT: (id) => `/decks/${id}/edit`,
   DECK_CARD_MODE: (id) => `/decks/${id}/card-mode`,
+  DECK_QUIZ_MODE: (id) => `/decks/${id}/quiz-mode`,
   USER_PROFILE: "/users/me",
   PROFILE: "/profile",
   RESET_PASSWORD: "/reset-password",

@@ -5,7 +5,7 @@ import { getDeckById } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
-import { Button, addToast } from "@heroui/react";
+import { Progress, Button, addToast } from "@heroui/react";
 import { WrongIcon, CorrectIcon, FlagIcon } from "@/components/Icons";
 import { submitUserProgress } from "@/api/userAPI";
 import { ROUTES } from "@/routes/paths.js";
@@ -131,7 +131,6 @@ const CardMode = () => {
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
             { label: `Library`, path: `${ROUTES.DECKS}` },
-            { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS?.(id) },
             { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
             { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE(id) },
           ]}
@@ -140,10 +139,21 @@ const CardMode = () => {
         </Title>
       </div>
 
+      <div className="bg-default-200 mt-20 w-full rounded-[35px] p-8">
+        <Progress
+          color="primary"
+          label="Current Progress"
+          maxValue={cards?.length}
+          showValueLabel={true}
+          value={progress.length}
+          classNames={{ track: "bg-primary/10" }}
+        />
+      </div>
+
       {hasFinished ? (
-        <div className="mt-20 text-center">
+        <div className="bg-default-200 mt-8 flex flex-col items-center justify-between rounded-[35px] p-8 text-center">
           <p className="mb-4 text-xl font-bold">
-            Thank you for completing &quot;{deck.title}&quot; in card mode.{" "}
+            Thank you for completing &quot;{deck.title}&quot; in card mode.
             <br></br>
             You’ve learned {progress?.filter((item) => item?.isCorrect).length}/
             {progress?.length} cards
@@ -156,7 +166,7 @@ const CardMode = () => {
         cards &&
         cards[currentCardIndex] && (
           <>
-            <div className="mt-4 flex flex-wrap items-center justify-evenly gap-4">
+            <div className="mt-8 flex flex-wrap items-center justify-evenly gap-4">
               <DecksCard
                 key={cards[currentCardIndex]._id}
                 front={cards[currentCardIndex].question}
@@ -164,7 +174,7 @@ const CardMode = () => {
                 flipDirection="vertical"
               />
             </div>
-            <div className="mt-4 flex items-center justify-center gap-4">
+            <div className="mt-8 flex items-center justify-center gap-4">
               <Button
                 color="danger"
                 aria-label="Wrong answer"
@@ -189,7 +199,7 @@ const CardMode = () => {
                 <CorrectIcon />
               </Button>
             </div>
-            <div className="mt-10 text-center">
+            <div className="bg-default-200 mt-8 rounded-[35px] p-8 text-center">
               <p className="text-default-800 mb-2">
                 If you encounter any issues with this deck, please report it.
               </p>
