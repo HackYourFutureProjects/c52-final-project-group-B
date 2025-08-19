@@ -40,7 +40,7 @@ const CardMode = () => {
         if (savedProgress) {
           const parsed = JSON.parse(savedProgress);
           const savedIndex = parsed.currentCardIndex || 0;
-          const validIndex = Math.min(savedIndex, getCards.length);
+          const validIndex = Math.min(savedIndex, getCards.length - 1);
           setProgress(parsed.results || []);
           setCurrentCardIndex(validIndex);
         } else {
@@ -216,8 +216,8 @@ const CardMode = () => {
               isReportAProblemOpen={isReportAProblemOpen}
               setIsReportAProblemOpen={setIsReportAProblemOpen}
               sourceDetails={{
-                deckId: deck._id,
-                deckTitle: deck.title,
+                deckId: deck?._id,
+                deckTitle: deck?.title,
                 cardId: cards[currentCardIndex]._id,
               }}
             />

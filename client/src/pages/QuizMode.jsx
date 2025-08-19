@@ -49,12 +49,17 @@ const QuizMode = () => {
         if (savedProgress) {
           const parsed = JSON.parse(savedProgress);
           const savedIndex = parsed.currentCardIndex || 0;
-          const validIndex = Math.min(savedIndex, getCards.length);
+          const validIndex = Math.min(savedIndex, getCards.length - 1);
           setProgress(parsed.results || []);
           setCurrentCardIndex(validIndex);
         }
       } catch {
-        // navigate(ROUTES.NOT_FOUND);
+        addToast({
+          title: "Error",
+          description: "Failed to load quiz data. Please try again later.",
+          status: "error",
+        });
+        navigate(ROUTES.NOT_FOUND);
       }
     };
     fetchDeckAndCards();
@@ -124,13 +129,13 @@ const QuizMode = () => {
   };
 
   const randomCard = (currentProgress = progress) => {
-    const randomIndex = Math.floor(Math.random() * cards.length);
-    if (
-      currentProgress.some((item) => item.cardId === cards[randomIndex]._id)
-    ) {
-      return randomCard(currentProgress);
+    const answeredIds = new Set(currentProgress.map((item) => item.cardId));
+    const unAnsweredCards = cards.filter((card) => !answeredIds.has(card._id));
+    if (unAnsweredCards.length === 0) {
+      return -1;
     }
-    return randomIndex;
+    const randomIndex = Math.floor(Math.random() * unAnsweredCards.length);
+    return cards.indexOf(unAnsweredCards[randomIndex]);
   };
 
   const randomAnswers = (currentCard) => {
@@ -236,8 +241,8 @@ const QuizMode = () => {
                 isReportAProblemOpen={isReportAProblemOpen}
                 setIsReportAProblemOpen={setIsReportAProblemOpen}
                 sourceDetails={{
-                  deckId: deck._id,
-                  deckTitle: deck.title,
+                  deckId: deck?._id,
+                  deckTitle: deck?.title,
                   cardId: cards[currentCardIndex]._id,
                 }}
               />
