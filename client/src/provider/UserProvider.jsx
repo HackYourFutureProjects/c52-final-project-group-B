@@ -20,12 +20,13 @@ export default function UserProvider({ children }) {
     const getLocalStorageUser = localStorage.getItem("user");
     if (getLocalStorageUser) {
       const localUser = JSON.parse(getLocalStorageUser);
+      const refreshUserToken = refreshToken(localUser);
       setUser({
-        userid: localUser.userid || "",
-        username: localUser.username || "",
-        profilePictureUrl: localUser.profilePictureUrl || "",
-        accessToken: localUser.accessToken || "",
-        refreshToken: localUser.refreshToken || "",
+        userid: refreshUserToken.userid || "",
+        username: refreshUserToken.username || "",
+        profilePictureUrl: refreshUserToken.profilePictureUrl || "",
+        accessToken: refreshUserToken.accessToken || "",
+        refreshToken: refreshUserToken.refreshToken || "",
       });
     }
     setIsUserLoaded(true);
@@ -72,9 +73,9 @@ export default function UserProvider({ children }) {
     navigate(ROUTES.HOME);
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (activeUser) => {
     try {
-      const newTokens = await refreshAccessToken(user.refreshToken);
+      const newTokens = await refreshAccessToken(activeUser.refreshToken);
       if (newTokens) {
         setLocalStorageUser(newTokens);
       }

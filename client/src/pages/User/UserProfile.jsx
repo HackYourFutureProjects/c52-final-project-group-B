@@ -131,7 +131,7 @@ const UserProfile = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: "Profile", path: `/users/${userInfo.id}` },
+            { label: "Profile", path: `/users/me` },
           ]}
         >
           Profile

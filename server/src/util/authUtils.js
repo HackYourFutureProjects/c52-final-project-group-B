@@ -17,11 +17,19 @@ export const generateRefreshToken = (user) => {
 };
 
 export const verifyAccessToken = (token) => {
-  return jwt.verify(token, ACCESS_SECRET);
+  try {
+    return jwt.verify(token, ACCESS_SECRET);
+  } catch {
+    return false;
+  }
 };
 
 export const verifyRefreshToken = (token) => {
-  return jwt.verify(token, REFRESH_SECRET);
+  try {
+    return jwt.verify(token, REFRESH_SECRET);
+  } catch {
+    return false;
+  }
 };
 
 export const decodedToken = (token) => {
