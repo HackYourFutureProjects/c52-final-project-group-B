@@ -25,8 +25,8 @@ const BrowseDecks = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("search") || "";
-  const language = searchParams.get("language") || "";
-  const numCardsMin = searchParams.get("numCardsMin") || "10";
+  const language = searchParams.get("language") || [];
+  const numCardsMin = searchParams.get("numCardsMin") || "0";
   const numCardsMax = searchParams.get("numCardsMax") || "100";
   const decksPerPage = searchParams.get("decksPerPage") || "20";
   const sortBy = searchParams.get("sortBy") || "mostRecent";
@@ -104,9 +104,12 @@ const BrowseDecks = () => {
             <Select
               label="Language"
               radius="full"
+              selectionMode="multiple"
               isClearable
               className="basis-full"
-              selectedKeys={[language]}
+              selectedKeys={
+                language.length > 0 ? language.toLowerCase().split(",") : []
+              }
               onChange={(e) => updateSearchParams("language", e.target.value)}
             >
               {languages.map((lang) => (

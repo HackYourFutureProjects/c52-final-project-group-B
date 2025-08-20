@@ -36,7 +36,10 @@ class DeckService {
       },
     });
 
-    const [res] = await DeckModel.aggregate(pipeline);
+    const [res] = await DeckModel.aggregate(pipeline).collation({
+      locale: "en",
+      strength: 2,
+    });
     const total = res?.meta?.[0]?.total ?? 0;
     const decks = res?.items ?? [];
 
@@ -59,8 +62,9 @@ class DeckService {
     const match = {
       userId: new mongoose.Types.ObjectId(userId),
     };
-    if (language && language.trim() !== "") {
-      match.language = language.trim();
+
+    if (language && language.length > 0) {
+      match.language = { $in: language.map((lang) => lang.trim()) };
     }
 
     const pipeline = [

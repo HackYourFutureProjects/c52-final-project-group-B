@@ -215,11 +215,22 @@ const DeckPage = () => {
         </div>
 
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
-          <h3 className="text-xl font-bold">Languages</h3>
-          <div className="flex gap-2 capitalize">
-            <Button radius="full" as={Link} href="#">
-              {deck?.language || (isLoading ? "..." : "unknown")}
-            </Button>
+          <h3 className="text-xl font-bold">
+            {deck?.language?.length > 1 ? "Languages" : "Language"}
+          </h3>
+          <div className="flex flex-wrap gap-2 capitalize">
+            {deck?.language &&
+              deck.language.map((lang, index) => (
+                <Button
+                  key={index}
+                  radius="full"
+                  as={Link}
+                  href={`${ROUTES.BROWSE}?language=${lang}`}
+                  className="flex-1"
+                >
+                  {lang}
+                </Button>
+              ))}
           </div>
         </div>
       </div>

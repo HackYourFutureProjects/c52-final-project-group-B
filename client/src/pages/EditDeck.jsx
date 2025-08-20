@@ -94,12 +94,12 @@ const EditDeck = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-
+    const allLanguages = new FormData(e.currentTarget).getAll("language");
     try {
       await updateDeck(id, {
         title: data.title,
         description: data.description,
-        language: data.language,
+        language: allLanguages,
         isPublic: isPublic,
       });
 
@@ -193,8 +193,10 @@ const EditDeck = () => {
             name="language"
             label="Language"
             radius="full"
-            defaultSelectedKeys={[deck?.language]}
+            selectionMode="multiple"
+            defaultSelectedKeys={deck?.language}
             isRequired
+            isClearable
             classNames={{
               trigger: "px-5",
             }}

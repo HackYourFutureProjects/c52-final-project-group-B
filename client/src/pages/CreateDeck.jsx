@@ -95,15 +95,15 @@ const CreateDeck = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
+    const allLanguages = new FormData(e.currentTarget).getAll("language");
 
     try {
       const createdDeck = await createDeck({
         title: data.title,
         description: data.description,
-        language: data.language,
+        language: allLanguages,
         isPublic: isPublic,
       });
-
       const cardPromises = cards.map((card) =>
         createCard({
           deckId: createdDeck._id,
@@ -111,9 +111,7 @@ const CreateDeck = () => {
           answer: card.answer,
         })
       );
-
       await Promise.all(cardPromises);
-
       navigate(ROUTES.DECK_DETAILS(createdDeck._id));
     } catch (error) {
       addToast({
@@ -169,8 +167,9 @@ const CreateDeck = () => {
             name="language"
             label="Language"
             radius="full"
-            /* TODO: If multiple selection is needed in the future, add (selectionMode="multiple") to the Select component. */
+            selectionMode="multiple"
             isRequired
+            isClearable
             classNames={{
               trigger: "px-5",
             }}

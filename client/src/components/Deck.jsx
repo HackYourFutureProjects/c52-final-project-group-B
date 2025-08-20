@@ -44,49 +44,51 @@ const Deck = ({ deck, className }) => {
       <CardBody>
         <p className="line-clamp-3">{description}</p>
       </CardBody>
-      <CardFooter className="justify-between">
-        <div className="flex gap-3">
-          <Avatar
-            showFallback
-            isBordered
+      <CardFooter className="flex flex-col items-start">
+        <div className="flex w-full justify-between">
+          <div className="flex gap-3">
+            <Avatar
+              showFallback
+              isBordered
+              color="primary"
+              radius="full"
+              size="md"
+              src={
+                user?.profilePictureUrl || currentUser?.profilePictureUrl || ""
+              }
+            />
+            <div className="flex flex-col items-start justify-center">
+              <h4 className="text-default-700 text-xs leading-none font-semibold">
+                Created by
+              </h4>
+              <h5 className="text-primary tracking-tight">
+                {user?.username || currentUser?.username || "You"}
+              </h5>
+            </div>
+          </div>
+          <Button
+            as={Link}
+            isIconOnly
             color="primary"
             radius="full"
             size="md"
-            src={
-              user?.profilePictureUrl || currentUser?.profilePictureUrl || ""
-            }
-          />
-          <div className="flex flex-col items-start justify-center">
-            <h4 className="text-default-700 text-xs leading-none font-semibold">
-              Created by
-            </h4>
-            <h5 className="text-primary tracking-tight">
-              {user?.username || currentUser?.username || "You"}
-            </h5>
-          </div>
-        </div>
-        <Button
-          as={Link}
-          isIconOnly
-          color="primary"
-          radius="full"
-          size="md"
-          variant="solid"
-          href={ROUTES.DECK_DETAILS(deckID)}
-        >
-          <svg
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
+            variant="solid"
+            href={ROUTES.DECK_DETAILS(deckID)}
           >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </Button>
+            <svg
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
@@ -97,6 +99,7 @@ Deck.propTypes = {
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    language: PropTypes.arrayOf(PropTypes.string).isRequired,
     userInfo: PropTypes.shape({
       username: PropTypes.string.isRequired,
       profilePictureUrl: PropTypes.string,
