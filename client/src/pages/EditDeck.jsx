@@ -126,12 +126,7 @@ const EditDeck = () => {
               answer: card.answer,
             })
           );
-        } else if (
-          !card.isNew &&
-          card.isDeleted &&
-          card.question &&
-          card.answer
-        ) {
+        } else if (!card.isNew && card.isDeleted) {
           cardPromises.push(deleteCardById(id, card.id));
         } else if (!card.isNew && card.question && card.answer) {
           cardPromises.push(
