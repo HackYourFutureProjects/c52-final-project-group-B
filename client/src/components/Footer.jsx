@@ -7,7 +7,7 @@ import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 const Footer = () => {
   return (
     <footer className="bg-default-200 mt-12 p-6 md:p-8">
-      <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-6 text-center md:gap-10">
+      <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-4 text-center md:gap-10">
         <Link
           href={ROUTES.FAQ}
           underline="hover"
@@ -91,11 +91,11 @@ const Footer = () => {
         </div>
       </nav>
       <Divider className="mx-auto my-6 max-w-6xl" />
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 md:flex-row">
         <Link href={ROUTES.HOME} className="text-default-foreground">
-          <MemixLogoIcon width={160} height={49} />
+          <MemixLogoIcon width={140} height={43} className="md:w-[160px]" />
         </Link>
-        <p className="text-foreground text-right text-base font-semibold md:text-lg">
+        <p className="text-foreground text-center text-sm font-semibold md:text-right md:text-base">
           Made with ❤️ by Group B, Cohort 52 — 2025
         </p>
       </div>

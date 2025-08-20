@@ -17,7 +17,9 @@ const AppWrapper = ({ children }) => {
       <ToastProvider placement="top-right" toastOffset={25} />
       <UserProvider>
         <Navigator />
-        <main className="container mx-auto min-h-dvh">{children}</main>
+        <main className="container mx-auto flex-1 px-4 max-md:px-6 max-sm:px-4">
+          {children}
+        </main>
         <Footer />
       </UserProvider>
     </HeroUIProvider>

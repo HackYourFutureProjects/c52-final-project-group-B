@@ -9,13 +9,13 @@ export default function Navigator() {
     <>
       <Navbar
         classNames={{
-          base: "rounded-full container mx-auto mt-8 top-8 bg-default-300/40",
+          base: "rounded-full container mx-auto mt-4 md:mt-8 top-4 md:top-8 bg-default-300/40 px-3 md:px-6",
         }}
         maxWidth="full"
       >
         <NavbarBrand justify="start">
           <Link className="text-default-foreground" href={ROUTES.HOME}>
-            <MemixLogoIcon size={120} />
+            <MemixLogoIcon size={96} className="md:size-[120px]" />
           </Link>
         </NavbarBrand>
 

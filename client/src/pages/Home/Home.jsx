@@ -172,21 +172,41 @@ const Home = () => {
           <Swiper
             modules={[Pagination]}
             slidesPerView={"auto"}
-            pagination={{
-              clickable: true,
+            spaceBetween={16}
+            pagination={{ clickable: true }}
+            breakpoints={{
+              640: {
+                slidesPerView: 1.2,
+                centeredSlides: true,
+                spaceBetween: 16,
+              },
+              768: {
+                slidesPerView: 2,
+                centeredSlides: false,
+                spaceBetween: 20,
+              },
+              1024: {
+                slidesPerView: 3,
+                centeredSlides: false,
+                spaceBetween: 24,
+              },
+              1280: {
+                slidesPerView: 4,
+                centeredSlides: false,
+                spaceBetween: 24,
+              },
             }}
             wrapperClass="pb-12"
           >
-            {decks &&
-              decks.slice(0, 10).map((deck) => (
-                <SwiperSlide
-                  key={deck._id}
-                  style={{ width: "auto" }}
-                  className="px-4 py-2"
-                >
-                  <Deck deck={deck} />
-                </SwiperSlide>
-              ))}
+            {decks?.slice(0, 10).map((deck) => (
+              <SwiperSlide
+                key={deck._id}
+                style={{ width: "auto" }}
+                className="px-4 py-2"
+              >
+                <Deck deck={deck} />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
         <Button
