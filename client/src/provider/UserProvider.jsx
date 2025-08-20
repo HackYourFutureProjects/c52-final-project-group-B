@@ -17,19 +17,23 @@ export default function UserProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getLocalStorageUser = localStorage.getItem("user");
-    if (getLocalStorageUser) {
-      const localUser = JSON.parse(getLocalStorageUser);
-      const refreshUserToken = refreshToken(localUser);
-      setUser({
-        userid: refreshUserToken.userid || "",
-        username: refreshUserToken.username || "",
-        profilePictureUrl: refreshUserToken.profilePictureUrl || "",
-        accessToken: refreshUserToken.accessToken || "",
-        refreshToken: refreshUserToken.refreshToken || "",
-      });
-    }
-    setIsUserLoaded(true);
+    const initializeUser = async () => {
+      const getLocalStorageUser = localStorage.getItem("user");
+      if (getLocalStorageUser) {
+        const localUser = JSON.parse(getLocalStorageUser);
+        const refreshUserToken = await refreshToken(localUser);
+        setUser({
+          userid: refreshUserToken.userid || "",
+          username: refreshUserToken.username || "",
+          profilePictureUrl: refreshUserToken.profilePictureUrl || "",
+          accessToken: refreshUserToken.accessToken || "",
+          refreshToken: refreshUserToken.refreshToken || "",
+        });
+      }
+      setIsUserLoaded(true);
+    };
+
+    initializeUser();
   }, []);
 
   const setLocalStorageUser = (userData) => {
@@ -75,9 +79,10 @@ export default function UserProvider({ children }) {
 
   const refreshToken = async (activeUser) => {
     try {
-      const newTokens = await refreshAccessToken(activeUser.refreshToken);
-      if (newTokens) {
-        setLocalStorageUser(newTokens);
+      const refreshUserInfo = await refreshAccessToken(activeUser.refreshToken);
+      if (refreshUserInfo) {
+        setLocalStorageUser(refreshUserInfo);
+        return refreshUserInfo;
       }
     } catch {
       addToast({
