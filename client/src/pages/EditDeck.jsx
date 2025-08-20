@@ -20,8 +20,14 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateDeck, getDeckById } from "@/api/decksAPI";
-import { createCard, updateCardById, getCardsByDeckId } from "@/api/cardsAPI";
+import {
+  createCard,
+  updateCardById,
+  deleteCardById,
+  getCardsByDeckId,
+} from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
+import { ROUTES } from "@/routes/paths.js";
 
 const EditDeck = () => {
   const [cards, setCards] = useState([]);
@@ -54,7 +60,7 @@ const EditDeck = () => {
           color: "danger",
           radius: "full",
         });
-        navigate("/not-found");
+        navigate(ROUTES.NOT_FOUND);
       }
     };
     fetchDeckAndCards();
@@ -72,7 +78,13 @@ const EditDeck = () => {
 
   const removeCard = (cardId) => {
     if (cards.length > 1) {
-      setCards(cards.filter((card) => card.id !== cardId));
+      const updateCards = cards.map((card) => {
+        if (card.id === cardId) {
+          return { ...card, isDeleted: true };
+        }
+        return card;
+      });
+      setCards(updateCards);
     } else {
       addToast({
         title: "Error",
@@ -114,6 +126,13 @@ const EditDeck = () => {
               answer: card.answer,
             })
           );
+        } else if (
+          !card.isNew &&
+          card.isDeleted &&
+          card.question &&
+          card.answer
+        ) {
+          cardPromises.push(deleteCardById(id, card.id));
         } else if (!card.isNew && card.question && card.answer) {
           cardPromises.push(
             updateCardById(id, card.id, {
@@ -133,7 +152,7 @@ const EditDeck = () => {
         radius: "full",
       });
 
-      navigate(`/decks/${id}`);
+      navigate(ROUTES.DECK_DETAILS(id));
     } catch (error) {
       addToast({
         title: "Error",
@@ -250,63 +269,69 @@ const EditDeck = () => {
         </div>
 
         <div className="mt-20 flex flex-col gap-5">
-          {cards.map((card, index) => (
-            <div
-              key={card.id}
-              className="bg-default-300 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
-            >
-              <div className="ml-2 text-xl font-bold">{index + 1}.</div>
-              <Divider orientation="vertical" className="h-10 w-[2px]" />
-              <Input
-                name={`question-${card.id}`}
-                label="Enter the question"
-                type="text"
-                radius="full"
-                value={card.question}
-                onChange={(e) =>
-                  updateCard(card.id, "question", e.target.value)
-                }
-                isRequired
-                minLength={1}
-                maxLength={100}
-                classNames={{
-                  inputWrapper: "px-5",
-                }}
-              />
-              <Divider orientation="vertical" className="h-10 w-[2px]" />
-              <Input
-                name={`answer-${card.id}`}
-                label="Enter the answer"
-                type="text"
-                radius="full"
-                value={card.answer}
-                onChange={(e) => updateCard(card.id, "answer", e.target.value)}
-                isRequired
-                minLength={1}
-                maxLength={100}
-                classNames={{
-                  inputWrapper: "px-5",
-                }}
-              />
-              <Divider orientation="vertical" className="h-10 w-[2px]" />
-              <Tooltip
-                content="Delete Card"
-                showArrow={true}
-                delay={0}
-                closeDelay={0}
-                radius="full"
-              >
-                <Button
-                  isIconOnly
-                  radius="full"
-                  size="lg"
-                  onPress={() => removeCard(card.id)}
+          {cards.map((card, index) => {
+            if (!card.isDeleted) {
+              return (
+                <div
+                  key={card.id}
+                  className="bg-default-300 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
                 >
-                  <DeleteIcon />
-                </Button>
-              </Tooltip>
-            </div>
-          ))}
+                  <div className="ml-2 text-xl font-bold">{index + 1}.</div>
+                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <Input
+                    name={`question-${card.id}`}
+                    label="Enter the question"
+                    type="text"
+                    radius="full"
+                    value={card.question}
+                    onChange={(e) =>
+                      updateCard(card.id, "question", e.target.value)
+                    }
+                    isRequired
+                    minLength={1}
+                    maxLength={100}
+                    classNames={{
+                      inputWrapper: "px-5",
+                    }}
+                  />
+                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <Input
+                    name={`answer-${card.id}`}
+                    label="Enter the answer"
+                    type="text"
+                    radius="full"
+                    value={card.answer}
+                    onChange={(e) =>
+                      updateCard(card.id, "answer", e.target.value)
+                    }
+                    isRequired
+                    minLength={1}
+                    maxLength={100}
+                    classNames={{
+                      inputWrapper: "px-5",
+                    }}
+                  />
+                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <Tooltip
+                    content="Delete Card"
+                    showArrow={true}
+                    delay={0}
+                    closeDelay={0}
+                    radius="full"
+                  >
+                    <Button
+                      isIconOnly
+                      radius="full"
+                      size="lg"
+                      onPress={() => removeCard(card.id)}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </Tooltip>
+                </div>
+              );
+            }
+          })}
 
           <div className="border-default flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
             <Tooltip
@@ -333,7 +358,7 @@ const EditDeck = () => {
             radius="full"
             className="font-bold"
             color="default"
-            onPress={() => navigate(`/decks/${id}`)}
+            onPress={() => navigate(ROUTES.DECK_DETAILS(id))}
           >
             Cancel
           </Button>
