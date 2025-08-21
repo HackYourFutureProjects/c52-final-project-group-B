@@ -63,8 +63,23 @@ class DeckService {
       userId: new mongoose.Types.ObjectId(userId),
     };
 
-    if (language && language.length > 0) {
-      match.language = { $in: language.map((lang) => lang.trim()) };
+    if (language) {
+      let langs = [];
+      if (Array.isArray(language)) {
+        langs = language.map((l) => String(l).trim()).filter(Boolean);
+      } else if (typeof language === "string" && language.trim() !== "") {
+        langs = language
+          .split(",")
+          .map((l) => l.trim())
+          .filter(Boolean);
+      }
+      if (langs.length === 1) {
+        // one language: any deck that contains it
+        match.language = { $in: langs };
+      } else if (langs.length > 1) {
+        // multiple languages: deck must contain all
+        match.language = { $all: langs };
+      }
     }
 
     const pipeline = [
