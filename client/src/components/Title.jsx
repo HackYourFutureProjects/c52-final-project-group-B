@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
+import cn from "@/util/cn";
 import { Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 
-const Title = ({ children, classes, breadcrumbs }) => {
+const Title = ({ children, className, breadcrumbs }) => {
   return (
     <>
-      <h1 className={classes ?? "heading-title text-4xl font-bold"}>
+      <h1 className={cn("heading-title text-4xl font-bold", className)}>
         {children}
       </h1>
       {breadcrumbs && breadcrumbs.length > 0 && (
@@ -25,7 +26,7 @@ const Title = ({ children, classes, breadcrumbs }) => {
 
 Title.propTypes = {
   children: PropTypes.string.isRequired,
-  classes: PropTypes.string,
+  className: PropTypes.string,
   breadcrumbs: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,

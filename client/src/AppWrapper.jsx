@@ -16,9 +16,9 @@ const AppWrapper = ({ children }) => {
     <HeroUIProvider navigate={navigate} useHref={useHref}>
       <ToastProvider placement="top-right" toastOffset={25} />
       <UserProvider>
-        <main className="flex min-h-screen flex-col">
+        <main className="flex min-h-screen flex-col items-center px-4 xl:px-0">
           <Navigator />
-          <div className="container mx-auto flex-1">{children}</div>
+          <div className="container flex-1">{children}</div>
           <Footer />
         </main>
       </UserProvider>

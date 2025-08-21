@@ -87,7 +87,7 @@ const BrowseDecks = () => {
         </Title>
       </div>
 
-      <Form className="mt-20 items-stretch">
+      <Form className="mt-10 items-stretch md:mt-20">
         <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
           <Input
             label="Search Decks"

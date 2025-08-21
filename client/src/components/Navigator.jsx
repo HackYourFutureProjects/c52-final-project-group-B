@@ -9,7 +9,7 @@ export default function Navigator() {
     <>
       <Navbar
         classNames={{
-          base: "rounded-full container mx-auto mt-8 top-8 bg-default-300/40",
+          base: "rounded-full container mt-4 top-4 md:mt-8 md:top-8 bg-default-300/40",
         }}
         maxWidth="full"
       >
@@ -24,7 +24,7 @@ export default function Navigator() {
           <UserAuth />
         </NavbarContent>
       </Navbar>
-      <div className="h-20"></div>
+      <div className="h-10 md:h-20"></div>
     </>
   );
 }
