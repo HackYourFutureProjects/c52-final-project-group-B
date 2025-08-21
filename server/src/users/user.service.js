@@ -91,14 +91,13 @@ class UserService {
     }
 
     const newAccessToken = generateAccessToken(user);
-    const newRefreshToken = generateRefreshToken(user._id);
 
     return {
       userid: user._id,
       username: user.username,
       profilePictureUrl: user.profilePictureUrl || "",
       accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
+      refreshToken: token,
     };
   }
 

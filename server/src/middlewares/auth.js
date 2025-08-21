@@ -16,7 +16,7 @@ export const authenticate = (req, res, next) => {
     next();
   } catch (err) {
     return next(
-      createAndThrowError(HTTP_STATUS.FORBIDDEN, "Invalid or expired token"),
+      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid or expired token"),
     );
   }
 };
