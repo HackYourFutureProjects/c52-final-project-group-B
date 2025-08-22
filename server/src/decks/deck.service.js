@@ -142,7 +142,7 @@ class DeckService {
         items: [{ $skip: skip }, { $limit: pageSize }],
       },
     });
-    
+
     const [res] = await DeckModel.aggregate(pipeline).collation({
       locale: "en",
       strength: 2,
