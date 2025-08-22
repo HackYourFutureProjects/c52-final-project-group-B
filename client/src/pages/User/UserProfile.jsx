@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo, useRef } from "react";
 import { UserContext } from "@/context/UserContext";
 import {
   Button,
@@ -13,6 +13,7 @@ import UserCard from "@/components/UserCard";
 import { getUserById, updateCurrentUser, deactivateUser } from "@/api/userAPI";
 import apiRequest from "@/api/index";
 import { PASSWORD_MIN_LENGTH } from "@/constants/validation";
+import { FiUpload } from "react-icons/fi";
 
 const UserProfile = () => {
   const {
@@ -36,6 +37,14 @@ const UserProfile = () => {
     newPassword: "",
   });
   const [isConfirmDeactivateOpen, setIsConfirmDeactivateOpen] = useState(false);
+
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const cloudinaryUploadEndpoint = useMemo(() => {
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    return `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+  }, []);
 
   useEffect(() => {
     if (!user && isUserLoaded === true) {
@@ -62,12 +71,33 @@ const UserProfile = () => {
 
   const onSave = async () => {
     try {
+      if (isUploading) {
+        addToast({
+          title: "Please wait",
+          description: "Avatar is still uploading to Cloudinary.",
+          color: "warning",
+          radius: "full",
+        });
+        return;
+      }
       const updated = await updateCurrentUser(form);
       updateUser(updated);
       setUserInfo(updated);
       setIsEditing(false);
+      addToast({
+        title: "Success",
+        description: "Profile updated",
+        color: "success",
+        radius: "full",
+      });
     } catch (e) {
       console.error(e);
+      addToast({
+        title: "Error",
+        description: e?.message || "Failed to update profile",
+        color: "danger",
+        radius: "full",
+      });
     }
   };
 
@@ -108,6 +138,53 @@ const UserProfile = () => {
     }
   };
 
+  const triggerFileDialog = () => fileInputRef.current?.click();
+
+  const onFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append(
+        "upload_preset",
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
+      );
+      formData.append("folder", import.meta.env.VITE_CLOUDINARY_FOLDER);
+
+      const res = await fetch(cloudinaryUploadEndpoint, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(errText || "Cloudinary upload failed");
+      }
+      const data = await res.json();
+      if (!data?.secure_url) {
+        throw new Error("Cloudinary response missing secure_url");
+      }
+      setForm((prev) => ({ ...prev, profilePictureUrl: data.secure_url }));
+      addToast({
+        title: "Uploaded",
+        description: "Avatar uploaded to Cloudinary.",
+        color: "success",
+        radius: "full",
+      });
+    } catch (err) {
+      addToast({
+        title: "Upload failed",
+        description: err?.message || "Could not upload avatar",
+        color: "danger",
+        radius: "full",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
   if (!userInfo) {
     return (
       <div className="text-center">
@@ -139,11 +216,49 @@ const UserProfile = () => {
       </div>
 
       <div className="mx-auto max-w-2xl px-4">
-        <UserCard user={userInfo} />
+        {!isEditing && <UserCard user={userInfo} />}
 
         <div className="mt-8">
           {isEditing ? (
-            <div className="space-y-4">
+            <div className="space-y-6">
+              <div className="flex flex-col items-center gap-2">
+                <button
+                  type="button"
+                  onClick={triggerFileDialog}
+                  className="group border-default-200 relative h-28 w-28 overflow-hidden rounded-full border md:h-32 md:w-32"
+                  aria-label="Change avatar"
+                  disabled={isUploading}
+                >
+                  <img
+                    src={
+                      form.profilePictureUrl ||
+                      "https://placehold.co/128x128?text=Avatar"
+                    }
+                    alt="Avatar"
+                    className={`h-full w-full object-cover transition-opacity ${
+                      isUploading ? "opacity-60" : "opacity-100"
+                    }`}
+                  />
+                  <div className="pointer-events-none absolute inset-0 hidden items-center justify-center bg-black/50 group-hover:flex">
+                    <FiUpload className="h-8 w-8 text-white" />
+                  </div>
+                  {isUploading && (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                      Uploading…
+                    </div>
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={onFileSelect}
+                />
+                <p className="text-xs text-gray-500">
+                  JPG, PNG, WebP up to 5MB per file
+                </p>
+              </div>
               <Input
                 name="username"
                 label="Displayed name"
@@ -160,20 +275,14 @@ const UserProfile = () => {
                 value={form.email}
                 onChange={onChange}
               />
-              <Input
-                name="profilePictureUrl"
-                label="Profile Picture URL"
-                variant="flat"
-                radius="full"
-                value={form.profilePictureUrl}
-                onChange={onChange}
-              />
-              <div className="mt-4 flex justify-end gap-3">
+
+              <div className="mt-2 flex justify-end gap-3">
                 <Button
                   className="font-semibold"
                   color="primary"
                   radius="full"
                   onPress={onSave}
+                  isDisabled={isUploading}
                 >
                   Save
                 </Button>
