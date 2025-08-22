@@ -124,8 +124,8 @@ class DeckService {
     const sortOptions = {
       mostRecent: { createdAt: -1 },
       oldest: { createdAt: 1 },
-      numCardsAsc: { cardsCount: 1 },
-      numCardsDesc: { cardsCount: -1 },
+      numCardsAsc: { cardsCount: -1 },
+      numCardsDesc: { cardsCount: 1 },
     };
     pipeline.push({ $sort: sortOptions[sortBy] || sortOptions.mostRecent });
 
