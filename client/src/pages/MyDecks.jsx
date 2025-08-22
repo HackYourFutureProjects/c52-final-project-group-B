@@ -230,7 +230,6 @@ const MyDecks = () => {
                 const limitNum = Number(decksPerPage);
                 const start = (page - 1) * limitNum + 1;
                 const end = Math.min(page * limitNum, totalResults);
-                if (!decks) return null;
                 return `Showing ${start}-${end} of ${totalResults} results`;
               })()}
             </p>
