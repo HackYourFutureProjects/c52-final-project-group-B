@@ -5,7 +5,7 @@ export const getCardsByDeckId = async (id) => {
 };
 
 export const createCard = async (data) => {
-  return apiRequest(`/decks/${data.deckId}/cards`, "POST", data);
+  return apiRequest(`/decks/${data.deckId}/cards`, "POST", data, true);
 };
 
 export const updateCardById = async (deckId, cardId, cardData) => {

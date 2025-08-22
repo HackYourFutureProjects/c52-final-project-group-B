@@ -14,7 +14,7 @@ import { UserContext } from "@/context/UserContext";
 
 const Home = () => {
   const [decks, setDecks] = useState([]);
-  const { user } = useContext(UserContext);
+  const { user, setIsLoginOpen } = useContext(UserContext);
   useEffect(() => {
     const fetchDecks = async () => {
       try {
@@ -83,13 +83,23 @@ const Home = () => {
             >
               Browse Decks
             </Button>
-            {user && (
+            {user ? (
               <Button
                 as={Link}
                 variant="ghost"
                 color="primary"
                 radius="full"
                 href={ROUTES.DECK_CREATE}
+                className="font-bold"
+              >
+                Create A Deck
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                color="primary"
+                radius="full"
+                onPress={() => setIsLoginOpen(true)}
                 className="font-bold"
               >
                 Create A Deck

@@ -45,9 +45,10 @@ const decksFilterPipeline = ({
 
   // Language filter (deck.language is now an array of strings)
   if (language && language.trim() !== "") {
+    const trimmedLanguages = language.split(",").map((lang) => lang.trim());
     pipeline.push({
       $match: {
-        language: { $in: [language.trim()] },
+        language: { $all: trimmedLanguages },
       },
     });
   }

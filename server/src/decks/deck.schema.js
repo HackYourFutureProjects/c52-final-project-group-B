@@ -8,7 +8,7 @@ export const deckValidationSchema = z.object({
 export const updateDeckSchema = z.object({
   title: z.string().trim().min(1, "Title cannot be empty").optional(),
   description: z.string().optional(),
-  language: z.string().optional(),
+  language: z.array(z.string()).optional(),
   isPublic: z.boolean().optional(),
 });
 
@@ -16,7 +16,7 @@ export const createDeckSchema = z.object({
   userId: objectIdSchema.optional(),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  language: z.string().trim().min(1, "Language is required"),
+  language: z.array(z.string()).min(1, "At least one language is required"),
   isPublic: z.boolean().optional(),
 });
 

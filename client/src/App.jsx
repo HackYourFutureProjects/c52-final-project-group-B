@@ -7,6 +7,7 @@ import DeckPage from "@/pages/DeckPage";
 import CreateDeck from "@/pages/CreateDeck";
 import EditDeck from "@/pages/EditDeck";
 import CardMode from "@/pages/CardMode";
+import QuizMode from "@/pages/QuizMode";
 import NotFound from "@/pages/NotFound/NotFoundPage";
 import UserProfile from "@/pages/User/UserProfile";
 import ResetPasswordPage from "@/pages/Auth/ResetPasswordPage";
@@ -39,6 +40,7 @@ const App = () => {
       <Route path={ROUTES.DECK_DETAILS(":id")} element={<DeckPage />} />
       <Route path={ROUTES.DECK_EDIT(":id")} element={<EditDeck />} />
       <Route path={ROUTES.DECK_CARD_MODE(":id")} element={<CardMode />} />
+      <Route path={ROUTES.DECK_QUIZ_MODE(":id")} element={<QuizMode />} />
 
       <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
       <Route path="*" element={<NotFound />} />
