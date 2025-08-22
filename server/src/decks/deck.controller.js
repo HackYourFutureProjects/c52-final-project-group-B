@@ -13,8 +13,34 @@ import {
   updateCardSchema,
 } from "../cards/card.schema.js";
 import { generateFlashcards } from "../services/openAi/openAI.js";
+import {
+  prepareLanguages,
+  mergeAnswerLanguage,
+} from "../util/languageUtils.js";
 
 const deckService = new DeckService();
+
+/**
+ * Create a deck and all of its cards in one step.
+ */
+const createDeckWithCards = async (parsedDeck, deckLanguages, userId) => {
+  const deck = await deckService.createDeck({
+    title: parsedDeck.title,
+    description: parsedDeck.description,
+    userId,
+    language: deckLanguages,
+    isPublic: true,
+    createdAt: new Date(),
+  });
+
+  const cards = await Promise.all(
+    parsedDeck.cards.map((card) =>
+      deckService.createDeckCard({ ...card, deckId: deck._id }, userId),
+    ),
+  );
+
+  return { deck, cards };
+};
 
 export const getDecks = async (req, res) => {
   const { page, limit, search, language, minCards, maxCards, sortBy } =
@@ -72,73 +98,37 @@ export const deleteDeck = async (req, res) => {
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
 };
 
+/**
+ * Generate a deck using AI, then persist the deck and its cards.
+ */
 export const generateDeck = async (req, res) => {
   const { language, amountCards, userPrompt } = generateDeckSchema.parse(
     req.body,
   );
-  // Normalize languages for AI and persistence
-  const normalizeLanguageInput = (value) =>
-    String(value)
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
 
-  const normalizedLanguage = Array.isArray(language)
-    ? [...new Set(language.flatMap(normalizeLanguageInput))]
-    : [...new Set(normalizeLanguageInput(language || ""))];
+  // 1) Prepare input languages for AI and DB
+  const { normalizedLanguage: studyLanguages, languageForAi: aiLanguages } =
+    prepareLanguages(language);
+  const numCards = amountCards;
 
-  // Convert study language keys to human-readable names for AI prompt (e.g., "arabic" -> "Arabic")
-  const toLanguageName = (value) =>
-    String(value)
-      .replace(/[_-]+/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase()
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-
-  const languageForAi = normalizedLanguage.map(toLanguageName);
-
-  // Generate deck and cards using AI
-  const parsedDeck = await generateFlashcards({
-    language: languageForAi,
-    numCards: amountCards,
+  // 2) Ask AI to generate deck content
+  const aiDeck = await generateFlashcards({
+    language: aiLanguages,
+    numCards,
     userPrompt,
   });
 
-  // Merge detected answer language into deck languages (for DB and client)
-  let deckLanguages = [...normalizedLanguage];
-  try {
-    const answerLanguageName = String(parsedDeck?.answerLanguage || "").trim();
-    if (answerLanguageName) {
-      const toLanguageKey = (value) =>
-        String(value)
-          .toLowerCase()
-          .replace(/\s*\(.*?\)\s*/g, "") // drop parenthetical qualifiers
-          .replace(/[^a-z]/g, ""); // keep a-z only
-      const answerKey = toLanguageKey(answerLanguageName);
-      if (answerKey && !deckLanguages.includes(answerKey)) {
-        deckLanguages.push(answerKey);
-      }
-    }
-  } catch (e) {
-    // ignore parse issues; proceed with provided study language(s)
-  }
+  // 3) Merge any detected answer language (kept as normalized key)
+  const persistedLanguages = mergeAnswerLanguage(
+    studyLanguages,
+    aiDeck?.answerLanguage,
+  );
 
-  // Create the deck
-  const deck = await deckService.createDeck({
-    title: parsedDeck.title,
-    description: parsedDeck.description,
-    userId: req.user.id,
-    language: deckLanguages,
-    isPublic: true,
-    createdAt: new Date(),
-  });
-
-  // Create all cards for this deck
-  const cards = await Promise.all(
-    parsedDeck.cards.map((card) =>
-      deckService.createDeckCard({ ...card, deckId: deck._id }, req.user.id),
-    ),
+  // 4) Persist deck and cards
+  const { deck, cards } = await createDeckWithCards(
+    aiDeck,
+    persistedLanguages,
+    req.user.id,
   );
 
   res.status(HTTP_STATUS.CREATED).json({ deck, cards });
