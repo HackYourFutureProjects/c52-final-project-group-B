@@ -61,28 +61,6 @@ export const updateDeck = async (req, res) => {
 export const createDeck = async (req, res) => {
   const deckData = createDeckSchema.parse(req.body);
   deckData.userId = req.user.id;
-  // Normalize language into an array of trimmed, unique items
-  if (Array.isArray(deckData.language)) {
-    deckData.language = [
-      ...new Set(
-        deckData.language.flatMap((l) =>
-          String(l)
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean),
-        ),
-      ),
-    ];
-  } else if (typeof deckData.language === "string") {
-    deckData.language = [
-      ...new Set(
-        String(deckData.language)
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-      ),
-    ];
-  }
   const newDeck = await deckService.createDeck(deckData);
   res.status(HTTP_STATUS.CREATED).json(newDeck);
 };
@@ -99,25 +77,15 @@ export const generateDeck = async (req, res) => {
     req.body,
   );
   // Normalize languages for AI and persistence
+  const normalizeLanguageInput = (value) =>
+    String(value)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
   const normalizedLanguage = Array.isArray(language)
-    ? [
-        ...new Set(
-          language.flatMap((l) =>
-            String(l)
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean),
-          ),
-        ),
-      ]
-    : [
-        ...new Set(
-          String(language || "")
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean),
-        ),
-      ];
+    ? [...new Set(language.flatMap(normalizeLanguageInput))]
+    : [...new Set(normalizeLanguageInput(language || ""))];
 
   // Convert study language keys to human-readable names for AI prompt (e.g., "arabic" -> "Arabic")
   const toLanguageName = (value) =>
