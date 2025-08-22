@@ -160,7 +160,7 @@ const MyDecks = () => {
                 defaultValue={[Number(numCardsMin), Number(numCardsMax)]}
                 onChangeEnd={(values) => {
                   updateSearchParams("numCardsMin", Number(values[0]));
-                  updateSearchParams("numCardsMax", Number(values[1]));
+                  updateSearchParams("numCardsMax", String(Number(values[1])));
                 }}
               />
             </div>
