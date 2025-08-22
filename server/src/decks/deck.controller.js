@@ -119,19 +119,49 @@ export const generateDeck = async (req, res) => {
         ),
       ];
 
+  // Convert study language keys to human-readable names for AI prompt (e.g., "arabic" -> "Arabic")
+  const toLanguageName = (value) =>
+    String(value)
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const languageForAi = normalizedLanguage.map(toLanguageName);
+
   // Generate deck and cards using AI
   const parsedDeck = await generateFlashcards({
-    language: normalizedLanguage,
+    language: languageForAi,
     numCards: amountCards,
     userPrompt,
   });
+
+  // Merge detected answer language into deck languages (for DB and client)
+  let deckLanguages = [...normalizedLanguage];
+  try {
+    const answerLanguageName = String(parsedDeck?.answerLanguage || "").trim();
+    if (answerLanguageName) {
+      const toLanguageKey = (value) =>
+        String(value)
+          .toLowerCase()
+          .replace(/\s*\(.*?\)\s*/g, "") // drop parenthetical qualifiers
+          .replace(/[^a-z]/g, ""); // keep a-z only
+      const answerKey = toLanguageKey(answerLanguageName);
+      if (answerKey && !deckLanguages.includes(answerKey)) {
+        deckLanguages.push(answerKey);
+      }
+    }
+  } catch (e) {
+    // ignore parse issues; proceed with provided study language(s)
+  }
 
   // Create the deck
   const deck = await deckService.createDeck({
     title: parsedDeck.title,
     description: parsedDeck.description,
     userId: req.user.id,
-    language: normalizedLanguage,
+    language: deckLanguages,
     isPublic: true,
     createdAt: new Date(),
   });

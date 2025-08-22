@@ -214,30 +214,28 @@ const DeckPage = () => {
           )}
         </div>
 
-<div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
-  <h3 className="text-xl font-bold">
-    {deck?.language?.length > 1 ? "Languages" : "Language"}
-  </h3>
-  <div className="flex flex-wrap gap-2 capitalize">
-    {deck?.language?.length > 0 ? (
-      deck.language.map((lang) => (
-        <Button
-          key={lang}
-          radius="full"
-          as={Link}
-          href={`${ROUTES.BROWSE}?language=${lang}`}
-        >
-          {lang}
-        </Button>
-      ))
-    ) : isLoading ? (
-      "..."
-    ) : (
-      "unknown"
-    )}
-  </div>
-</div>
-
+        <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
+          <h3 className="text-xl font-bold">
+            {deck?.language?.length > 1 ? "Languages" : "Language"}
+          </h3>
+          <div className="flex flex-wrap gap-2 capitalize">
+            {deck?.language?.length > 0
+              ? deck.language.map((lang) => (
+                  <Button
+                    key={lang}
+                    radius="full"
+                    as={Link}
+                    href={`${ROUTES.BROWSE}?language=${lang}`}
+                  >
+                    {lang}
+                  </Button>
+                ))
+              : isLoading
+                ? "..."
+                : "unknown"}
+          </div>
+        </div>
+      </div>
 
       <div className="mt-20 flex items-center justify-between">
         <div className="flex flex-col">

@@ -15,7 +15,7 @@ export async function generateFlashcards({ language, numCards, userPrompt }) {
     input: [
       { role: "system", content: [{ type: "input_text", text: systemPrompt }] },
     ],
-    temperature: 1,
+    temperature: 0.2,
     max_output_tokens: 2048,
   });
 
