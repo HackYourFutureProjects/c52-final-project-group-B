@@ -216,9 +216,11 @@ const DeckPage = () => {
         <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
           <h3 className="text-xl font-bold">Languages</h3>
           <div className="flex gap-2 capitalize">
-            <Button radius="full" as={Link} href="#">
-              {deck?.language || (isLoading ? "..." : "unknown")}
-            </Button>
+            {deck?.language?.map((lang) => (
+              <Button key={lang} radius="full" as={Link} href="#">
+                {lang}
+              </Button>
+            )) || (isLoading ? "..." : "unknown")}
           </div>
         </div>
       </div>

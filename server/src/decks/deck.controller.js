@@ -4,6 +4,7 @@ import {
   updateDeckSchema,
   createDeckSchema,
   paginationQuerySchema,
+  generateDeckSchema,
 } from "./deck.schema.js";
 import DeckService from "./deck.service.js";
 import {
@@ -11,6 +12,7 @@ import {
   createCardSchema,
   updateCardSchema,
 } from "../cards/card.schema.js";
+import { generateFlashcards } from "../services/openAi/openAI.js";
 
 const deckService = new DeckService();
 
@@ -59,6 +61,28 @@ export const updateDeck = async (req, res) => {
 export const createDeck = async (req, res) => {
   const deckData = createDeckSchema.parse(req.body);
   deckData.userId = req.user.id;
+  // Normalize language into an array of trimmed, unique items
+  if (Array.isArray(deckData.language)) {
+    deckData.language = [
+      ...new Set(
+        deckData.language.flatMap((l) =>
+          String(l)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        ),
+      ),
+    ];
+  } else if (typeof deckData.language === "string") {
+    deckData.language = [
+      ...new Set(
+        String(deckData.language)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      ),
+    ];
+  }
   const newDeck = await deckService.createDeck(deckData);
   res.status(HTTP_STATUS.CREATED).json(newDeck);
 };
@@ -68,6 +92,58 @@ export const deleteDeck = async (req, res) => {
   await deckService.deleteDeck(deckId, req.user.id);
 
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
+};
+
+export const generateDeck = async (req, res) => {
+  const { language, amountCards, userPrompt } = generateDeckSchema.parse(
+    req.body,
+  );
+  // Normalize languages for AI and persistence
+  const normalizedLanguage = Array.isArray(language)
+    ? [
+        ...new Set(
+          language.flatMap((l) =>
+            String(l)
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+          ),
+        ),
+      ]
+    : [
+        ...new Set(
+          String(language || "")
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        ),
+      ];
+
+  // Generate deck and cards using AI
+  const parsedDeck = await generateFlashcards({
+    language: normalizedLanguage,
+    numCards: amountCards,
+    userPrompt,
+  });
+
+  // Create the deck
+  const deck = await deckService.createDeck({
+    title: parsedDeck.title,
+    description: parsedDeck.description,
+    userId: req.user.id,
+    language: normalizedLanguage,
+    isPublic: true,
+    createdAt: new Date(),
+  });
+
+  // Create all cards for this deck
+  const cards = await Promise.all(
+    parsedDeck.cards.map((card) =>
+      deckService.createDeckCard({ ...card, deckId: deck._id }, req.user.id),
+    ),
+  );
+
+  res.status(HTTP_STATUS.CREATED).json({ deck, cards });
 };
 
 //deck cards controller

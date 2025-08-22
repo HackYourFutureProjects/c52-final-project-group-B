@@ -17,10 +17,14 @@ export const deckSchema = new mongoose.Schema({
     maxlength: 500,
   },
   language: {
-    type: String,
+    type: [String],
     required: true,
-    minlength: 2,
-    maxlength: 50,
+    validate: {
+      validator: function (arr) {
+        return arr.every((str) => str.length >= 2 && str.length <= 50);
+      },
+      message: "Each language must be between 2 and 50 characters long",
+    },
   },
   createdAt: {
     type: Date,

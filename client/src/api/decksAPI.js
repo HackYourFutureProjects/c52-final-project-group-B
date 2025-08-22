@@ -41,3 +41,12 @@ export const updateDeck = async (deckId, deckData) => {
 export const deleteDeck = async (deckId) => {
   return apiRequest(`/decks/${deckId}`, "DELETE", null, true);
 };
+
+export const generateDeck = async ({ language, amountCards, userPrompt }) => {
+  return apiRequest(
+    "/decks/generate",
+    "POST",
+    { language, amountCards, userPrompt },
+    true
+  );
+};

@@ -16,7 +16,7 @@ export const createDeckSchema = z.object({
   userId: objectIdSchema.optional(),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  language: z.string().min(1, "Language is required"),
+  language: z.string().trim().min(1, "Language is required"),
   isPublic: z.boolean().optional(),
 });
 
@@ -30,4 +30,12 @@ export const paginationQuerySchema = z.object({
   sortBy: z
     .enum(["mostRecent", "oldest", "numCardsAsc", "numCardsDesc"])
     .default("mostRecent"),
+});
+
+export const generateDeckSchema = z.object({
+  language: z
+    .array(z.string().min(2, "Each language is required"))
+    .nonempty("At least one language is required"),
+  amountCards: z.coerce.number().int().min(1).max(50).default(20),
+  userPrompt: z.string().min(3, "Description is required"),
 });

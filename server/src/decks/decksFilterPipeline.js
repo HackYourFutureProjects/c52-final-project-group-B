@@ -43,11 +43,11 @@ const decksFilterPipeline = ({
     });
   }
 
-  // Language filter
+  // Language filter (deck.language is now an array of strings)
   if (language && language.trim() !== "") {
     pipeline.push({
       $match: {
-        language: language.trim(),
+        language: { $in: [language.trim()] },
       },
     });
   }
