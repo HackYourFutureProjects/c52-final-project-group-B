@@ -143,7 +143,10 @@ class DeckService {
       },
     });
 
-    const [res] = await DeckModel.aggregate(pipeline);
+   const [res] = await DeckModel.aggregate(pipeline).collation({
+      locale: "en",
+      strength: 2,
+    });
     const total = res?.meta?.[0]?.total ?? 0;
     const decks = res?.items ?? [];
     return { items: decks, total, pages: Math.ceil(total / pageSize) || 1 };
