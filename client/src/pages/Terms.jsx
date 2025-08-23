@@ -1,17 +1,27 @@
-// client/src/pages/Legal/Terms.jsx
-import { Link, Card } from "@heroui/react";
+import { Link } from "@heroui/react";
+import Title from "@/components/Title";
+import { ROUTES } from "@/routes/paths.js";
 
 const Terms = () => {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-4 py-10">
-      <header className="space-y-2 text-center">
-        <h1 className="text-3xl font-extrabold">Terms of Use</h1>
-        <p className="text-foreground-500">Last updated: August 13, 2025</p>
-      </header>
+    <>
+      <div className="flex flex-col justify-center text-center">
+        <Title
+          breadcrumbs={[
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Terms`, path: ROUTES.TERMS },
+          ]}
+        >
+          Terms of Use
+        </Title>
+        <p className="mt-5">Last updated: August 13, 2025</p>
+      </div>
 
-      <Card className="space-y-6 p-6 text-sm leading-6">
+      <div className="ring-default mt-20 space-y-6 rounded-[20px] p-4 text-sm leading-6 ring-1 md:rounded-[35px] md:p-8">
         <section id="acceptance" className="space-y-2">
-          <h2 className="text-xl font-bold">1. Acceptance of Terms</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            1. Acceptance of Terms
+          </h2>
           <p>
             Welcome to <strong>Memix</strong> (the “Service”). By accessing or
             using the Service, you agree to be bound by these Terms of Use
@@ -20,7 +30,7 @@ const Terms = () => {
         </section>
 
         <section id="about" className="space-y-2">
-          <h2 className="text-xl font-bold">2. The Service</h2>
+          <h2 className="text-secondary text-xl font-bold">2. The Service</h2>
           <p>
             Memix is a web application where users can create, browse, and study
             flashcard decks. Features may include deck creation, editing,
@@ -30,7 +40,7 @@ const Terms = () => {
         </section>
 
         <section id="eligibility" className="space-y-2">
-          <h2 className="text-xl font-bold">3. Eligibility</h2>
+          <h2 className="text-secondary text-xl font-bold">3. Eligibility</h2>
           <p>
             You must be at least 13 years old (or older where required by your
             local law) to use the Service. If you are under the age of majority,
@@ -39,7 +49,9 @@ const Terms = () => {
         </section>
 
         <section id="account" className="space-y-2">
-          <h2 className="text-xl font-bold">4. Accounts & Security</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            4. Accounts & Security
+          </h2>
           <ul className="list-disc space-y-1 pl-5">
             <li>You are responsible for the accuracy of your account info.</li>
             <li>
@@ -53,7 +65,7 @@ const Terms = () => {
         </section>
 
         <section id="user-content" className="space-y-2">
-          <h2 className="text-xl font-bold">5. User Content</h2>
+          <h2 className="text-secondary text-xl font-bold">5. User Content</h2>
           <p>
             You own the content you create (e.g., deck titles, descriptions,
             cards, images) and grant Memix a worldwide, non-exclusive,
@@ -69,7 +81,9 @@ const Terms = () => {
         </section>
 
         <section id="prohibited" className="space-y-2">
-          <h2 className="text-xl font-bold">6. Prohibited Uses</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            6. Prohibited Uses
+          </h2>
           <ul className="list-disc space-y-1 pl-5">
             <li>Reverse engineering or scraping the Service.</li>
             <li>
@@ -85,7 +99,9 @@ const Terms = () => {
         </section>
 
         <section id="ip" className="space-y-2">
-          <h2 className="text-xl font-bold">7. Intellectual Property</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            7. Intellectual Property
+          </h2>
           <p>
             The Service, including its logo, UI, and code, contains material
             owned by or licensed to us. Except for the limited rights granted in
@@ -94,7 +110,9 @@ const Terms = () => {
         </section>
 
         <section id="third-parties" className="space-y-2">
-          <h2 className="text-xl font-bold">8. Third-Party Links & Social</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            8. Third-Party Links & Social
+          </h2>
           <p>
             The Service may contain links to third-party websites (e.g., social
             media). We do not control and are not responsible for their content
@@ -104,18 +122,16 @@ const Terms = () => {
         </section>
 
         <section id="privacy" className="space-y-2">
-          <h2 className="text-xl font-bold">9. Privacy</h2>
+          <h2 className="text-secondary text-xl font-bold">9. Privacy</h2>
           <p>
-            For information on how we collect and process personal data, see our{" "}
-            <Link href="/privacy" underline="hover" color="foreground">
-              Privacy&nbsp;Policy
-            </Link>
-            . By using the Service, you consent to those practices.
+            For information on how we collect and process personal data, see our
+            Privacy Policy. By using the Service, you consent to those
+            practices.
           </p>
         </section>
 
         <section id="changes" className="space-y-2">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-secondary text-xl font-bold">
             10. Changes to the Service or Terms
           </h2>
           <p>
@@ -128,7 +144,7 @@ const Terms = () => {
         </section>
 
         <section id="disclaimer" className="space-y-2">
-          <h2 className="text-xl font-bold">11. Disclaimers</h2>
+          <h2 className="text-secondary text-xl font-bold">11. Disclaimers</h2>
           <p>
             The Service is provided “as is” and “as available” without
             warranties of any kind, whether express or implied, including
@@ -140,7 +156,9 @@ const Terms = () => {
         </section>
 
         <section id="liability" className="space-y-2">
-          <h2 className="text-xl font-bold">12. Limitation of Liability</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            12. Limitation of Liability
+          </h2>
           <p>
             To the maximum extent permitted by law, Memix and its contributors
             will not be liable for any indirect, incidental, special,
@@ -150,7 +168,9 @@ const Terms = () => {
         </section>
 
         <section id="termination" className="space-y-2">
-          <h2 className="text-xl font-bold">13. Suspension & Termination</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            13. Suspension & Termination
+          </h2>
           <p>
             We may suspend or terminate your access to the Service at any time
             if you violate these Terms or if we reasonably believe your use
@@ -160,7 +180,9 @@ const Terms = () => {
         </section>
 
         <section id="governing-law" className="space-y-2">
-          <h2 className="text-xl font-bold">14. Governing Law</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            14. Governing Law
+          </h2>
           <p>
             These Terms are governed by the laws of the Netherlands. If any
             dispute arises, the courts of Amsterdam will have exclusive
@@ -169,7 +191,7 @@ const Terms = () => {
         </section>
 
         <section id="contact" className="space-y-2">
-          <h2 className="text-xl font-bold">15. Contact</h2>
+          <h2 className="text-secondary text-xl font-bold">15. Contact</h2>
           <p>
             Questions about these Terms? Reach us via the{" "}
             <Link href="/support" underline="hover" color="foreground">
@@ -180,7 +202,9 @@ const Terms = () => {
         </section>
 
         <section id="misc" className="space-y-2">
-          <h2 className="text-xl font-bold">16. Miscellaneous</h2>
+          <h2 className="text-secondary text-xl font-bold">
+            16. Miscellaneous
+          </h2>
           <ul className="list-disc space-y-1 pl-5">
             <li>
               If any provision is found unenforceable, the remaining provisions
@@ -198,8 +222,8 @@ const Terms = () => {
             </em>
           </p>
         </section>
-      </Card>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -19,7 +19,12 @@
 }
 
 .swiper-pagination-bullet-active {
-  background-color: hsl(var(--heroui-primary));
+  background-color: hsl(var(--heroui-secondary));
+}
+
+[role="button"],
+button {
+  cursor: pointer;
 }
 
 @keyframes marquee {

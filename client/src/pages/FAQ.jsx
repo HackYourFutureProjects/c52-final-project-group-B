@@ -1,11 +1,11 @@
-import { Accordion, AccordionItem, Card } from "@heroui/react";
+import { Accordion, AccordionItem } from "@heroui/react";
 import Title from "@/components/Title";
 import { ROUTES } from "@/routes/paths.js";
 
 export default function FAQ() {
   return (
-    <div className="space-y-12">
-      <div className="text-center">
+    <>
+      <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
@@ -14,17 +14,15 @@ export default function FAQ() {
         >
           Frequently Asked Questions
         </Title>
-        <p className="mx-auto mt-2 max-w-2xl">
-          Short answers to common questions about Memix
-        </p>
       </div>
 
-      <Card className="bg-default-200 rounded-[25px] p-4">
+      <div className="mt-20 flex flex-col">
         <Accordion
-          showDivider={false}
+          variant="splitted"
           itemClasses={{
-            base: "my-3 rounded-[20px] border-1 border-default px-6 py-3 text-left",
-            title: "font-semibold",
+            base: "bg-default-100 from-secondary/15 to-default-100 ring-default rounded-[20px] bg-radial-[at_50%_0%] to-100% ring-1 md:rounded-[35px] mb-5 px-5 shadow-none text-center md:text-left",
+            title: "font-bold text-secondary text-center md:text-left",
+            indicator: "text-secondary",
           }}
         >
           <AccordionItem
@@ -98,11 +96,11 @@ export default function FAQ() {
             aria-label="Will you add new study modes?"
             title="Will you add new study modes?"
           >
-            Card Mode is available today. We focused on doing the basics well,
-            and more study modes may be added in the future.
+            Card Mode, and Quiz Mode are available today. We focused on doing
+            the basics well, and more study modes may be added in the future.
           </AccordionItem>
         </Accordion>
-      </Card>
-    </div>
+      </div>
+    </>
   );
 }

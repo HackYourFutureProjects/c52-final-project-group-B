@@ -6,10 +6,11 @@ import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { DecksCard } from "@/components/Card";
 import { Progress, Button, addToast } from "@heroui/react";
-import { WrongIcon, CorrectIcon, FlagIcon } from "@/components/Icons";
+import { PiCheckBold, PiXBold, PiFlagFill } from "react-icons/pi";
 import { submitUserProgress } from "@/api/userAPI";
 import { ROUTES } from "@/routes/paths.js";
 import ReportAProblemModal from "@/components/Modals/ReportAProblem";
+import StylishDiv from "@/components/StylishDiv";
 
 const CardMode = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -140,34 +141,54 @@ const CardMode = () => {
         </Title>
       </div>
 
-      <div className="bg-default-200 mt-20 w-full rounded-[35px] p-8">
+      <StylishDiv className="mt-20 w-full">
         <Progress
-          color="primary"
+          showValueLabel
+          color="secondary"
           label="Current Progress"
           maxValue={cards?.length}
-          showValueLabel={true}
           value={progress.length}
-          classNames={{ track: "bg-primary/10" }}
+          classNames={{
+            label: "text-sm",
+            value: "text-sm",
+            track: "bg-secondary/20",
+          }}
         />
-      </div>
+      </StylishDiv>
 
       {hasFinished ? (
-        <div className="bg-default-200 mt-8 flex flex-col items-center justify-between rounded-[35px] p-8 text-center">
-          <p className="mb-4 text-xl font-bold">
-            Thank you for completing &quot;{deck.title}&quot; in card mode.
-            <br></br>
-            You’ve learned {progress?.filter((item) => item?.isCorrect).length}/
-            {progress?.length} cards
-          </p>
-          <Button color="primary" onPress={handleCompleteDeck}>
+        <StylishDiv className="mt-5 flex flex-col items-center justify-between bg-radial-[at_50%_100%] text-center md:mt-10 md:p-20">
+          <div className="text-md md:text-xl">
+            <p>
+              Thank you for completing the deck{" "}
+              <span className="text-primary font-bold capitalize">
+                &quot;{deck.title}&quot;
+              </span>{" "}
+              in card mode!
+            </p>
+            <p className="my-4">
+              You’ve learned{" "}
+              <strong className="text-primary">
+                {progress?.filter((item) => item?.isCorrect).length}/
+                {progress?.length}
+              </strong>{" "}
+              cards
+            </p>
+          </div>
+          <Button
+            color="primary"
+            radius="full"
+            onPress={handleCompleteDeck}
+            className="w-50"
+          >
             Complete
           </Button>
-        </div>
+        </StylishDiv>
       ) : (
         cards &&
         cards[currentCardIndex] && (
           <>
-            <div className="mt-8 flex flex-wrap items-center justify-evenly gap-4">
+            <div className="mt-5 flex flex-wrap items-center justify-evenly gap-4 md:mt-10">
               <DecksCard
                 key={cards[currentCardIndex]._id}
                 front={cards[currentCardIndex].question}
@@ -175,18 +196,19 @@ const CardMode = () => {
                 flipDirection="vertical"
               />
             </div>
-            <div className="mt-8 flex items-center justify-center gap-4">
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
               <Button
                 color="danger"
                 aria-label="Wrong answer"
                 radius="full"
                 size="lg"
-                className="text-white"
                 onPress={() => handleAnswer(false)}
+                className="flex-1 md:flex-0"
               >
-                <WrongIcon />
+                <PiXBold size={30} />
               </Button>
-              <div className="block text-center text-lg font-bold">
+              <div className="bg-default order-3 block w-full rounded-[35px] py-3 text-center text-lg font-bold md:order-none md:w-50">
                 {currentCardIndex + 1} / {cards.length}
               </div>
               <Button
@@ -194,18 +216,19 @@ const CardMode = () => {
                 aria-label="Correct answer"
                 radius="full"
                 size="lg"
-                className="px-5 text-white"
                 onPress={() => handleAnswer(true)}
+                className="flex-1 md:flex-0"
               >
-                <CorrectIcon />
+                <PiCheckBold size={30} />
               </Button>
             </div>
-            <div className="bg-default-200 mt-8 rounded-[35px] p-8 text-center">
-              <p className="text-default-800 mb-2">
+
+            <div className="mt-10 text-center">
+              <p className="mb-2">
                 If you encounter any issues with this deck, please report it.
               </p>
               <Button
-                startContent={<FlagIcon />}
+                startContent={<PiFlagFill size={16} />}
                 radius="full"
                 size="sm"
                 onPress={() => setIsReportAProblemOpen(true)}
@@ -213,6 +236,7 @@ const CardMode = () => {
                 Report a problem
               </Button>
             </div>
+
             <ReportAProblemModal
               isReportAProblemOpen={isReportAProblemOpen}
               setIsReportAProblemOpen={setIsReportAProblemOpen}

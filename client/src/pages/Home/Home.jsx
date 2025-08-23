@@ -11,6 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { ROUTES } from "@/routes/paths.js";
 import { UserContext } from "@/context/UserContext";
+import StylishDiv from "@/components/StylishDiv";
 
 const Home = () => {
   const [decks, setDecks] = useState([]);
@@ -60,7 +61,7 @@ const Home = () => {
   return (
     <>
       <div className="flex flex-col items-center gap-4 md:-mt-20 md:flex-row md:gap-8">
-        <div className="my-10 mt-20 flex flex-col gap-4 text-center md:my-0 md:basis-2/5 md:text-left">
+        <div className="mt-20 flex flex-col gap-4 text-center md:my-0 md:basis-2/5 md:text-left">
           <div className="mb-20 flex flex-col gap-1 md:mb-0">
             <Title className="text-primary">Study Your Way, Every Day</Title>
             <p className="text-secondary text-xl font-bold">
@@ -134,41 +135,41 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="bg-default-100 from-secondary/15 to-default-100 ring-default flex flex-col items-center gap-4 rounded-[20px] bg-radial-[at_50%_00%] to-100% p-4 text-center ring-1 md:rounded-[35px] md:to-50% md:p-8">
+      <StylishDiv className="mt-20 flex flex-col items-center text-center md:mt-0 md:to-50%">
         <h2 className="heading-title text-secondary text-2xl font-bold">
           Your Learning Companion
         </h2>
-        <p className="max-w-3xl text-center">
+        <p className="max-w-6xl text-center">
           With Memix, learning is as simple as flipping a card. Create custom
           decks for any topic, review them at your own pace, and let smart
           repetition help you remember more with less effort. Whether you’re
           studying for a test, picking up a new skill, or just keeping your
           brain active, Memix makes it easy—and fun.
         </p>
-      </div>
+      </StylishDiv>
 
       <div className="mt-4 grid grid-cols-1 gap-4 text-center md:grid-cols-3">
-        <div className="ring-default bg-default-100 rounded-[20px] p-4 ring-1 md:rounded-[35px] md:p-8">
+        <StylishDiv className="bg-radial-[at_50%_100%] to-50%">
           <h3 className="text-secondary text-3xl font-black">
             {activeUsers.toLocaleString()}
           </h3>
           <p>Active User</p>
-        </div>
-        <div className="ring-default bg-default-100 rounded-[20px] p-4 ring-1 md:rounded-[35px] md:p-8">
+        </StylishDiv>
+        <StylishDiv className="bg-radial-[at_50%_100%] to-50%">
           <h3 className="text-secondary text-3xl font-black">
             {decksCreated.toLocaleString()}
           </h3>
           <p>Decks Created</p>
-        </div>
-        <div className="ring-default bg-default-100 rounded-[20px] p-4 ring-1 md:rounded-[35px] md:p-8">
+        </StylishDiv>
+        <StylishDiv className="bg-radial-[at_50%_100%] to-50%">
           <h3 className="text-secondary text-3xl font-black">
             {cardsLearned.toLocaleString()}
           </h3>
           <p>Cards Learned</p>
-        </div>
+        </StylishDiv>
       </div>
 
-      <div className="bg-default-100 ring-default from-secondary/15 to-default-100 mt-10 flex flex-col items-center gap-4 rounded-[20px] bg-radial-[at_50%_00%] to-100% py-4 text-center ring-1 md:mt-20 md:gap-8 md:rounded-[35px] md:to-50% md:py-8">
+      <StylishDiv className="mt-20 flex flex-col items-center px-0 text-center md:gap-8 md:to-50% md:py-8">
         <h2 className="heading-title text-secondary text-2xl font-bold">
           Latest Decks
         </h2>
@@ -203,11 +204,11 @@ const Home = () => {
                 <SwiperSlide
                   key={deck._id}
                   style={{ width: "auto" }}
-                  className="px-4 py-2"
+                  className="px-2 py-2 md:px-4"
                 >
                   <Deck
                     deck={deck}
-                    className="w-full max-w-full min-w-[200px] md:max-w-[400px] md:min-w-[200px]"
+                    className="w-full max-w-full md:max-w-[400px]"
                   />
                 </SwiperSlide>
               ))}
@@ -215,7 +216,8 @@ const Home = () => {
         </div>
         <Button
           as={Link}
-          color="primary"
+          variant="ghost"
+          color="secondary"
           radius="full"
           size="lg"
           href={ROUTES.BROWSE}
@@ -223,13 +225,13 @@ const Home = () => {
         >
           Browse Decks
         </Button>
-      </div>
+      </StylishDiv>
 
-      <div className="relative -mx-4 -mb-10 overflow-hidden py-24 text-center">
-        <h2 className="heading-title text-4xl font-bold uppercase">
+      <div className="relative -mx-4 -mb-10 overflow-hidden px-5 py-24 text-center">
+        <h2 className="heading-title text-primary text-4xl font-bold uppercase">
           {user ? "Create your decks today" : "Join our community now"}
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-lg leading-8">
+        <p className="text-secondary mx-auto max-w-xl text-lg leading-8">
           {user
             ? "Start creating your own decks and share your knowledge."
             : "Experience the benefits of our community. Just join and explore."}

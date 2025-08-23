@@ -2,11 +2,7 @@
 import { Link, Divider, Tooltip } from "@heroui/react";
 import { ROUTES } from "@/routes/paths.js";
 import { MemixLogoIcon } from "@/components/Icons";
-import {
-  FaSquareFacebook,
-  FaSquareXTwitter,
-  FaSquareInstagram,
-} from "react-icons/fa6";
+import { PiFacebookLogo, PiXLogo, PiInstagramLogo } from "react-icons/pi";
 
 const Footer = () => {
   return (
@@ -37,7 +33,7 @@ const Footer = () => {
                 aria-label="Facebook"
                 className="bg-default text-foreground rounded-full p-2"
               >
-                <FaSquareFacebook size={24} />
+                <PiFacebookLogo size={24} />
               </Link>
             </Tooltip>
 
@@ -48,7 +44,7 @@ const Footer = () => {
                 aria-label="Twitter"
                 className="bg-default text-foreground rounded-full p-2"
               >
-                <FaSquareXTwitter size={24} />
+                <PiXLogo size={24} />
               </Link>
             </Tooltip>
 
@@ -59,7 +55,7 @@ const Footer = () => {
                 aria-label="Instagram"
                 className="bg-default text-foreground rounded-full p-2"
               >
-                <FaSquareInstagram size={24} />
+                <PiInstagramLogo size={24} />
               </Link>
             </Tooltip>
           </div>

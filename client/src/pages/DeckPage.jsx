@@ -6,10 +6,6 @@ import {
   Progress,
   Button,
   Link,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Tooltip,
   Modal,
   ModalContent,
@@ -19,20 +15,19 @@ import {
   Spinner,
 } from "@heroui/react";
 import {
-  CardsIcon,
-  PencilIcon,
-  BookMarkIcon,
-  ShareIcon,
-  MoreIcon,
-  DeleteIcon,
-} from "@/components/Icons";
-import { MdOutlineQuiz } from "react-icons/md";
+  PiShareNetwork,
+  PiNotePencil,
+  PiTrash,
+  PiCards,
+  PiExam,
+} from "react-icons/pi";
 import { DecksCard } from "@/components/Card";
 import { getDeckById, deleteDeck } from "@/api/decksAPI";
 import { getUserProgress } from "@/api/userAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import { UserContext } from "@/context/UserContext";
 import { ROUTES } from "@/routes/paths.js";
+import StylishDiv from "@/components/StylishDiv";
 
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
@@ -175,89 +170,86 @@ const DeckPage = () => {
         {error && <p className="text-danger mt-2 text-sm">{error}</p>}
       </div>
 
-      <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
-        <h3 className="text-xl font-bold">Description</h3>
+      <StylishDiv className="mt-20 flex flex-col text-center md:text-left">
+        <h3 className="text-secondary text-xl font-bold">Description</h3>
         <p>
           {deck?.description ||
             (isLoading
               ? "Fetching deck details..."
               : "No description available.")}
         </p>
-      </div>
+      </StylishDiv>
 
-      <div className="mt-3 flex items-stretch justify-center gap-3">
-        <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
-          <h3 className="text-xl font-bold">Your Learning Progress</h3>
+      <div className="mt-4 flex flex-col items-stretch justify-center gap-4 md:flex-row">
+        <StylishDiv className="flex flex-1 flex-col text-center md:text-left">
+          <h3 className="text-secondary text-xl font-bold">
+            Your Learning Progress
+          </h3>
           {user ? (
             <Progress
-              showValueLabel={true}
+              showValueLabel
+              color="secondary"
               maxValue={
                 deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
               }
               label={`${userProgress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
               value={userProgress || 0}
               classNames={{
-                label: "text-sm text-gray-500",
-                value: "text-sm text-gray-500",
-                track: "bg-primary/20",
+                label: "text-sm",
+                value: "text-sm",
+                track: "bg-default",
               }}
             />
           ) : (
             <Button
+              variant="flat"
               onPress={() => {
                 setIsLoginOpen(true);
               }}
               radius="full"
+              className="text-foreground bg-default"
             >
               Log in to see your progress
             </Button>
           )}
-        </div>
+        </StylishDiv>
 
-        <div className="bg-default-200 flex flex-1 flex-col gap-3 rounded-[35px] p-8">
-          <h3 className="text-xl font-bold">
+        <StylishDiv className="flex flex-1 flex-col text-center md:text-left">
+          <h3 className="text-secondary text-xl font-bold">
             {deck?.language?.length > 1 ? "Languages" : "Language"}
           </h3>
-          <div className="flex flex-wrap gap-2 capitalize">
+          <div className="flex flex-col flex-wrap gap-2 capitalize md:flex-row">
             {deck?.language &&
               deck.language.map((lang, index) => (
                 <Button
                   key={index}
+                  variant="flat"
                   radius="full"
                   as={Link}
                   href={`${ROUTES.BROWSE}?language=${lang}`}
-                  className="flex-1"
+                  className="text-foreground bg-default md:flex-1"
                 >
                   {lang}
                 </Button>
               ))}
           </div>
-        </div>
+        </StylishDiv>
       </div>
 
-      <div className="mt-20 flex items-center justify-between">
-        <div className="flex flex-col">
-          <h3 className="text-xl font-bold">
+      <div className="mt-5 flex flex-col-reverse items-center justify-center gap-4 text-center md:mt-20 md:flex-row md:justify-between md:text-left">
+        <div className="mt-10 flex flex-col md:mt-0">
+          <h3 className="text-secondary text-xl font-bold">
             This Deck has{" "}
-            {deck?.cardsCount ?? (Array.isArray(cards) ? cards.length : 0)}{" "}
+            <span className="text-primary">
+              {deck?.cardsCount ??
+                (Array.isArray(cards) ? cards.length : "no")}{" "}
+            </span>
             cards
           </h3>
-          <p className="text-gray-500">Start learning using the card mode!</p>
+          <p>Start learning using our study modes!</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Tooltip
-            content="Save Deck"
-            showArrow={true}
-            delay={0}
-            closeDelay={0}
-            radius="full"
-          >
-            <Button isIconOnly radius="full" size="lg" className="p-3">
-              <BookMarkIcon />
-            </Button>
-          </Tooltip>
-
+        <div className="flex items-center gap-4">
           <Tooltip
             content="Share Deck"
             showArrow={true}
@@ -265,64 +257,86 @@ const DeckPage = () => {
             closeDelay={0}
             radius="full"
           >
-            <Button isIconOnly radius="full" size="lg" className="p-3">
-              <ShareIcon />
+            <Button
+              isIconOnly
+              variant="faded"
+              color="secondary"
+              radius="full"
+              size="lg"
+            >
+              <PiShareNetwork size={25} />
             </Button>
           </Tooltip>
 
           {isOwner && (
-            <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <Button isIconOnly radius="full" size="lg">
-                  <MoreIcon size={30} />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Dropdown menu with icons"
-                variant="faded"
+            <>
+              <Tooltip
+                content="Edit Deck"
+                showArrow={true}
+                delay={0}
+                closeDelay={0}
+                radius="full"
               >
-                <DropdownItem
-                  key="edit"
-                  endContent={<PencilIcon size={20} />}
+                <Button
+                  isIconOnly
+                  variant="faded"
+                  color="secondary"
+                  radius="full"
+                  size="lg"
                   onPress={handleEditDeck}
                 >
-                  Edit Deck
-                </DropdownItem>
-                <DropdownItem
-                  key="delete"
-                  className="text-danger"
-                  color="danger"
-                  endContent={<DeleteIcon size={20} />}
+                  <PiNotePencil size={25} />
+                </Button>
+              </Tooltip>
+
+              <Tooltip
+                content="Delete Deck"
+                color="danger"
+                showArrow={true}
+                delay={0}
+                closeDelay={0}
+                radius="full"
+              >
+                <Button
+                  isIconOnly
+                  variant="faded"
+                  color="secondary"
+                  radius="full"
+                  size="lg"
                   onPress={handleDeleteDeck}
                 >
-                  Delete Deck
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+                  <PiTrash size={25} />
+                </Button>
+              </Tooltip>
+            </>
           )}
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-3">
+      <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <Button
+          radius="full"
+          size="lg"
           as={Link}
           href={ROUTES.DECK_CARD_MODE(id)}
-          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
-          startContent={<CardsIcon />}
+          className="bg-default-100 from-secondary/15 to-default-100 ring-default hover:ring-primary hover:text-primary hover:from-primary/15 flex gap-4 bg-radial-[at_50%_0%] to-100% p-4 text-xl font-bold ring-1 transition duration-250 md:flex-1 md:p-8"
+          startContent={<PiCards size={30} />}
         >
           Card Mode
         </Button>
         <Button
+          radius="full"
+          size="lg"
           as={Link}
           href={ROUTES.DECK_QUIZ_MODE(id)}
-          className="bg-default-200 flex flex-1 gap-3 rounded-[35px] p-8 text-center text-xl font-bold"
-          startContent={<MdOutlineQuiz size={30} />}
+          className="bg-default-100 from-secondary/15 to-default-100 ring-default hover:ring-primary hover:text-primary hover:from-primary/15 flex gap-4 bg-radial-[at_50%_0%] to-100% p-4 text-xl font-bold ring-1 transition duration-250 md:flex-1 md:p-8"
+          startContent={<PiExam size={30} />}
         >
           Quiz Mode
         </Button>
       </div>
 
-      <div className="mt-20 flex flex-wrap items-center justify-evenly gap-4">
+      <div className="mt-20 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {Array.isArray(cards) && cards.length > 0 ? (
           cards.map((card) => (
             <DecksCard
@@ -345,19 +359,21 @@ const DeckPage = () => {
       {/* Delete Confirmation Modal */}
       <Modal isOpen={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Delete Deck</ModalHeader>
+          <ModalHeader className="text-danger font-bold">
+            Delete Deck
+          </ModalHeader>
           <ModalBody>
-            <p>
-              Are you sure you want to delete &quot;{deck?.title}&quot;? This
-              action cannot be undone.
-            </p>
+            <div>
+              Are you sure you want to delete the deck{" "}
+              <span className="text-danger font-bold capitalize">
+                &quot;{deck?.title}&quot;
+              </span>
+              ? <br />
+              <strong>This action cannot be undone.</strong>
+            </div>
           </ModalBody>
           <ModalFooter>
-            <Button
-              color="default"
-              variant="light"
-              onPress={() => setIsDeleteModalOpen(false)}
-            >
+            <Button variant="light" onPress={() => setIsDeleteModalOpen(false)}>
               Cancel
             </Button>
             <Button color="danger" onPress={confirmDeleteDeck}>

@@ -14,8 +14,9 @@ import {
 import { getDecks } from "@/api/decksAPI";
 import Deck from "@/components/Deck";
 import languages from "@/data/languages.js";
-import { SearchIcon } from "@/components/Icons";
+import { PiMagnifyingGlass } from "react-icons/pi";
 import { ROUTES } from "@/routes/paths.js";
+import StylishDiv from "@/components/StylishDiv";
 
 const BrowseDecks = () => {
   const [decks, setDecks] = useState([]);
@@ -87,30 +88,48 @@ const BrowseDecks = () => {
         </Title>
       </div>
 
-      <Form className="mt-10 items-stretch md:mt-20">
-        <div className="bg-default-200 flex flex-col gap-3 rounded-[35px] p-8">
+      <Form className="mt-20 items-stretch">
+        <StylishDiv className="flex flex-col">
           <Input
             label="Search Decks"
             type="text"
             radius="full"
+            variant="faded"
+            color="secondary"
             minLength={2}
             maxLength={100}
-            endContent={<SearchIcon />}
+            endContent={
+              <PiMagnifyingGlass
+                className="m-auto hidden md:block"
+                size={30}
+                fill="hsl(var(--heroui-secondary))"
+              />
+            }
             value={search}
             onChange={(e) => updateSearchParams("search", e.target.value)}
+            classNames={{
+              inputWrapper: "px-5 items-center md:items-start",
+              input: "text-center md:text-left",
+            }}
           />
 
-          <div className="flex flex-wrap items-start gap-3 md:flex-nowrap">
+          <div className="flex flex-wrap items-start gap-4 md:flex-nowrap">
             <Select
               label="Language"
               radius="full"
               selectionMode="multiple"
+              variant="faded"
+              color="secondary"
               isClearable
               className="basis-full"
               selectedKeys={
                 language.length > 0 ? language.toLowerCase().split(",") : []
               }
               onChange={(e) => updateSearchParams("language", e.target.value)}
+              classNames={{
+                trigger: "px-5 items-center md:items-start",
+                value: "text-center md:text-left",
+              }}
             >
               {languages.map((lang) => (
                 <SelectItem
@@ -128,14 +147,18 @@ const BrowseDecks = () => {
               ))}
             </Select>
 
-            <div className="bg-default-100 flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs">
+            <div className="bg-default-100 hover:border-secondary border-default-200 border-medium flex min-h-14 basis-full items-center rounded-full px-5 shadow-xs transition-colors">
               <Slider
                 label="Number of Cards"
                 aria-label="Number of Cards"
+                color="secondary"
                 maxValue={300}
                 minValue={0}
                 showTooltip={true}
                 size="sm"
+                classNames={{
+                  labelWrapper: "text-secondary",
+                }}
                 defaultValue={[Number(numCardsMin), Number(numCardsMax)]}
                 onChangeEnd={(e) => {
                   updateSearchParams("numCardsMin", Number(e[0]));
@@ -144,7 +167,7 @@ const BrowseDecks = () => {
               />
             </div>
           </div>
-        </div>
+        </StylishDiv>
       </Form>
 
       {isLoading ? (
@@ -153,23 +176,29 @@ const BrowseDecks = () => {
         </div>
       ) : (
         <>
-          <div className="mt-20 flex items-center justify-between">
-            <div className="flex basis-3/4 flex-col">
-              <h3 className="text-xl font-bold">
+          <div className="mt-20 flex flex-col items-center justify-center gap-4 md:flex-row md:justify-between">
+            <div className="flex w-full flex-col text-center md:basis-1/2 md:text-left lg:basis-2/3">
+              <h3 className="text-secondary text-xl font-bold">
                 Browse through our collection of decks
               </h3>
               <p className="text-gray-500">
                 {decks && `${totalResults} decks found`}
               </p>
             </div>
-            <div className="flex basis-1/4 items-center gap-3">
+            <div className="flex w-full flex-col items-center gap-4 md:basis-1/2 md:flex-row lg:basis-1/3">
               <Select
                 label="Sort By"
                 radius="full"
+                color="secondary"
+                variant="faded"
                 disallowEmptySelection
                 selectedKeys={[sortBy]}
                 onChange={(e) => {
                   updateSearchParams("sortBy", e.target.value);
+                }}
+                classNames={{
+                  trigger: "px-5 items-center md:items-start",
+                  value: "text-center md:text-left",
                 }}
               >
                 <SelectItem key={"mostRecent"}>Most Recent</SelectItem>
@@ -181,10 +210,16 @@ const BrowseDecks = () => {
               <Select
                 label="Decks per Page"
                 radius="full"
+                color="secondary"
+                variant="faded"
                 disallowEmptySelection
                 selectedKeys={[decksPerPage]}
                 onChange={(e) => {
                   updateSearchParams("decksPerPage", e.target.value);
+                }}
+                classNames={{
+                  trigger: "px-5 items-center md:items-start",
+                  value: "text-center md:text-left",
                 }}
               >
                 <SelectItem key={"5"}>5</SelectItem>
@@ -194,23 +229,24 @@ const BrowseDecks = () => {
               </Select>
             </div>
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {decks.map((deck) => (
               <Deck key={deck._id} deck={deck} className="max-w-full" />
             ))}
           </div>
 
-          <div className="mt-20 flex flex-col items-center justify-center">
-            {totalPages > 1 && (
-              <Pagination
-                showControls
-                radius="full"
-                page={page}
-                total={totalPages}
-                onChange={(newPage) => updateSearchParams("page", newPage)}
-              />
-            )}
-            <p className="text-default-800 mt-2 text-sm">
+          <div className="mt-10 flex flex-col items-center justify-center">
+            <Pagination
+              showControls
+              showShadow
+              color="primary"
+              radius="full"
+              variant="faded"
+              page={page}
+              total={totalPages}
+              onChange={(newPage) => updateSearchParams("page", newPage)}
+            />
+            <p className="text-foreground mt-5 text-sm">
               {(() => {
                 const limitNum = Number(decksPerPage);
                 const start = (page - 1) * limitNum + 1;

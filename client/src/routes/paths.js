@@ -3,6 +3,7 @@ export const ROUTES = {
   ABOUT: "/about",
   TERMS: "/terms",
   FAQ: "/faq",
+  SUPPORT: "/support",
   DECKS: "/decks",
   MY_DECKS: "/decks/mine",
   DECK_CREATE: "/decks/create",
