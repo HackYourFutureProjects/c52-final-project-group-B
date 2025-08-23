@@ -43,7 +43,7 @@ const decksFilterPipeline = ({
     });
   }
 
-  // Language filter
+  // Language filter (deck.language is now an array of strings)
   if (language && language.trim() !== "") {
     const trimmedLanguages = language.split(",").map((lang) => lang.trim());
     pipeline.push({
