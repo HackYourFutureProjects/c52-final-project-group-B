@@ -119,7 +119,7 @@ const EditDeck = () => {
       complete: function (results) {
         const filteredData = results.data.map((row, index) => {
           return {
-            cardId: cards.length + index + 1,
+            cardId: Date.now() + index,
             question: row[0],
             answer: row[1],
             isNew: true,
