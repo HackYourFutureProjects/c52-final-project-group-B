@@ -1,4 +1,10 @@
-import { PiTrash, PiLockKey, PiLockKeyOpen, PiPlus } from "react-icons/pi";
+import {
+  PiTrash,
+  PiLockKey,
+  PiLockKeyOpen,
+  PiPlus,
+  PiDownloadSimple,
+} from "react-icons/pi";
 import Title from "@/components/Title";
 import {
   addToast,
@@ -11,6 +17,11 @@ import {
   Button,
   Tooltip,
   Divider,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,6 +34,7 @@ import {
 } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
+import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
 
 const EditDeck = () => {
@@ -30,6 +42,8 @@ const EditDeck = () => {
   const [isPublic, setIsPublic] = useState(false);
   const [deck, setDeck] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [importedCards, setImportedCards] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -97,6 +111,31 @@ const EditDeck = () => {
         card.id === cardId ? { ...card, [field]: value } : card
       )
     );
+  };
+
+  const importCards = () => {
+    Papa.parse(importedCards, {
+      header: false,
+      complete: function (results) {
+        const filteredData = results.data.map((row, index) => {
+          return {
+            cardId: cards.length + index + 1,
+            question: row[0],
+            answer: row[1],
+            isNew: true,
+          };
+        });
+        setCards([...cards, ...filteredData]);
+        addToast({
+          title: "Success",
+          description: `Successfully imported ${filteredData.length} cards`,
+          color: "success",
+          radius: "full",
+        });
+        setImportedCards("");
+        setIsImportOpen(false);
+      },
+    });
   };
 
   const onSubmit = async (e) => {
@@ -248,6 +287,44 @@ const EditDeck = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <Tooltip
+              content="Import Cards"
+              showArrow={true}
+              delay={0}
+              closeDelay={0}
+              radius="full"
+            >
+              <Button
+                isIconOnly
+                variant="faded"
+                color="secondary"
+                radius="full"
+                size="lg"
+                onPress={() => setIsImportOpen(true)}
+              >
+                <PiDownloadSimple size={25} />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              content="Delete Cards"
+              showArrow={true}
+              delay={0}
+              closeDelay={0}
+              radius="full"
+            >
+              <Button
+                isIconOnly
+                variant="faded"
+                color="secondary"
+                radius="full"
+                size="lg"
+                onPress={() =>
+                  setCards([{ cardId: 1, question: "", answer: "" }])
+                }
+              >
+                <PiTrash size={25} />
+              </Button>
+            </Tooltip>
             <Tooltip
               content={
                 isPublic ? "Deck is set to public" : "Deck is set to private"
@@ -404,6 +481,54 @@ const EditDeck = () => {
           </Button>
         </div>
       </Form>
+
+      <Modal
+        isOpen={isImportOpen}
+        size="2xl"
+        onClose={() => setIsImportOpen(false)}
+      >
+        <ModalContent>
+          <ModalHeader className="text-primary flex flex-col gap-1">
+            Import Cards
+            <p className="text-foreground text-sm">
+              Import multiple cards at once by pasting CSV formatted text below.
+              <br />
+              Format: Each line should contain the front and back of a card,
+              separated by a comma.
+              <br />
+              Example: &quot;Capital of France, Paris&quot;
+            </p>
+          </ModalHeader>
+          <ModalBody>
+            <Textarea
+              isClearable
+              variant="faded"
+              color="secondary"
+              label="Import cards"
+              placeholder={
+                "Capital of France, Paris\nSquare root of 16, 4\nAuthor of Hamlet, William Shakespeare\nLargest ocean, Pacific Ocean"
+              }
+              value={importedCards}
+              onValueChange={setImportedCards}
+              minRows={10}
+              classNames={{
+                inputWrapper: "rounded-[25px] px-5",
+              }}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              size="lg"
+              radius="full"
+              className="font-bold"
+              color="primary"
+              onPress={() => importCards()}
+            >
+              Import
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
