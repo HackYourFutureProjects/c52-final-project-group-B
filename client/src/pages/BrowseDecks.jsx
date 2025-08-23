@@ -154,7 +154,7 @@ const BrowseDecks = () => {
                 color="secondary"
                 maxValue={300}
                 minValue={0}
-                showTooltip={true}
+                showTooltip
                 size="sm"
                 classNames={{
                   labelWrapper: "text-secondary",
@@ -222,10 +222,10 @@ const BrowseDecks = () => {
                   value: "text-center md:text-left",
                 }}
               >
-                <SelectItem key={"5"}>5</SelectItem>
-                <SelectItem key={"10"}>10</SelectItem>
-                <SelectItem key={"20"}>20</SelectItem>
-                <SelectItem key={"50"}>50</SelectItem>
+                <SelectItem key="5">5</SelectItem>
+                <SelectItem key="10">10</SelectItem>
+                <SelectItem key="20">20</SelectItem>
+                <SelectItem key="50">50</SelectItem>
               </Select>
             </div>
           </div>
