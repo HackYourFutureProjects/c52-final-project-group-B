@@ -219,18 +219,20 @@ const DeckPage = () => {
             {deck?.language?.length > 1 ? "Languages" : "Language"}
           </h3>
           <div className="flex flex-wrap gap-2 capitalize">
-            {deck?.language &&
-              deck.language.map((lang, index) => (
-                <Button
-                  key={index}
-                  radius="full"
-                  as={Link}
-                  href={`${ROUTES.BROWSE}?language=${lang}`}
-                  className="flex-1"
-                >
-                  {lang}
-                </Button>
-              ))}
+            {deck?.language?.length > 0
+              ? deck.language.map((lang) => (
+                  <Button
+                    key={lang}
+                    radius="full"
+                    as={Link}
+                    href={`${ROUTES.BROWSE}?language=${lang}`}
+                  >
+                    {lang}
+                  </Button>
+                ))
+              : isLoading
+                ? "..."
+                : "unknown"}
           </div>
         </div>
       </div>

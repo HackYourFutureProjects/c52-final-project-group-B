@@ -4,6 +4,7 @@ import {
   updateDeckSchema,
   createDeckSchema,
   paginationQuerySchema,
+  generateDeckSchema,
 } from "./deck.schema.js";
 import DeckService from "./deck.service.js";
 import {
@@ -11,8 +12,35 @@ import {
   createCardSchema,
   updateCardSchema,
 } from "../cards/card.schema.js";
+import { generateFlashcards } from "../services/openAi/openAI.js";
+import {
+  prepareLanguages,
+  mergeAnswerLanguage,
+} from "../util/languageUtils.js";
 
 const deckService = new DeckService();
+
+/**
+ * Create a deck and all of its cards in one step.
+ */
+const createDeckWithCards = async (parsedDeck, deckLanguages, userId) => {
+  const deck = await deckService.createDeck({
+    title: parsedDeck.title,
+    description: parsedDeck.description,
+    userId,
+    language: deckLanguages,
+    isPublic: true,
+    createdAt: new Date(),
+  });
+
+  const cards = await Promise.all(
+    parsedDeck.cards.map((card) =>
+      deckService.createDeckCard({ ...card, deckId: deck._id }, userId),
+    ),
+  );
+
+  return { deck, cards };
+};
 
 export const getDecks = async (req, res) => {
   const { page, limit, search, language, minCards, maxCards, sortBy } =
@@ -68,6 +96,42 @@ export const deleteDeck = async (req, res) => {
   await deckService.deleteDeck(deckId, req.user.id);
 
   res.status(HTTP_STATUS.OK).json({ message: "Deck deleted successfully" });
+};
+
+/**
+ * Generate a deck using AI, then persist the deck and its cards.
+ */
+export const generateDeck = async (req, res) => {
+  const { language, amountCards, userPrompt } = generateDeckSchema.parse(
+    req.body,
+  );
+
+  // 1) Prepare input languages for AI and DB
+  const { normalizedLanguage: studyLanguages, languageForAi: aiLanguages } =
+    prepareLanguages(language);
+  const numCards = amountCards;
+
+  // 2) Ask AI to generate deck content
+  const aiDeck = await generateFlashcards({
+    language: aiLanguages,
+    numCards,
+    userPrompt,
+  });
+
+  // 3) Merge any detected answer language (kept as normalized key)
+  const persistedLanguages = mergeAnswerLanguage(
+    studyLanguages,
+    aiDeck?.answerLanguage,
+  );
+
+  // 4) Persist deck and cards
+  const { deck, cards } = await createDeckWithCards(
+    aiDeck,
+    persistedLanguages,
+    req.user.id,
+  );
+
+  res.status(HTTP_STATUS.CREATED).json({ deck, cards });
 };
 
 //deck cards controller
