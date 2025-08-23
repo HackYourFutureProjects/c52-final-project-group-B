@@ -14,6 +14,7 @@ import {
 } from "@heroui/react";
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
+import { PiCaretRightBold } from "react-icons/pi";
 
 const Deck = ({ deck, className }) => {
   const { user: currentUser } = useContext(UserContext);
@@ -29,17 +30,21 @@ const Deck = ({ deck, className }) => {
   return (
     <Card
       isPressable
-      shadow="sm"
+      shadow="none"
       className={cn(
-        "min-h-[250px] max-w-[400px] min-w-[300px] flex-1 px-3 py-2",
+        "ring-default-300 hover:ring-primary hover:shadow-primary/20 min-h-[250px] max-w-[400px] min-w-[200px] flex-1 px-3 py-2 ring-2 transition duration-250 hover:shadow-lg",
         className
       )}
-      classNames={{ base: "rounded-[35px]" }}
+      classNames={{ base: "rounded-[20px] md:rounded-[35px]" }}
       onPress={() => navigate(ROUTES.DECK_DETAILS(deckID))}
     >
-      <CardHeader className="flex items-start justify-between gap-3">
-        <p className="heading-title text-left font-bold">{title}</p>
-        <Chip>{numCards} Cards</Chip>
+      <CardHeader className="flex items-start justify-between gap-4 pb-0">
+        <p className="text-secondary line-clamp-2 text-left font-bold">
+          {title}
+        </p>
+        <Chip size="sm" variant="faded">
+          {numCards} Cards
+        </Chip>
       </CardHeader>
       <CardBody>
         <p className="line-clamp-3">{description}</p>
@@ -60,7 +65,7 @@ const Deck = ({ deck, className }) => {
             <h4 className="text-default-700 text-xs leading-none font-semibold">
               Created by
             </h4>
-            <h5 className="text-primary tracking-tight">
+            <h5 className="text-primary">
               {user?.username || currentUser?.username || "You"}
             </h5>
           </div>
@@ -71,21 +76,10 @@ const Deck = ({ deck, className }) => {
           color="primary"
           radius="full"
           size="md"
-          variant="solid"
+          variant="ghost"
           href={ROUTES.DECK_DETAILS(deckID)}
         >
-          <svg
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <PiCaretRightBold size={20} />
         </Button>
       </CardFooter>
     </Card>

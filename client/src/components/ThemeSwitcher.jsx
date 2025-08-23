@@ -1,6 +1,6 @@
 import { useTheme } from "@heroui/use-theme";
 import { Button } from "@heroui/react";
-import { DarkModeIcon, LightModeIcon } from "@/components/Icons";
+import { PiSunDimFill, PiMoonFill } from "react-icons/pi";
 
 export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme("light");
@@ -16,7 +16,7 @@ export const ThemeSwitcher = () => {
           className="hover:bg-primary hover:text-default"
           onPress={() => setTheme("light")}
         >
-          <LightModeIcon />
+          <PiSunDimFill size={20} />
         </Button>
       ) : (
         <Button
@@ -27,7 +27,7 @@ export const ThemeSwitcher = () => {
           className="hover:bg-primary hover:text-default"
           onPress={() => setTheme("dark")}
         >
-          <DarkModeIcon />
+          <PiMoonFill size={20} />
         </Button>
       )}
     </>

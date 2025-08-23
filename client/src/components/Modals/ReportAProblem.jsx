@@ -80,9 +80,11 @@ const ReportAProblemModal = ({
     >
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="text-primary flex flex-col gap-1">
             Report A Problem
-            <p className="text-default-800 text-sm"></p>
+            <p className="text-foreground text-sm">
+              Use this form to report any issues with the cards.
+            </p>
           </ModalHeader>
           <ModalBody>
             <Select
@@ -90,7 +92,7 @@ const ReportAProblemModal = ({
               disallowEmptySelection
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               label="Problem Type"
               placeholder="Select the problem type"
               name="problemType"
@@ -103,7 +105,7 @@ const ReportAProblemModal = ({
             <Input
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               label="Additional Information"
               name="moreInfo"
               placeholder="Enter any additional information"

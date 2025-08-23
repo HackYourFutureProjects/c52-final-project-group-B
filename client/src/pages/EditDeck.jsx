@@ -1,9 +1,4 @@
-import {
-  DeleteIcon,
-  AddIcon,
-  LockedIcon,
-  UnlockedIcon,
-} from "@/components/Icons";
+import { PiTrash, PiLockKey, PiLockKeyOpen, PiPlus } from "react-icons/pi";
 import Title from "@/components/Title";
 import {
   addToast,
@@ -28,6 +23,7 @@ import {
 } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
+import StylishDiv from "@/components/StylishDiv";
 
 const EditDeck = () => {
   const [cards, setCards] = useState([]);
@@ -177,42 +173,53 @@ const EditDeck = () => {
       </div>
 
       <Form className="mt-20 items-stretch" onSubmit={onSubmit}>
-        <div className="bg-default-300 flex flex-col gap-3 rounded-[35px] p-8">
+        <StylishDiv className="flex flex-col">
           <Input
             name="title"
             label="Enter Deck Title"
             type="text"
             radius="full"
+            variant="faded"
+            color="secondary"
             isRequired
             minLength={2}
             maxLength={100}
             defaultValue={deck?.title}
+            className="items-center md:items-start"
             classNames={{
-              inputWrapper: "px-5",
+              inputWrapper: "px-5 items-center md:items-start",
+              input: "text-center md:text-left",
             }}
           />
           <Textarea
             name="description"
             label="Description"
             placeholder="Enter Deck description"
+            variant="faded"
+            color="secondary"
             isRequired
             minLength={10}
             maxLength={500}
             defaultValue={deck?.description}
             classNames={{
-              inputWrapper: "rounded-[25px] px-5",
+              inputWrapper: "px-5 rounded-[25px] items-center md:items-start",
+              input: "text-center md:text-left",
             }}
           />
           <Select
             name="language"
             label="Language"
             radius="full"
+            variant="faded"
+            color="secondary"
             selectionMode="multiple"
             defaultSelectedKeys={deck?.language}
             isRequired
             isClearable
+            className="items-center text-center md:items-start md:text-left"
             classNames={{
-              trigger: "px-5",
+              trigger: "px-5 items-center md:items-start",
+              value: "text-center md:text-left",
             }}
           >
             {languages.map((language) => (
@@ -231,15 +238,16 @@ const EditDeck = () => {
               </SelectItem>
             ))}
           </Select>
-        </div>
-        <div className="mt-20 flex items-center justify-between">
-          <div className="flex flex-col">
-            <h3 className="text-xl font-bold">Edit cards</h3>
-            <p className="text-default-500">
+        </StylishDiv>
+
+        <div className="mt-5 flex flex-col items-center justify-center gap-4 text-center md:mt-20 md:flex-row md:justify-between md:text-left">
+          <div className="mt-10 flex flex-col md:mt-0">
+            <h3 className="text-secondary text-xl font-bold">Edit cards</h3>
+            <p>
               Below you can modify existing cards or add new ones to your deck.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Tooltip
               content={
                 isPublic ? "Deck is set to public" : "Deck is set to private"
@@ -251,35 +259,45 @@ const EditDeck = () => {
             >
               <Button
                 isIconOnly
+                variant="faded"
+                color="secondary"
                 radius="full"
                 size="lg"
                 onPress={() => setIsPublic(!isPublic)}
               >
                 {isPublic ? (
-                  <UnlockedIcon size={30} />
+                  <PiLockKeyOpen size={25} />
                 ) : (
-                  <LockedIcon size={30} />
+                  <PiLockKey size={25} />
                 )}
               </Button>
             </Tooltip>
           </div>
         </div>
 
-        <div className="mt-20 flex flex-col gap-5">
+        <div className="mt-5 flex flex-col gap-5">
           {cards.map((card, index) => {
             if (!card.isDeleted) {
               return (
-                <div
-                  key={card.id}
-                  className="bg-default-300 flex w-full flex-row flex-nowrap items-center gap-3 rounded-[35px] p-3"
+                <StylishDiv
+                  key={card.cardId}
+                  className="flex w-full flex-col items-center p-4 md:flex-row md:flex-nowrap md:p-4"
                 >
-                  <div className="ml-2 text-xl font-bold">{index + 1}.</div>
-                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <div className="text-secondary ml-2 text-xl font-bold">
+                    <span className="md:hidden">Card #</span>
+                    {index + 1}
+                  </div>
+                  <Divider
+                    orientation="vertical"
+                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
+                  />
                   <Input
                     name={`question-${card.id}`}
                     label="Enter the question"
                     type="text"
                     radius="full"
+                    variant="faded"
+                    color="secondary"
                     value={card.question}
                     onChange={(e) =>
                       updateCard(card.id, "question", e.target.value)
@@ -287,16 +305,23 @@ const EditDeck = () => {
                     isRequired
                     minLength={1}
                     maxLength={100}
+                    className="items-center md:items-start"
                     classNames={{
-                      inputWrapper: "px-5",
+                      inputWrapper: "px-5 items-center md:items-start",
+                      input: "text-center md:text-left",
                     }}
                   />
-                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <Divider
+                    orientation="vertical"
+                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
+                  />
                   <Input
                     name={`answer-${card.id}`}
                     label="Enter the answer"
                     type="text"
                     radius="full"
+                    variant="faded"
+                    color="secondary"
                     value={card.answer}
                     onChange={(e) =>
                       updateCard(card.id, "answer", e.target.value)
@@ -304,11 +329,16 @@ const EditDeck = () => {
                     isRequired
                     minLength={1}
                     maxLength={100}
+                    className="items-center md:items-start"
                     classNames={{
-                      inputWrapper: "px-5",
+                      inputWrapper: "px-5 items-center md:items-start",
+                      input: "text-center md:text-left",
                     }}
                   />
-                  <Divider orientation="vertical" className="h-10 w-[2px]" />
+                  <Divider
+                    orientation="vertical"
+                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
+                  />
                   <Tooltip
                     content="Delete Card"
                     showArrow={true}
@@ -318,19 +348,21 @@ const EditDeck = () => {
                   >
                     <Button
                       isIconOnly
+                      variant="faded"
+                      color="secondary"
                       radius="full"
                       size="lg"
                       onPress={() => removeCard(card.id)}
                     >
-                      <DeleteIcon />
+                      <PiTrash size={25} />
                     </Button>
                   </Tooltip>
-                </div>
+                </StylishDiv>
               );
             }
           })}
 
-          <div className="border-default flex w-full flex-row flex-nowrap items-center justify-center gap-3 rounded-[35px] border-1 border-dashed p-3">
+          <div className="border-secondary/40 flex w-full flex-row flex-nowrap items-center justify-center gap-4 rounded-[20px] border-1 border-dashed p-4 md:rounded-[35px]">
             <Tooltip
               content="Add a new card"
               showArrow={true}
@@ -340,16 +372,18 @@ const EditDeck = () => {
             >
               <Button
                 isIconOnly
+                variant="ghost"
+                color="secondary"
                 radius="full"
                 size="lg"
                 onPress={() => addCard()}
               >
-                <AddIcon size={24} />
+                <PiPlus size={25} />
               </Button>
             </Tooltip>
           </div>
         </div>
-        <div className="mt-20 flex justify-center gap-4">
+        <div className="mt-5 flex flex-col-reverse justify-center gap-4 md:flex-row">
           <Button
             size="lg"
             radius="full"

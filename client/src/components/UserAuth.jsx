@@ -49,7 +49,6 @@ const UserAuth = () => {
             <DropdownItem
               key="loggedIn"
               className="font-bold"
-              color="primary"
               textValue={`Logged in as @${user.username}`}
             >
               Logged in as @{user.username}

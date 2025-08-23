@@ -11,7 +11,7 @@ import {
   ModalHeader,
 } from "@heroui/react";
 import { requestPasswordReset } from "@/api/userAPI";
-import { MailIcon } from "@/components/Icons";
+import { PiEnvelopeSimple } from "react-icons/pi";
 
 const ResetPasswordModal = ({
   isResetPasswordOpen,
@@ -76,9 +76,9 @@ const ResetPasswordModal = ({
     >
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="text-primary flex flex-col gap-1">
             Reset Password
-            <p className="text-default-800 text-sm">
+            <p className="text-foreground text-sm">
               Please enter your email address to reset your password.
             </p>
           </ModalHeader>
@@ -87,9 +87,13 @@ const ResetPasswordModal = ({
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <MailIcon className="text-default pointer-events-none" />
+                <PiEnvelopeSimple
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
+                />
               }
               label="Email"
               name="email"
