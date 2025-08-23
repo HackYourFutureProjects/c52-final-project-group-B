@@ -1,5 +1,10 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import Title from "@/components/Title";
 import {
   addToast,
@@ -46,12 +51,26 @@ const DeckPage = () => {
   const navigate = useNavigate();
   const { user, isUserLoaded, forceLogin, setIsLoginOpen } =
     useContext(UserContext);
+
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Accept origin from either query string or router state
+  const fromQuery = searchParams.get("from");
+  const fromState = location.state?.from;
+  const from = fromQuery || fromState;
+
   const isOwner =
     user &&
     deck &&
     deck.userInfo &&
     user.userid ===
       (typeof deck.userInfo === "object" ? deck.userInfo._id : deck.userInfo);
+
+  const middleCrumb =
+    from === "my-decks"
+      ? { label: "My Decks", path: ROUTES.MY_DECKS }
+      : { label: "Library", path: ROUTES.DECKS };
 
   useEffect(() => {
     let isCancelled = false;
@@ -109,8 +128,8 @@ const DeckPage = () => {
       try {
         const progress = await getUserProgress(id);
         setUserProgress(progress);
-      } catch (error) {
-        setError(error.message || "Failed to load user progress");
+      } catch (err) {
+        setError(err.message || "Failed to load user progress");
       }
     };
 
@@ -145,10 +164,10 @@ const DeckPage = () => {
         radius: "full",
       });
       navigate("/");
-    } catch (error) {
+    } catch (err) {
       addToast({
         title: "Error",
-        description: error.message || "Failed to delete deck",
+        description: err.message || "Failed to delete deck",
         color: "danger",
         radius: "full",
       });
@@ -163,10 +182,12 @@ const DeckPage = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
-            { label: `Library`, path: ROUTES.DECKS },
+            middleCrumb,
             {
-              label: `${deck?.title || (isLoading ? "Loading..." : "Deck")}`,
-              path: `${ROUTES.DECK_DETAILS(id)}`,
+              label: deck?.title || (isLoading ? "Loading..." : "Deck"),
+              path: `${ROUTES.DECK_DETAILS(id)}${
+                from === "my-decks" ? "?from=my-decks" : ""
+              }`,
             },
           ]}
         >
@@ -175,7 +196,7 @@ const DeckPage = () => {
         {error && <p className="text-danger mt-2 text-sm">{error}</p>}
       </div>
 
-      <div className="bg-default-200 mt-20 flex flex-col gap-3 rounded-[35px] p-8">
+      <div className="bg-default-200 mt-6 flex flex-col gap-3 rounded-[35px] p-8">
         <h3 className="text-xl font-bold">Description</h3>
         <p>
           {deck?.description ||
@@ -194,7 +215,9 @@ const DeckPage = () => {
               maxValue={
                 deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)
               }
-              label={`${userProgress || 0}/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
+              label={`${
+                userProgress || 0
+              }/${deck?.cardsCount || (Array.isArray(cards) ? cards.length : 0)} cards`}
               value={userProgress || 0}
               classNames={{
                 label: "text-sm text-gray-500",
@@ -248,25 +271,13 @@ const DeckPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Tooltip
-            content="Save Deck"
-            showArrow={true}
-            delay={0}
-            closeDelay={0}
-            radius="full"
-          >
+          <Tooltip content="Save Deck" showArrow radius="full">
             <Button isIconOnly radius="full" size="lg" className="p-3">
               <BookMarkIcon />
             </Button>
           </Tooltip>
 
-          <Tooltip
-            content="Share Deck"
-            showArrow={true}
-            delay={0}
-            closeDelay={0}
-            radius="full"
-          >
+          <Tooltip content="Share Deck" showArrow radius="full">
             <Button isIconOnly radius="full" size="lg" className="p-3">
               <ShareIcon />
             </Button>
@@ -279,10 +290,7 @@ const DeckPage = () => {
                   <MoreIcon size={30} />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Dropdown menu with icons"
-                variant="faded"
-              >
+              <DropdownMenu aria-label="Deck actions" variant="faded">
                 <DropdownItem
                   key="edit"
                   endContent={<PencilIcon size={20} />}
