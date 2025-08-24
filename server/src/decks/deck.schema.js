@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { objectIdSchema } from "../constants/shared.js";
+import languages from "../services/openAi/prompts/languages.js";
 
 export const deckValidationSchema = z.object({
   deckId: objectIdSchema,
@@ -38,4 +39,26 @@ export const generateDeckSchema = z.object({
     .nonempty("At least one language is required"),
   amountCards: z.coerce.number().int().min(1).max(50).default(20),
   userPrompt: z.string().min(3, "Description is required"),
+});
+
+export const generateDeck_V2Schema = z.object({
+  userPrompt: z.string().min(3, "Description is required"),
+});
+
+export const generatedDeckSchema = z.object({
+  deck: z.object({
+    title: z.string().min(1, "Deck title is required"),
+    description: z.string().min(1, "Deck description is required"),
+    languages: z
+      .array(z.enum(languages))
+      .nonempty("At least one language required"),
+  }),
+  cards: z
+    .array(
+      z.object({
+        question: z.string().min(1, "Question cannot be empty"),
+        answer: z.string().min(1, "Answer cannot be empty"),
+      }),
+    )
+    .min(1, "At least one card is required"),
 });

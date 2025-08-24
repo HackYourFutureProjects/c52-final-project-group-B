@@ -5,6 +5,7 @@ import {
   createDeckSchema,
   paginationQuerySchema,
   generateDeckSchema,
+  generateDeck_V2Schema,
 } from "./deck.schema.js";
 import DeckService from "./deck.service.js";
 import {
@@ -132,6 +133,13 @@ export const generateDeck = async (req, res) => {
   );
 
   res.status(HTTP_STATUS.CREATED).json({ deck, cards });
+};
+
+export const generateDeck_V2 = async (req, res) => {
+  const { userPrompt } = generateDeck_V2Schema.parse(req.body);
+  const generatedDeck = await deckService.generateDeck_V2(userPrompt);
+
+  res.status(HTTP_STATUS.CREATED).json(generatedDeck);
 };
 
 //deck cards controller

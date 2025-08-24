@@ -16,6 +16,7 @@ import MyDecks from "@/pages/MyDecks";
 import { ROUTES } from "@/routes/paths";
 import Support from "@/pages/Support";
 import GenerateDeck from "@/pages/GenerateDeck";
+import CreateDeck_V2 from "@/pages/CreateDeck_V2";
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
       <Route path={ROUTES.HOME} element={<Home />} />
       <Route path={ROUTES.ABOUT} element={<About />} />
       <Route path={ROUTES.TERMS} element={<Terms />} />
-      <Route path="/support" element={<Support />} />
+      <Route path={ROUTES.SUPPORT} element={<Support />} />
       <Route path={ROUTES.FAQ} element={<FAQ />} />
 
       <Route path={ROUTES.USER_PROFILE} element={<UserProfile />} />
@@ -32,12 +33,13 @@ const App = () => {
         element={<Navigate to={ROUTES.USER_PROFILE} replace />}
       />
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
-      <Route path={ROUTES.DECKS} element={<BrowseDecks />} />
 
+      <Route path={ROUTES.DECKS} element={<BrowseDecks />} />
       <Route path={ROUTES.BROWSE} element={<BrowseDecks />} />
       <Route path={ROUTES.MY_DECKS} element={<MyDecks />} />
       <Route path={ROUTES.DECK_GENERATE} element={<GenerateDeck />} />
       <Route path={ROUTES.DECK_CREATE} element={<CreateDeck />} />
+      <Route path="/decks/create_v2" element={<CreateDeck_V2 />} />
       <Route path={ROUTES.DECK_DETAILS(":id")} element={<DeckPage />} />
       <Route path={ROUTES.DECK_EDIT(":id")} element={<EditDeck />} />
       <Route path={ROUTES.DECK_CARD_MODE(":id")} element={<CardMode />} />
