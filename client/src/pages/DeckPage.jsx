@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Title from "@/components/Title";
 import {
   addToast,
@@ -60,6 +60,7 @@ const DeckPage = () => {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isUserLoaded, forceLogin, setIsLoginOpen } =
     useContext(UserContext);
   const isOwner =
@@ -179,7 +180,9 @@ const DeckPage = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
-            { label: `Library`, path: ROUTES.DECKS },
+            location.state?.from === ROUTES.MY_DECKS
+              ? { label: "My Decks", path: ROUTES.MY_DECKS }
+              : { label: "Library", path: ROUTES.DECKS },
             {
               label: `${deck?.title || (isLoading ? "Loading..." : "Deck")}`,
               path: `${ROUTES.DECK_DETAILS(id)}`,
