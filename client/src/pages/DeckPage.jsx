@@ -20,6 +20,15 @@ import {
   PiTrash,
   PiCards,
   PiExam,
+  PiEnvelopeSimple,
+  PiFacebookLogo,
+  PiMessengerLogo,
+  PiLinkedinLogo,
+  PiTelegramLogo,
+  PiThreadsLogo,
+  PiXLogo,
+  PiWhatsappLogo,
+  PiRedditLogo,
 } from "react-icons/pi";
 import { DecksCard } from "@/components/Card";
 import { getDeckById, deleteDeck } from "@/api/decksAPI";
@@ -28,12 +37,24 @@ import { getCardsByDeckId } from "@/api/cardsAPI";
 import { UserContext } from "@/context/UserContext";
 import { ROUTES } from "@/routes/paths.js";
 import StylishDiv from "@/components/StylishDiv";
+import {
+  EmailShareButton,
+  FacebookMessengerShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  TelegramShareButton,
+  ThreadsShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  RedditShareButton,
+} from "react-share";
 
 const DeckPage = () => {
   const [deck, setDeck] = useState(null);
   const [cards, setCards] = useState(null);
   const [userProgress, setUserProgress] = useState(0);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -266,6 +287,7 @@ const DeckPage = () => {
               color="secondary"
               radius="full"
               size="lg"
+              onPress={() => setIsShareModalOpen(true)}
             >
               <PiShareNetwork size={25} />
             </Button>
@@ -383,6 +405,121 @@ const DeckPage = () => {
               Delete
             </Button>
           </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Social Media Sharing Modal */}
+      <Modal
+        isOpen={isShareModalOpen}
+        onOpenChange={setIsShareModalOpen}
+        size="lg"
+      >
+        <ModalContent>
+          <ModalHeader className="text-primary font-bold">
+            Share Deck
+          </ModalHeader>
+          <ModalBody className="mb-5 flex flex-row justify-between gap-2">
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <EmailShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiEnvelopeSimple size={25} />
+              </EmailShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <FacebookMessengerShareButton
+                url={`https://c52b.hyf.dev/decks/${id}`}
+              >
+                <PiMessengerLogo size={25} />
+              </FacebookMessengerShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <FacebookShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiFacebookLogo size={25} />
+              </FacebookShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <LinkedinShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiLinkedinLogo size={25} />
+              </LinkedinShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <TelegramShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiTelegramLogo size={25} />
+              </TelegramShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <ThreadsShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiThreadsLogo size={25} />
+              </ThreadsShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <TwitterShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiXLogo size={25} />
+              </TwitterShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <WhatsappShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiWhatsappLogo size={25} />
+              </WhatsappShareButton>
+            </Button>
+
+            <Button
+              isIconOnly
+              radius="full"
+              variant="ghost"
+              onPress={() => setIsShareModalOpen(false)}
+            >
+              <RedditShareButton url={`https://c52b.hyf.dev/decks/${id}`}>
+                <PiRedditLogo size={25} />
+              </RedditShareButton>
+            </Button>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
