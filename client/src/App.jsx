@@ -32,6 +32,7 @@ const App = () => {
         element={<Navigate to={ROUTES.USER_PROFILE} replace />}
       />
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+      <Route path={ROUTES.DECKS} element={<BrowseDecks />} />
 
       <Route path={ROUTES.BROWSE} element={<BrowseDecks />} />
       <Route path={ROUTES.MY_DECKS} element={<MyDecks />} />

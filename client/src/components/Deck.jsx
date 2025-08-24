@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -12,48 +13,46 @@ import {
 } from "@heroui/react";
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
-import { UserContext } from "@/context/UserContext";
+import { PiCaretRightBold } from "react-icons/pi";
 
-const Deck = ({ deck, className, origin }) => {
+const Deck = ({ deck, className, from }) => {
   const { user: currentUser } = useContext(UserContext);
   const {
     _id: deckID,
     title,
     description,
-    userInfo,
+    userInfo: user,
     cardsCount: numCards,
   } = deck;
 
   const navigate = useNavigate();
-
-  const to = ROUTES.DECK_DETAILS(deckID);
-  const fromState = origin === "my-decks" ? { from: "my-decks" } : undefined;
-  const toWithQuery = origin === "my-decks" ? `${to}?from=my-decks` : to;
-
-  const avatarUrl =
-    userInfo?.profilePictureUrl || currentUser?.profilePictureUrl || "";
-  const creatorName = userInfo?.username || currentUser?.username || "Me";
-
   return (
     <Card
       isPressable
-      shadow="sm"
+      shadow="none"
       className={cn(
-        "min-h-[250px] max-w-[400px] min-w-[300px] flex-1 px-3 py-2",
+        "ring-default-300 hover:ring-primary hover:shadow-primary/20 min-h-[250px] max-w-[400px] min-w-[200px] flex-1 px-3 py-2 ring-2 transition duration-250 hover:shadow-lg",
         className
       )}
-      classNames={{ base: "rounded-[35px]" }}
-      onPress={() => navigate(toWithQuery, { state: fromState })}
+      classNames={{ base: "rounded-[20px] md:rounded-[35px]" }}
+      onPress={() =>
+        navigate(
+          ROUTES.DECK_DETAILS(deckID),
+          from ? { state: { from } } : undefined
+        )
+      }
     >
-      <CardHeader className="flex items-start justify-between gap-3">
-        <p className="heading-title text-left font-bold">{title}</p>
-        <Chip>{numCards} Cards</Chip>
+      <CardHeader className="flex items-start justify-between gap-4 pb-0">
+        <p className="text-secondary line-clamp-2 text-left font-bold">
+          {title}
+        </p>
+        <Chip size="sm" variant="faded">
+          {numCards} Cards
+        </Chip>
       </CardHeader>
-
       <CardBody>
         <p className="line-clamp-3">{description}</p>
       </CardBody>
-
       <CardFooter className="justify-between">
         <div className="flex gap-3">
           <Avatar
@@ -62,38 +61,33 @@ const Deck = ({ deck, className, origin }) => {
             color="primary"
             radius="full"
             size="md"
-            src={avatarUrl}
+            src={
+              user?.profilePictureUrl || currentUser?.profilePictureUrl || ""
+            }
           />
           <div className="flex flex-col items-start justify-center">
             <h4 className="text-default-700 text-xs leading-none font-semibold">
               Created by
             </h4>
-            <h5 className="text-primary tracking-tight">{creatorName}</h5>
+            <h5 className="text-primary">
+              {user?.username || currentUser?.username || "You"}
+            </h5>
           </div>
         </div>
-
         <Button
-          as={RouterLink}
-          to={toWithQuery}
-          state={fromState}
           isIconOnly
           color="primary"
           radius="full"
           size="md"
-          variant="solid"
+          variant="ghost"
+          onPress={() =>
+            navigate(
+              ROUTES.DECK_DETAILS(deckID),
+              from ? { state: { from } } : undefined
+            )
+          }
         >
-          <svg
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="24"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <PiCaretRightBold size={20} />
         </Button>
       </CardFooter>
     </Card>
@@ -106,13 +100,13 @@ Deck.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     userInfo: PropTypes.shape({
-      username: PropTypes.string,
+      username: PropTypes.string.isRequired,
       profilePictureUrl: PropTypes.string,
-    }),
+    }).isRequired,
     cardsCount: PropTypes.number.isRequired,
   }).isRequired,
   className: PropTypes.string,
-  origin: PropTypes.oneOf(["my-decks"]),
+  from: PropTypes.string,
 };
 
 export default Deck;

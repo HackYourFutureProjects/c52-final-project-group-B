@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/UserContext";
-import { LockedIcon, MailIcon } from "@/components/Icons";
+import { PiEnvelopeSimple, PiLockKey } from "react-icons/pi";
 import { loginUser } from "@/api/userAPI";
 
 const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
@@ -86,16 +86,22 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
     >
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
-          <ModalHeader className="flex flex-col gap-1">Log in</ModalHeader>
+          <ModalHeader className="text-primary flex flex-col gap-1">
+            Log in
+          </ModalHeader>
 
           <ModalBody>
             <Input
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <MailIcon className="text-default pointer-events-none" />
+                <PiEnvelopeSimple
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
+                />
               }
               label="Email"
               name="email"
@@ -108,11 +114,12 @@ const LoginModal = ({ isLoginOpen, setIsLoginOpen }) => {
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <LockedIcon
-                  size={28}
-                  className="text-default pointer-events-none"
+                <PiLockKey
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
                 />
               }
               label="Password"

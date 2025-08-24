@@ -2,102 +2,73 @@
 import { Link, Divider, Tooltip } from "@heroui/react";
 import { ROUTES } from "@/routes/paths.js";
 import { MemixLogoIcon } from "@/components/Icons";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { PiFacebookLogo, PiXLogo, PiInstagramLogo } from "react-icons/pi";
 
 const Footer = () => {
   return (
-    <footer className="bg-default-200 mt-12 p-6 md:p-8">
-      <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-6 text-center md:gap-10">
-        <Link
-          href={ROUTES.FAQ}
-          underline="hover"
-          color="foreground"
-          className="text-foreground font-semibold hover:opacity-80"
-        >
-          FAQ
-        </Link>
-        <Divider orientation="vertical" className="hidden h-5 md:block" />
-        <Link
-          href={ROUTES.ABOUT}
-          underline="hover"
-          color="foreground"
-          className="text-foreground font-semibold hover:opacity-80"
-        >
-          About
-        </Link>
-        <Divider orientation="vertical" className="hidden h-5 md:block" />
-        <Link
-          href="/support"
-          underline="hover"
-          color="foreground"
-          className="text-foreground font-semibold hover:opacity-80"
-        >
-          Support
-        </Link>
-        <Divider orientation="vertical" className="hidden h-5 md:block" />
-        <Link
-          href={ROUTES.TERMS}
-          underline="hover"
-          color="foreground"
-          className="text-foreground font-semibold hover:opacity-80"
-        >
-          Terms of Use
-        </Link>
-        <Divider orientation="vertical" className="hidden h-5 md:block" />
-        <div className="flex items-center gap-3">
-          <span className="text-foreground font-semibold">Social Media</span>
+    <footer className="mt-10 flex w-full justify-center">
+      <div className="bg-default-100 ring-default absolute flex w-full flex-col items-center justify-center px-4 py-8 ring-1 md:p-8">
+        <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
+          <Link href={ROUTES.FAQ} underline="hover" color="foreground">
+            FAQ
+          </Link>
+          <Divider orientation="vertical" className="hidden h-5 md:block" />
+          <Link href={ROUTES.ABOUT} underline="hover" color="foreground">
+            About
+          </Link>
+          <Divider orientation="vertical" className="hidden h-5 md:block" />
+          <Link href="/support" underline="hover" color="foreground">
+            Support
+          </Link>
+          <Divider orientation="vertical" className="hidden h-5 md:block" />
+          <Link href={ROUTES.TERMS} underline="hover" color="foreground">
+            Terms of Use
+          </Link>
+          <Divider orientation="vertical" className="hidden h-5 md:block" />
+          <div className="flex w-full items-center justify-center gap-4 md:w-auto">
+            <Tooltip content="Facebook">
+              <Link
+                isExternal
+                href="https://www.facebook.com/"
+                aria-label="Facebook"
+                className="bg-default text-foreground rounded-full p-2"
+              >
+                <PiFacebookLogo size={24} />
+              </Link>
+            </Tooltip>
 
-          <Tooltip content="Facebook">
-            <Link
-              isExternal
-              href="https://www.facebook.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              underline="none"
-              className="bg-default-300 rounded-full p-2 transition hover:opacity-80"
-            >
-              <FaFacebook className="text-foreground h-5 w-5" />
-            </Link>
-          </Tooltip>
+            <Tooltip content="Twitter / X">
+              <Link
+                isExternal
+                href="https://twitter.com/"
+                aria-label="Twitter"
+                className="bg-default text-foreground rounded-full p-2"
+              >
+                <PiXLogo size={24} />
+              </Link>
+            </Tooltip>
 
-          <Tooltip content="Twitter / X">
-            <Link
-              isExternal
-              href="https://twitter.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              underline="none"
-              className="bg-default-300 rounded-full p-2 transition hover:opacity-80"
-            >
-              <FaTwitter className="text-foreground h-5 w-5" />
-            </Link>
-          </Tooltip>
-
-          <Tooltip content="Instagram">
-            <Link
-              isExternal
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              underline="none"
-              className="bg-default-300 rounded-full p-2 transition hover:opacity-80"
-            >
-              <FaInstagram className="text-foreground h-5 w-5" />
-            </Link>
-          </Tooltip>
+            <Tooltip content="Instagram">
+              <Link
+                isExternal
+                href="https://www.instagram.com/"
+                aria-label="Instagram"
+                className="bg-default text-foreground rounded-full p-2"
+              >
+                <PiInstagramLogo size={24} />
+              </Link>
+            </Tooltip>
+          </div>
+        </nav>
+        <Divider className="container my-4" />
+        <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
+          <Link href={ROUTES.HOME} className="text-foreground">
+            <MemixLogoIcon width={120} height={40} />
+          </Link>
+          <p className="text-foreground text-center md:text-right">
+            Made with ❤️ by Group B, Cohort 52 — 2025
+          </p>
         </div>
-      </nav>
-      <Divider className="mx-auto my-6 max-w-6xl" />
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <Link href={ROUTES.HOME} className="text-default-foreground">
-          <MemixLogoIcon width={160} height={49} />
-        </Link>
-        <p className="text-foreground text-right text-base font-semibold md:text-lg">
-          Made with ❤️ by Group B, Cohort 52 — 2025
-        </p>
       </div>
     </footer>
   );

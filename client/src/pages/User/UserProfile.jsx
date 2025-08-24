@@ -204,7 +204,7 @@ const UserProfile = () => {
 
   return (
     <>
-      <div className="mb-6 flex flex-col justify-center text-center">
+      <div className="flex flex-col justify-center text-center">
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
@@ -215,179 +215,193 @@ const UserProfile = () => {
         </Title>
       </div>
 
-      <div className="mx-auto max-w-2xl px-4">
+      <div className="mx-auto mt-20 max-w-3xl px-0 md:px-4">
         {!isEditing && <UserCard user={userInfo} />}
 
-        <div className="mt-8">
-          {isEditing ? (
-            <div className="space-y-6">
-              <div className="flex flex-col items-center gap-2">
-                <button
-                  type="button"
-                  onClick={triggerFileDialog}
-                  className="group border-default-200 relative h-28 w-28 overflow-hidden rounded-full border md:h-32 md:w-32"
-                  aria-label="Change avatar"
-                  disabled={isUploading}
-                >
-                  <img
-                    src={
-                      form.profilePictureUrl ||
-                      "https://placehold.co/128x128?text=Avatar"
-                    }
-                    alt="Avatar"
-                    className={`h-full w-full object-cover transition-opacity ${
-                      isUploading ? "opacity-60" : "opacity-100"
-                    }`}
-                  />
-                  <div className="pointer-events-none absolute inset-0 hidden items-center justify-center bg-black/50 group-hover:flex">
-                    <FiUpload className="h-8 w-8 text-white" />
-                  </div>
-                  {isUploading && (
-                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                      Uploading…
-                    </div>
-                  )}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={onFileSelect}
+        {isEditing ? (
+          <div className="space-y-6">
+            <div className="flex flex-col items-center gap-4">
+              <button
+                type="button"
+                onClick={triggerFileDialog}
+                className="group border-default-200 relative h-28 w-28 overflow-hidden rounded-full border md:h-32 md:w-32"
+                aria-label="Change avatar"
+                disabled={isUploading}
+              >
+                <img
+                  src={
+                    form.profilePictureUrl ||
+                    "https://placehold.co/128x128?text=Avatar"
+                  }
+                  alt="Avatar"
+                  className={`h-full w-full object-cover transition-opacity ${
+                    isUploading ? "opacity-60" : "opacity-100"
+                  }`}
                 />
-                <p className="text-xs text-gray-500">
-                  JPG, PNG, WebP up to 5MB per file
-                </p>
-              </div>
-              <Input
-                name="username"
-                label="Displayed name"
-                variant="flat"
-                radius="full"
-                value={form.username}
-                onChange={onChange}
-              />
-              <Input
-                name="email"
-                label="Email"
-                variant="flat"
-                radius="full"
-                value={form.email}
-                onChange={onChange}
-              />
-
-              <div className="mt-2 flex justify-end gap-3">
-                <Button
-                  className="font-semibold"
-                  color="primary"
-                  radius="full"
-                  onPress={onSave}
-                  isDisabled={isUploading}
-                >
-                  Save
-                </Button>
-                <Button
-                  className="font-semibold"
-                  color="secondary"
-                  variant="flat"
-                  radius="full"
-                  onPress={() => {
-                    setIsEditing(false);
-                    setForm({
-                      username: userInfo.username || "",
-                      email: userInfo.email || "",
-                      profilePictureUrl: userInfo.profilePictureUrl || "",
-                    });
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="mt-4 flex items-center justify-center gap-4">
-              <Button
-                className="px-6 font-semibold"
-                radius="full"
-                color="primary"
-                onPress={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </Button>
-              <Popover
-                showArrow
-                backdrop="blur"
-                placement="top"
-                isOpen={isConfirmDeactivateOpen}
-                onOpenChange={(open) => setIsConfirmDeactivateOpen(open)}
-              >
-                <PopoverTrigger>
-                  <Button
-                    className="px-6 font-semibold"
-                    radius="full"
-                    color="danger"
-                  >
-                    Deactivate Account
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-[240px] p-6 text-center">
-                  <p className="text-danger font-bold">
-                    Are you sure you want to deactivate your account?
-                  </p>
-                  <div className="mt-4 flex gap-4">
-                    <Button
-                      className="font-semibold"
-                      color="danger"
-                      radius="full"
-                      onPress={async () => {
-                        try {
-                          const updatedUser = await deactivateUser(
-                            userInfo._id || userInfo.id
-                          );
-                          setUserInfo(updatedUser);
-                          setIsConfirmDeactivateOpen(false);
-                          logoutUser();
-                          addToast({
-                            title: "Success",
-                            description: "User deactivated successfully",
-                            color: "success",
-                            radius: "full",
-                          });
-                        } catch (error) {
-                          setIsConfirmDeactivateOpen(false);
-                          addToast({
-                            title: "Error",
-                            description:
-                              error.message || "Failed to deactivate user",
-                            color: "danger",
-                            radius: "full",
-                          });
-                        }
-                      }}
-                    >
-                      Confirm
-                    </Button>
-                    <Button
-                      className="font-semibold"
-                      radius="full"
-                      onPress={() => setIsConfirmDeactivateOpen(false)}
-                    >
-                      Cancel
-                    </Button>
+                <div className="pointer-events-none absolute inset-0 hidden items-center justify-center bg-black/50 group-hover:flex">
+                  <FiUpload className="h-8 w-8 text-white" />
+                </div>
+                {isUploading && (
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                    Uploading…
                   </div>
-                </PopoverContent>
-              </Popover>
+                )}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={onFileSelect}
+              />
+              <p className="text-foreground text-xs">
+                JPG, PNG, WebP up to 5MB per file
+              </p>
             </div>
-          )}
-        </div>
+            <Input
+              name="username"
+              label="Displayed name"
+              variant="faded"
+              color="secondary"
+              radius="full"
+              value={form.username}
+              onChange={onChange}
+              classNames={{
+                inputWrapper: "px-5 items-center md:items-start",
+                input: "text-center md:text-left",
+              }}
+            />
+            <Input
+              name="email"
+              label="Email"
+              variant="faded"
+              color="secondary"
+              radius="full"
+              value={form.email}
+              onChange={onChange}
+              classNames={{
+                inputWrapper: "px-5 items-center md:items-start",
+                input: "text-center md:text-left",
+              }}
+            />
 
-        <div className="mt-12">
-          <h3 className="mb-4 text-lg font-bold">Change Password</h3>
+            <div className="mt-2 flex flex-col justify-center gap-4 md:flex-row md:justify-end">
+              <Button
+                className="font-semibold"
+                color="primary"
+                radius="full"
+                onPress={onSave}
+                isDisabled={isUploading}
+              >
+                Save
+              </Button>
+              <Button
+                className="font-semibold"
+                color="secondary"
+                variant="faded"
+                radius="full"
+                onPress={() => {
+                  setIsEditing(false);
+                  setForm({
+                    username: userInfo.username || "",
+                    email: userInfo.email || "",
+                    profilePictureUrl: userInfo.profilePictureUrl || "",
+                  });
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-5 flex flex-col justify-center gap-4 md:flex-row md:items-center">
+            <Button
+              className="px-6 font-semibold"
+              radius="full"
+              color="primary"
+              variant="faded"
+              onPress={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </Button>
+            <Popover
+              showArrow
+              backdrop="blur"
+              placement="top"
+              isOpen={isConfirmDeactivateOpen}
+              onOpenChange={(open) => setIsConfirmDeactivateOpen(open)}
+            >
+              <PopoverTrigger>
+                <Button
+                  className="px-6 font-semibold"
+                  radius="full"
+                  color="danger"
+                  variant="faded"
+                >
+                  Deactivate Account
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex w-[240px] p-6 text-center">
+                <p className="text-danger font-bold">
+                  Are you sure you want to deactivate your account?
+                </p>
+                <div className="mt-4 flex gap-4">
+                  <Button
+                    className="font-semibold"
+                    color="danger"
+                    radius="full"
+                    onPress={async () => {
+                      try {
+                        const updatedUser = await deactivateUser(
+                          userInfo._id || userInfo.id
+                        );
+                        setUserInfo(updatedUser);
+                        setIsConfirmDeactivateOpen(false);
+                        logoutUser();
+                        addToast({
+                          title: "Success",
+                          description: "User deactivated successfully",
+                          color: "success",
+                          radius: "full",
+                        });
+                      } catch (error) {
+                        setIsConfirmDeactivateOpen(false);
+                        addToast({
+                          title: "Error",
+                          description:
+                            error.message || "Failed to deactivate user",
+                          color: "danger",
+                          radius: "full",
+                        });
+                      }
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    className="font-semibold"
+                    radius="full"
+                    onPress={() => setIsConfirmDeactivateOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        )}
+
+        <div className="mt-20">
+          <h3 className="text-secondary mb-4 text-center text-lg font-bold md:text-left">
+            Change Password
+          </h3>
           <div className="grid gap-4 md:grid-cols-2">
             <Input
-              label="Current Password"
+              label="Enter your current password"
               type="password"
-              variant="flat"
+              radius="full"
+              variant="faded"
+              color="secondary"
               value={passwordForm.currentPassword}
               onChange={(e) =>
                 setPasswordForm((p) => ({
@@ -395,24 +409,32 @@ const UserProfile = () => {
                   currentPassword: e.target.value,
                 }))
               }
-              className="rounded-[20px]"
+              classNames={{
+                inputWrapper: "px-5 items-center md:items-start",
+                input: "text-center md:text-left",
+              }}
             />
             <Input
-              label="New Password"
+              label="Enter your new password"
               type="password"
-              variant="flat"
+              radius="full"
+              variant="faded"
+              color="secondary"
               value={passwordForm.newPassword}
               onChange={(e) =>
                 setPasswordForm((p) => ({ ...p, newPassword: e.target.value }))
               }
-              className="rounded-[20px]"
+              classNames={{
+                inputWrapper: "px-5 items-center md:items-start",
+                input: "text-center md:text-left",
+              }}
             />
           </div>
-          <div className="mt-4 text-right">
+          <div className="mt-5 text-center md:text-right">
             <Button
               color="primary"
               radius="full"
-              className="font-semibold"
+              className="w-full font-semibold md:w-auto"
               onPress={onPasswordChange}
             >
               Update Password

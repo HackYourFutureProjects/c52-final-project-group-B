@@ -13,7 +13,7 @@ import {
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
-import { LockedIcon, MailIcon, UserIcon } from "@/components/Icons";
+import { PiUser, PiEnvelopeSimple, PiLockKey } from "react-icons/pi";
 import { createUser } from "@/api/userAPI";
 
 const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
@@ -90,16 +90,22 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
     >
       <ModalContent>
         <Form className="block" onSubmit={handleSubmit}>
-          <ModalHeader className="flex flex-col gap-1">Sign up</ModalHeader>
+          <ModalHeader className="text-primary flex flex-col gap-1">
+            Sign up
+          </ModalHeader>
 
           <ModalBody>
             <Input
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <UserIcon className="text-default pointer-events-none" />
+                <PiUser
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
+                />
               }
               label="Display Name"
               name="username"
@@ -112,9 +118,13 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <MailIcon className="text-default pointer-events-none" />
+                <PiEnvelopeSimple
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
+                />
               }
               label="Email"
               name="email"
@@ -127,11 +137,12 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <LockedIcon
-                  size={28}
-                  className="text-default pointer-events-none"
+                <PiLockKey
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
                 />
               }
               label="Password"
@@ -149,11 +160,12 @@ const SignupModal = ({ isSignupOpen, setIsSignupOpen }) => {
               isRequired
               color="primary"
               radius="full"
-              variant="bordered"
+              variant="faded"
               endContent={
-                <LockedIcon
-                  size={28}
-                  className="text-default pointer-events-none"
+                <PiLockKey
+                  className="m-auto md:block"
+                  size={30}
+                  fill="hsl(var(--heroui-primary))"
                 />
               }
               label="Confirm Password"

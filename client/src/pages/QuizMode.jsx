@@ -5,9 +5,10 @@ import { getDeckById } from "@/api/decksAPI";
 import { getCardsByDeckId } from "@/api/cardsAPI";
 import Title from "@/components/Title";
 import { Progress, Button, addToast } from "@heroui/react";
-import { FlagIcon } from "@/components/Icons";
+import { PiFlagFill } from "react-icons/pi";
 import { ROUTES } from "@/routes/paths.js";
 import ReportAProblemModal from "@/components/Modals/ReportAProblem";
+import StylishDiv from "@/components/StylishDiv";
 
 const QuizMode = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
@@ -170,9 +171,9 @@ const QuizMode = () => {
         </Title>
       </div>
 
-      {cards && cards[currentCardIndex] && (
+      {cards && (
         <>
-          <div className="bg-default-200 mt-20 w-full rounded-[35px] p-8">
+          <StylishDiv className="mt-20 w-full">
             <Progress
               color="primary"
               label="Current Progress"
@@ -182,27 +183,46 @@ const QuizMode = () => {
               value={progress.length}
               classNames={{ track: "bg-primary/10" }}
             />
-          </div>
+          </StylishDiv>
           {hasFinished ? (
-            <div className="bg-default-200 mt-8 flex flex-col items-center justify-between rounded-[35px] p-8">
-              <p className="mb-4 text-center text-xl font-bold">
-                Thank you for completing &quot;{deck?.title}&quot; in quiz mode.
-                <br></br>
-                You’ve answered{" "}
-                {progress?.filter((item) => item?.isCorrect).length} out of{" "}
-                {quizSize} questions correctly.
-              </p>
-              <Button color="primary" onPress={handleCompleteDeck}>
+            <StylishDiv className="mt-5 flex flex-col items-center justify-between bg-radial-[at_50%_100%] text-center md:mt-10 md:p-20">
+              <div className="text-md md:text-xl">
+                <p>
+                  Thank you for completing the deck{" "}
+                  <span className="text-primary font-bold capitalize">
+                    &quot;{deck.title}&quot;
+                  </span>{" "}
+                  in quiz mode!
+                </p>
+                <p className="my-4">
+                  You’ve answered{" "}
+                  <strong className="text-primary">
+                    {progress?.filter((item) => item?.isCorrect).length}
+                    <span className="text-foreground font-normal">
+                      {" "}
+                      out of{" "}
+                    </span>
+                    {quizSize}
+                  </strong>{" "}
+                  questions correctly.
+                </p>
+              </div>
+              <Button
+                color="primary"
+                radius="full"
+                onPress={handleCompleteDeck}
+                className="w-50"
+              >
                 Complete
               </Button>
-            </div>
+            </StylishDiv>
           ) : (
             <>
-              <div className="bg-default-200 mt-8 flex min-h-90 w-full flex-col items-center justify-between rounded-[35px] p-8">
-                <div className="text-default-800 flex flex-3 items-center justify-center text-2xl font-bold">
+              <StylishDiv className="mt-5 flex min-h-90 w-full flex-col items-center justify-between bg-radial-[at_50%_100%] text-center md:mt-10">
+                <div className="text-secondary flex flex-3 items-center justify-center text-2xl font-bold">
                   {cards[currentCardIndex].question}
                 </div>
-                <div className="mt-8 grid w-full grid-cols-2 gap-4 text-center">
+                <div className="mt-4 grid w-full grid-cols-1 gap-2 text-center md:mt-8 md:grid-cols-2 md:gap-4">
                   {cards &&
                     randomAnswers(cards[currentCardIndex]).map(
                       (answer, index) => (
@@ -211,21 +231,23 @@ const QuizMode = () => {
                           size="lg"
                           radius="full"
                           variant="ghost"
+                          color="secondary"
                           onPress={() => handleAnswer(answer)}
+                          className="h-auto py-2 whitespace-normal"
                         >
                           {answer}
                         </Button>
                       )
                     )}
                 </div>
-              </div>
+              </StylishDiv>
 
-              <div className="bg-default-200 mt-8 rounded-[35px] p-8 text-center">
-                <p className="text-default-800 mb-2">
+              <div className="mt-10 text-center">
+                <p className="mb-2">
                   If you encounter any issues with this deck, please report it.
                 </p>
                 <Button
-                  startContent={<FlagIcon />}
+                  startContent={<PiFlagFill size={16} />}
                   radius="full"
                   size="sm"
                   onPress={() => setIsReportAProblemOpen(true)}
@@ -233,6 +255,7 @@ const QuizMode = () => {
                   Report a problem
                 </Button>
               </div>
+
               <ReportAProblemModal
                 isReportAProblemOpen={isReportAProblemOpen}
                 setIsReportAProblemOpen={setIsReportAProblemOpen}
