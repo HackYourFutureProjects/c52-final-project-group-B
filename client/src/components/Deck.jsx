@@ -10,6 +10,7 @@ import {
   Avatar,
   Button,
   Chip,
+  Link,
 } from "@heroui/react";
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
@@ -76,6 +77,7 @@ const Deck = ({ deck, className, from }) => {
         </div>
         <Button
           isIconOnly
+          as={Link}
           color="primary"
           radius="full"
           size="md"
