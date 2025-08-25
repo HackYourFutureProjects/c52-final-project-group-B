@@ -9,6 +9,14 @@ import { Progress, Button, addToast } from "@heroui/react";
 import { PiCheckBold, PiXBold, PiFlagFill } from "react-icons/pi";
 import { submitUserProgress } from "@/api/userAPI";
 import { ROUTES } from "@/routes/paths.js";
+import {
+  getCardProgress,
+  saveCardProgress,
+  markFinished,
+  markSubmitted,
+  unmarkSubmitted,
+  clearCardProgress,
+} from "@/util/cardProgress";
 import ReportAProblemModal from "@/components/Modals/ReportAProblem";
 import StylishDiv from "@/components/StylishDiv";
 
@@ -21,6 +29,7 @@ const CardMode = () => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [progress, setProgress] = useState([]);
   const [isReportAProblemOpen, setIsReportAProblemOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,13 +46,27 @@ const CardMode = () => {
         const getCards = await getCardsByDeckId(id);
         setCards(getCards);
 
-        const savedProgress = localStorage.getItem(`cardProgress-${id}`);
-        if (savedProgress) {
-          const parsed = JSON.parse(savedProgress);
-          const savedIndex = parsed.currentCardIndex || 0;
-          const validIndex = Math.min(savedIndex, getCards.length - 1);
-          setProgress(parsed.results || []);
-          setCurrentCardIndex(validIndex);
+        const saved = getCardProgress(id);
+        if (saved) {
+          setProgress(saved.results || []);
+
+          // If the attempt was already submitted (e.g., user refreshed),
+          // clear persisted data and redirect to avoid duplicate submissions.
+          if (saved.submitted) {
+            clearCardProgress(id);
+            navigate(ROUTES.DECK_DETAILS(id));
+            return;
+          }
+
+          // If the attempt was finished but not submitted, restore to the
+          // finished screen instead of clamping back to the last card.
+          if (saved.finished) {
+            setCurrentCardIndex(getCards.length);
+          } else {
+            const savedIndex = saved.currentCardIndex || 0;
+            const validIndex = Math.min(savedIndex, getCards.length - 1);
+            setCurrentCardIndex(validIndex);
+          }
         } else {
           setCurrentCardIndex(0);
         }
@@ -85,33 +108,47 @@ const CardMode = () => {
 
     setProgress(newProgress);
 
-    const dataToSave = {
+    const isLastCard = currentCardIndex >= cards.length - 1;
+
+    saveCardProgress(id, {
       userId: user?.userid,
       results: newProgress,
       currentCardIndex: currentCardIndex + 1,
-    };
-
-    localStorage.setItem(`cardProgress-${id}`, JSON.stringify(dataToSave));
+    });
+    if (isLastCard) {
+      markFinished(id);
+    }
 
     if (currentCardIndex < cards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
     } else {
+      // Move to finished screen and auto-submit results
       setCurrentCardIndex(cards.length);
+      autoSubmit(newProgress);
     }
   };
 
-  const handleCompleteDeck = async () => {
+  const autoSubmit = async (finalResults = progress) => {
     try {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+      const saved = getCardProgress(id);
+      if (saved?.submitted) {
+        navigate(ROUTES.DECK_DETAILS(id));
+        return;
+      }
+      markSubmitted(id);
+
       const dataToSend = {
         userId: user?.userid,
-        results: progress,
+        results: finalResults,
       };
 
       await submitUserProgress(dataToSend);
 
       setProgress([]);
       setCurrentCardIndex(0);
-      localStorage.removeItem(`cardProgress-${id}`);
+      clearCardProgress(id);
       addToast({
         title: "Deck Completed",
         description: `You have completed the deck "${deck.title}" in card mode.`,
@@ -121,6 +158,10 @@ const CardMode = () => {
       navigate(ROUTES.DECK_DETAILS(id));
     } catch (e) {
       console.error(e);
+      // Allow retry by clearing the temporary submission marker
+      unmarkSubmitted(id);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -175,14 +216,6 @@ const CardMode = () => {
               cards
             </p>
           </div>
-          <Button
-            color="primary"
-            radius="full"
-            onPress={handleCompleteDeck}
-            className="w-50"
-          >
-            Complete
-          </Button>
         </StylishDiv>
       ) : (
         cards &&
