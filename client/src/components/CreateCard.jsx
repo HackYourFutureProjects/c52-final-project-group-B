@@ -102,7 +102,7 @@ const CreateCard = ({ card, index, updateCard, removeCard }) => {
 
 CreateCard.propTypes = {
   card: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     question: PropTypes.string.isRequired,
     answer: PropTypes.string.isRequired,
   }).isRequired,
