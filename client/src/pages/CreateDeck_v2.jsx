@@ -32,6 +32,7 @@ import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
 import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
+import AnoAI from "@/components/animated-shader-background";
 
 const CreateDeck_V2 = () => {
   const { user, isUserLoaded, forceLogin } = useContext(UserContext);
@@ -519,8 +520,36 @@ const CreateDeck_V2 = () => {
         isDismissable={false}
         isKeyboardDismissDisabled={true}
         isOpen={isGenerateOpen}
+        backdrop="blur"
         size="2xl"
         onClose={() => setIsGenerateOpen(false)}
+        classNames={{
+          wrapper: "z-60 ",
+          base: " bg-default-100 from-secondary/15 to-default-100 ring-default md:p-2 rounded-[20px] bg-radial-[at_50%_0%] p-0 to-100% ring-1 md:rounded-[35px]",
+          // backdrop: "bg-[hsl(var(--heroui-background))]/10",
+          backdrop: "bg-black/80",
+        }}
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+        placement="center"
       >
         <ModalContent>
           <ModalHeader className="text-primary flex flex-col gap-1">
@@ -571,6 +600,8 @@ const CreateDeck_V2 = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {isGenerateOpen && <AnoAI />}
     </>
   );
 };
