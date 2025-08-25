@@ -23,8 +23,9 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
 import { createDeck } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
@@ -33,11 +34,20 @@ import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
 
 const CreateDeck = () => {
+  const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
+    useContext(UserContext);
+
   const [cards, setCards] = useState([{ cardId: 1, question: "", answer: "" }]);
   const [isPublic, setIsPublic] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [importedCards, setImportedCards] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user && isUserLoaded === true) {
+      forceLogin();
+    }
+  }, [user, isUserLoaded]);
 
   const addCard = () => {
     const newCard = {
@@ -124,6 +134,32 @@ const CreateDeck = () => {
       return;
     }
   };
+
+  if (!user) {
+    return (
+      <div className="text-center">
+        <Title
+          breadcrumbs={[
+            { label: "Home", path: ROUTES.HOME },
+            { label: `Profile`, path: ROUTES.PROFILE },
+            { label: `Create A Deck`, path: ROUTES.DECK_CREATE },
+          ]}
+        >
+          Create A Deck
+        </Title>
+        <p className="mt-10 text-xl font-bold">
+          You need to be logged in to create a deck.
+        </p>
+        <Button
+          color="primary"
+          onPress={() => setIsLoginOpen(true)}
+          className="mt-4"
+        >
+          Login
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>
