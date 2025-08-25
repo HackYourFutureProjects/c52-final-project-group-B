@@ -21,5 +21,11 @@ export const createCardSchema = z.object({
 export const updateCardSchema = z.object({
   question: z.string().trim().min(1, "Question cannot be empty").optional(),
   answer: z.string().trim().min(1, "Answer cannot be empty").optional(),
-  order: z.number().min(0, "Order must be a positive integer").optional(),
+  order: z.number().min(0, "Order must be a non-negative integer").optional(),
+});
+
+export const updateCardSchema = z.object({
+  question: z.string().trim().min(1, "Question cannot be empty").optional(),
+  answer: z.string().trim().min(1, "Answer cannot be empty").optional(),
+  order: z.number().min(0, "Order must be a non-negative integer").optional(),
 });
