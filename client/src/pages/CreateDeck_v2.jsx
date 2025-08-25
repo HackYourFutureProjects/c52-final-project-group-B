@@ -240,8 +240,7 @@ const CreateDeck_V2 = () => {
             selectionMode="multiple"
             isRequired
             isClearable
-            value={deckLanguages}
-            selectedKeys={deckLanguages.length > 0 ? deckLanguages : []}
+            selectedKeys={deckLanguages}
             onSelectionChange={setDeckLanguages}
             className="items-center text-center md:items-start md:text-left"
             classNames={{
