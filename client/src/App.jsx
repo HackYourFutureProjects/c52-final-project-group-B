@@ -16,7 +16,7 @@ import MyDecks from "@/pages/MyDecks";
 import { ROUTES } from "@/routes/paths";
 import Support from "@/pages/Support";
 import GenerateDeck from "@/pages/GenerateDeck";
-import CreateDeck_V2 from "@/pages/CreateDeck_V2";
+import CreateDeck_V2 from "@/pages/CreateDeck_v2";
 
 const App = () => {
   return (
