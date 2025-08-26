@@ -245,7 +245,7 @@ class DeckService {
   async getCardsByDeckId(id) {
     const deck = await DeckModel.findById(id);
     if (!deck) createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
-    const cards = await CardModel.find({ deckId: id });
+    const cards = await CardModel.find({ deckId: id }).sort({ order: 1 });
     return cards;
   }
 

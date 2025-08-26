@@ -16,7 +16,6 @@ import {
   Avatar,
   Button,
   Tooltip,
-  Divider,
   Modal,
   ModalContent,
   ModalHeader,
@@ -36,6 +35,8 @@ import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
 import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
+import { Reorder } from "framer-motion";
+import CreateCard from "@/components/CreateCard";
 
 const EditDeck = () => {
   const [cards, setCards] = useState([]);
@@ -44,6 +45,7 @@ const EditDeck = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [importedCards, setImportedCards] = useState("");
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -55,10 +57,11 @@ const EditDeck = () => {
         setIsPublic(deckData.isPublic);
 
         const cardsData = await getCardsByDeckId(id);
-        const formattedCards = cardsData.map((card) => ({
+        const formattedCards = cardsData.map((card, index) => ({
           id: card._id,
           question: card.question,
           answer: card.answer,
+          order: card?.order !== 0 ? card.order : index,
           isNew: false,
         }));
         setCards(formattedCards);
@@ -81,6 +84,7 @@ const EditDeck = () => {
       id: `new-${Date.now()}`,
       question: "",
       answer: "",
+      order: cards.length,
       isNew: true,
     };
     setCards([...cards, newCard]);
@@ -119,9 +123,10 @@ const EditDeck = () => {
       complete: function (results) {
         const filteredData = results.data.map((row, index) => {
           return {
-            cardId: Date.now() + index,
+            id: Date.now() + index,
             question: row[0],
             answer: row[1],
+            order: cards.length + index,
             isNew: true,
           };
         });
@@ -152,13 +157,14 @@ const EditDeck = () => {
 
       const cardPromises = [];
 
-      cards.forEach((card) => {
+      cards.forEach((card, index) => {
         if (card.isNew && card.question && card.answer) {
           cardPromises.push(
             createCard({
               deckId: id,
               question: card.question,
               answer: card.answer,
+              order: index,
             })
           );
         } else if (!card.isNew && card.isDeleted) {
@@ -168,6 +174,7 @@ const EditDeck = () => {
             updateCardById(id, card.id, {
               question: card.question,
               answer: card.answer,
+              order: index,
             })
           );
         }
@@ -203,8 +210,8 @@ const EditDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Deck: ${deck?.title}`, path: `/deck/${id}` },
-            { label: `Edit Deck`, path: `/deck/${id}/edit` },
+            { label: `Deck: ${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
+            { label: `Edit Deck`, path: ROUTES.DECK_EDIT(id) },
           ]}
         >
           Edit Deck
@@ -318,9 +325,7 @@ const EditDeck = () => {
                 color="secondary"
                 radius="full"
                 size="lg"
-                onPress={() =>
-                  setCards([{ cardId: 1, question: "", answer: "" }])
-                }
+                onPress={() => setCards([{ id: 1, question: "", answer: "" }])}
               >
                 <PiTrash size={25} />
               </Button>
@@ -352,114 +357,45 @@ const EditDeck = () => {
           </div>
         </div>
 
-        <div className="mt-5 flex flex-col gap-5">
-          {cards.map((card, index) => {
-            if (!card.isDeleted) {
-              return (
-                <StylishDiv
-                  key={card.cardId}
-                  className="flex w-full flex-col items-center p-4 md:flex-row md:flex-nowrap md:p-4"
-                >
-                  <div className="text-secondary ml-2 text-xl font-bold">
-                    <span className="md:hidden">Card #</span>
-                    {index + 1}
-                  </div>
-                  <Divider
-                    orientation="vertical"
-                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
+        <Reorder.Group axis="y" values={cards} onReorder={setCards}>
+          <div className="mt-5 flex flex-col gap-5 select-none">
+            {cards.map((card, index) => {
+              if (!card.isDeleted) {
+                return (
+                  <CreateCard
+                    key={card.id}
+                    card={card}
+                    index={index}
+                    updateCard={updateCard}
+                    removeCard={removeCard}
                   />
-                  <Input
-                    name={`question-${card.id}`}
-                    label="Enter the question"
-                    type="text"
-                    radius="full"
-                    variant="faded"
-                    color="secondary"
-                    value={card.question}
-                    onChange={(e) =>
-                      updateCard(card.id, "question", e.target.value)
-                    }
-                    isRequired
-                    minLength={1}
-                    maxLength={100}
-                    className="items-center md:items-start"
-                    classNames={{
-                      inputWrapper: "px-5 items-center md:items-start",
-                      input: "text-center md:text-left",
-                    }}
-                  />
-                  <Divider
-                    orientation="vertical"
-                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
-                  />
-                  <Input
-                    name={`answer-${card.id}`}
-                    label="Enter the answer"
-                    type="text"
-                    radius="full"
-                    variant="faded"
-                    color="secondary"
-                    value={card.answer}
-                    onChange={(e) =>
-                      updateCard(card.id, "answer", e.target.value)
-                    }
-                    isRequired
-                    minLength={1}
-                    maxLength={100}
-                    className="items-center md:items-start"
-                    classNames={{
-                      inputWrapper: "px-5 items-center md:items-start",
-                      input: "text-center md:text-left",
-                    }}
-                  />
-                  <Divider
-                    orientation="vertical"
-                    className="bg-secondary/40 hidden h-10 w-[2px] md:block"
-                  />
-                  <Tooltip
-                    content="Delete Card"
-                    showArrow={true}
-                    delay={0}
-                    closeDelay={0}
-                    radius="full"
-                  >
-                    <Button
-                      isIconOnly
-                      variant="faded"
-                      color="secondary"
-                      radius="full"
-                      size="lg"
-                      onPress={() => removeCard(card.id)}
-                    >
-                      <PiTrash size={25} />
-                    </Button>
-                  </Tooltip>
-                </StylishDiv>
-              );
-            }
-          })}
+                );
+              }
+            })}
 
-          <div className="border-secondary/40 flex w-full flex-row flex-nowrap items-center justify-center gap-4 rounded-[20px] border-1 border-dashed p-4 md:rounded-[35px]">
-            <Tooltip
-              content="Add a new card"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
-              <Button
-                isIconOnly
-                variant="ghost"
-                color="secondary"
+            <div className="border-secondary/40 flex w-full flex-row flex-nowrap items-center justify-center gap-4 rounded-[20px] border-1 border-dashed p-4 md:rounded-[35px]">
+              <Tooltip
+                content="Add a new card"
+                showArrow={true}
+                delay={0}
+                closeDelay={0}
                 radius="full"
-                size="lg"
-                onPress={() => addCard()}
               >
-                <PiPlus size={25} />
-              </Button>
-            </Tooltip>
+                <Button
+                  isIconOnly
+                  variant="ghost"
+                  color="secondary"
+                  radius="full"
+                  size="lg"
+                  onPress={() => addCard()}
+                >
+                  <PiPlus size={25} />
+                </Button>
+              </Tooltip>
+            </div>
           </div>
-        </div>
+        </Reorder.Group>
+
         <div className="mt-5 flex flex-col-reverse justify-center gap-4 md:flex-row">
           <Button
             size="lg"

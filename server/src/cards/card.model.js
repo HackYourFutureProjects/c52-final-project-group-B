@@ -14,6 +14,11 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  order: {
+    type: Number,
+    min: 0,
+    default: 0,
+  },
 });
 
 export const CardModel = mongoose.model("Card", cardSchema, "cards");
