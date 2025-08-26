@@ -32,9 +32,10 @@ export function markSubmitted(deckId) {
 export function unmarkSubmitted(deckId) {
   const current = read(deckId);
   if (!current) return;
-  delete current.submitted;
-  delete current.submittedAt;
-  write(deckId, current);
+  const rest = { ...current };
+  delete rest.submitted;
+  delete rest.submittedAt;
+  write(deckId, rest);
 }
 
 export function clearCardProgress(deckId) {

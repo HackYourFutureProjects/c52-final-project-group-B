@@ -70,8 +70,7 @@ const CardMode = () => {
         } else {
           setCurrentCardIndex(0);
         }
-      } catch (e) {
-        console.error(e);
+      } catch {
         navigate(ROUTES.NOT_FOUND);
       }
     };
@@ -122,11 +121,12 @@ const CardMode = () => {
     if (currentCardIndex < cards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1);
     } else {
-      // Move to finished screen and auto-submit results
+      // Move to finished screen and let user submit manually
       setCurrentCardIndex(cards.length);
-      autoSubmit(newProgress);
     }
   };
+
+  const handleCompleteDeck = () => autoSubmit();
 
   const autoSubmit = async (finalResults = progress) => {
     try {
@@ -156,9 +156,7 @@ const CardMode = () => {
         radius: "full",
       });
       navigate(ROUTES.DECK_DETAILS(id));
-    } catch (e) {
-      console.error(e);
-      // Allow retry by clearing the temporary submission marker
+    } catch {
       unmarkSubmitted(id);
     } finally {
       setIsSubmitting(false);
@@ -281,6 +279,20 @@ const CardMode = () => {
             />
           </>
         )
+      )}
+
+      {hasFinished && (
+        <div className="mt-8 flex justify-center">
+          <Button
+            color="primary"
+            radius="full"
+            onPress={handleCompleteDeck}
+            isDisabled={isSubmitting}
+            className="w-50"
+          >
+            Complete
+          </Button>
+        </div>
       )}
     </>
   );
