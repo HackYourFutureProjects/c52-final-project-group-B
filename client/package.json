@@ -32,7 +32,8 @@
     "react-router-dom": "^7",
     "react-share": "^5.2.2",
     "swiper": "^11.2.10",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "three": "^0.179.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

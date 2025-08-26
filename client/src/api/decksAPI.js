@@ -50,3 +50,7 @@ export const generateDeck = async ({ language, amountCards, userPrompt }) => {
     true
   );
 };
+
+export const generateDeck_V2 = async (userPrompt) => {
+  return apiRequest("/decks/generate_v2", "POST", { userPrompt }, true);
+};
