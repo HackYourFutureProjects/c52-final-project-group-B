@@ -22,8 +22,9 @@ import {
   ModalBody,
   ModalFooter,
 } from "@heroui/react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "@/context/UserContext";
 import { createDeck } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
@@ -34,11 +35,20 @@ import { Reorder } from "framer-motion";
 import CreateCard from "@/components/CreateCard";
 
 const CreateDeck = () => {
+  const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
+    useContext(UserContext);
+
   const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
   const [isPublic, setIsPublic] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [importedCards, setImportedCards] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user && isUserLoaded === true) {
+      forceLogin();
+    }
+  }, [user, isUserLoaded]);
 
   const addCard = () => {
     const newCard = {
@@ -75,14 +85,12 @@ const CreateDeck = () => {
     Papa.parse(importedCards, {
       header: false,
       complete: function (results) {
-        const filteredData = results.data.map((row, index) => {
-          return {
-            id: cards.length + index + 1,
-            question: row[0],
-            answer: row[1],
-            order: cards.length + index,
-          };
-        });
+        const filteredData = results.data.map((row, index) => ({
+          id: cards.length + index + 1,
+          question: row[0],
+          answer: row[1],
+          order: cards.length + index,
+        }));
         setCards([...cards, ...filteredData]);
         addToast({
           title: "Success",
@@ -106,8 +114,9 @@ const CreateDeck = () => {
         title: data.title,
         description: data.description,
         language: allLanguages,
-        isPublic: isPublic,
+        isPublic,
       });
+
       const cardPromises = cards.map((card, index) =>
         createCard({
           deckId: createdDeck._id,
@@ -116,6 +125,7 @@ const CreateDeck = () => {
           order: index,
         })
       );
+
       await Promise.all(cardPromises);
       navigate(ROUTES.DECK_DETAILS(createdDeck._id));
     } catch (error) {
@@ -125,9 +135,34 @@ const CreateDeck = () => {
         color: "danger",
         radius: "full",
       });
-      return;
     }
   };
+
+  if (!user) {
+    return (
+      <div className="text-center">
+        <Title
+          breadcrumbs={[
+            { label: "Home", path: ROUTES.HOME },
+            { label: "Profile", path: ROUTES.PROFILE },
+            { label: "Create A Deck", path: ROUTES.DECK_CREATE },
+          ]}
+        >
+          Create A Deck
+        </Title>
+        <p className="mt-10 text-xl font-bold">
+          You need to be logged in to create a deck.
+        </p>
+        <Button
+          color="primary"
+          onPress={() => setIsLoginOpen(true)}
+          className="mt-4"
+        >
+          Login
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -135,8 +170,8 @@ const CreateDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Profile`, path: `/profile` },
-            { label: `Create A Deck`, path: `/deck/create` },
+            { label: "Profile", path: "/profile" },
+            { label: "Create A Deck", path: "/deck/create" },
           ]}
         >
           Create A Deck
@@ -216,13 +251,7 @@ const CreateDeck = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <Tooltip
-              content="Import Cards"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
+            <Tooltip content="Import Cards" showArrow radius="full">
               <Button
                 isIconOnly
                 variant="faded"
@@ -234,13 +263,7 @@ const CreateDeck = () => {
                 <PiDownloadSimple size={25} />
               </Button>
             </Tooltip>
-            <Tooltip
-              content="Delete Cards"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
+            <Tooltip content="Delete Cards" showArrow radius="full">
               <Button
                 isIconOnly
                 variant="faded"
@@ -256,9 +279,7 @@ const CreateDeck = () => {
               content={
                 isPublic ? "Deck is set to public" : "Deck is set to private"
               }
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
+              showArrow
               radius="full"
             >
               <Button
@@ -291,21 +312,15 @@ const CreateDeck = () => {
               />
             ))}
 
-            <div className="border-secondary/40 flex w-full flex-row flex-nowrap items-center justify-center gap-4 rounded-[20px] border-1 border-dashed p-4 md:rounded-[35px]">
-              <Tooltip
-                content="Add a new card"
-                showArrow={true}
-                delay={0}
-                closeDelay={0}
-                radius="full"
-              >
+            <div className="border-secondary/40 flex w-full items-center justify-center gap-4 rounded-[20px] border border-dashed p-4 md:rounded-[35px]">
+              <Tooltip content="Add a new card" showArrow radius="full">
                 <Button
                   isIconOnly
                   variant="ghost"
                   color="secondary"
                   radius="full"
                   size="lg"
-                  onPress={() => addCard()}
+                  onPress={addCard}
                 >
                   <PiPlus size={25} />
                 </Button>
@@ -356,9 +371,7 @@ const CreateDeck = () => {
               value={importedCards}
               onValueChange={setImportedCards}
               minRows={10}
-              classNames={{
-                inputWrapper: "rounded-[25px] px-5",
-              }}
+              classNames={{ inputWrapper: "rounded-[25px] px-5" }}
             />
           </ModalBody>
           <ModalFooter>
@@ -367,7 +380,7 @@ const CreateDeck = () => {
               radius="full"
               className="font-bold"
               color="primary"
-              onPress={() => importCards()}
+              onPress={importCards}
             >
               Import
             </Button>
