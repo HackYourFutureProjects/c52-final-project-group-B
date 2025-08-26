@@ -16,7 +16,6 @@ import {
   Avatar,
   Button,
   Tooltip,
-  Divider,
   Modal,
   ModalContent,
   ModalHeader,
@@ -32,12 +31,14 @@ import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
 import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
+import { Reorder } from "framer-motion";
+import CreateCard from "@/components/CreateCard";
 
 const CreateDeck = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
     useContext(UserContext);
 
-  const [cards, setCards] = useState([{ cardId: 1, question: "", answer: "" }]);
+  const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
   const [isPublic, setIsPublic] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [importedCards, setImportedCards] = useState("");
@@ -51,16 +52,17 @@ const CreateDeck = () => {
 
   const addCard = () => {
     const newCard = {
-      cardId: cards.length + 1,
+      id: cards.length + 1,
       question: "",
       answer: "",
+      order: cards.length,
     };
     setCards([...cards, newCard]);
   };
 
   const removeCard = (cardId) => {
     if (cards.length > 1) {
-      setCards(cards.filter((card) => card.cardId !== cardId));
+      setCards(cards.filter((card) => card.id !== cardId));
     } else {
       addToast({
         title: "Error",
@@ -74,7 +76,7 @@ const CreateDeck = () => {
   const updateCard = (cardId, field, value) => {
     setCards(
       cards.map((card) =>
-        card.cardId === cardId ? { ...card, [field]: value } : card
+        card.id === cardId ? { ...card, [field]: value } : card
       )
     );
   };
@@ -83,13 +85,12 @@ const CreateDeck = () => {
     Papa.parse(importedCards, {
       header: false,
       complete: function (results) {
-        const filteredData = results.data.map((row, index) => {
-          return {
-            cardId: cards.length + index + 1,
-            question: row[0],
-            answer: row[1],
-          };
-        });
+        const filteredData = results.data.map((row, index) => ({
+          id: cards.length + index + 1,
+          question: row[0],
+          answer: row[1],
+          order: cards.length + index,
+        }));
         setCards([...cards, ...filteredData]);
         addToast({
           title: "Success",
@@ -113,15 +114,18 @@ const CreateDeck = () => {
         title: data.title,
         description: data.description,
         language: allLanguages,
-        isPublic: isPublic,
+        isPublic,
       });
-      const cardPromises = cards.map((card) =>
+
+      const cardPromises = cards.map((card, index) =>
         createCard({
           deckId: createdDeck._id,
           question: card.question,
           answer: card.answer,
+          order: index,
         })
       );
+
       await Promise.all(cardPromises);
       navigate(ROUTES.DECK_DETAILS(createdDeck._id));
     } catch (error) {
@@ -131,7 +135,6 @@ const CreateDeck = () => {
         color: "danger",
         radius: "full",
       });
-      return;
     }
   };
 
@@ -141,8 +144,8 @@ const CreateDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
-            { label: `Profile`, path: ROUTES.PROFILE },
-            { label: `Create A Deck`, path: ROUTES.DECK_CREATE },
+            { label: "Profile", path: ROUTES.PROFILE },
+            { label: "Create A Deck", path: ROUTES.DECK_CREATE },
           ]}
         >
           Create A Deck
@@ -167,8 +170,8 @@ const CreateDeck = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: "/" },
-            { label: `Profile`, path: `/profile` },
-            { label: `Create A Deck`, path: `/deck/create` },
+            { label: "Profile", path: "/profile" },
+            { label: "Create A Deck", path: "/deck/create" },
           ]}
         >
           Create A Deck
@@ -248,13 +251,7 @@ const CreateDeck = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <Tooltip
-              content="Import Cards"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
+            <Tooltip content="Import Cards" showArrow radius="full">
               <Button
                 isIconOnly
                 variant="faded"
@@ -266,33 +263,21 @@ const CreateDeck = () => {
                 <PiDownloadSimple size={25} />
               </Button>
             </Tooltip>
-            <Tooltip
-              content="Delete Cards"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
+            <Tooltip content="Delete Cards" showArrow radius="full">
               <Button
                 isIconOnly
                 variant="faded"
                 color="secondary"
                 radius="full"
                 size="lg"
-                onPress={() =>
-                  setCards([{ cardId: 1, question: "", answer: "" }])
-                }
+                onPress={() => setCards([{ id: 1, question: "", answer: "" }])}
               >
                 <PiTrash size={25} />
               </Button>
             </Tooltip>
             <Tooltip
-              content={
-                isPublic ? "Deck is set to public" : "Deck is set to private"
-              }
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
+              content={isPublic ? "Deck is set to public" : "Deck is set to private"}
+              showArrow
               radius="full"
             >
               <Button
@@ -303,120 +288,40 @@ const CreateDeck = () => {
                 size="lg"
                 onPress={() => setIsPublic(!isPublic)}
               >
-                {isPublic ? (
-                  <PiLockKeyOpen size={25} />
-                ) : (
-                  <PiLockKey size={25} />
-                )}
+                {isPublic ? <PiLockKeyOpen size={25} /> : <PiLockKey size={25} />}
               </Button>
             </Tooltip>
           </div>
         </div>
 
-        <div className="mt-5 flex flex-col gap-5">
-          {cards.map((card, index) => (
-            <StylishDiv
-              key={card.cardId}
-              className="flex w-full flex-col items-center p-4 md:flex-row md:flex-nowrap md:p-4"
-            >
-              <div className="text-secondary ml-2 text-xl font-bold">
-                <span className="md:hidden">Card #</span>
-                {index + 1}
-              </div>
-              <Divider
-                orientation="vertical"
-                className="bg-secondary/40 hidden h-10 w-[2px] md:block"
+        <Reorder.Group axis="y" values={cards} onReorder={setCards}>
+          <div className="mt-5 flex flex-col gap-5 select-none">
+            {cards.map((card, index) => (
+              <CreateCard
+                key={card.id}
+                card={card}
+                index={index}
+                updateCard={updateCard}
+                removeCard={removeCard}
               />
-              <Input
-                name={`question-${card.cardId}`}
-                label="Enter the question"
-                type="text"
-                radius="full"
-                variant="faded"
-                color="secondary"
-                value={card.question}
-                onChange={(e) =>
-                  updateCard(card.cardId, "question", e.target.value)
-                }
-                isRequired
-                minLength={1}
-                maxLength={100}
-                className="items-center md:items-start"
-                classNames={{
-                  inputWrapper: "px-5 items-center md:items-start",
-                  input: "text-center md:text-left",
-                }}
-              />
-              <Divider
-                orientation="vertical"
-                className="bg-secondary/40 hidden h-10 w-[2px] md:block"
-              />
-              <Input
-                name={`answer-${card.cardId}`}
-                label="Enter the answer"
-                type="text"
-                radius="full"
-                variant="faded"
-                color="secondary"
-                value={card.answer}
-                onChange={(e) =>
-                  updateCard(card.cardId, "answer", e.target.value)
-                }
-                isRequired
-                minLength={1}
-                maxLength={100}
-                className="items-center md:items-start"
-                classNames={{
-                  inputWrapper: "px-5 items-center md:items-start",
-                  input: "text-center md:text-left",
-                }}
-              />
-              <Divider
-                orientation="vertical"
-                className="bg-secondary/40 hidden h-10 w-[2px] md:block"
-              />
-              <Tooltip
-                content="Delete Card"
-                showArrow={true}
-                delay={0}
-                closeDelay={0}
-                radius="full"
-              >
+            ))}
+
+            <div className="border-secondary/40 flex w-full items-center justify-center gap-4 rounded-[20px] border border-dashed p-4 md:rounded-[35px]">
+              <Tooltip content="Add a new card" showArrow radius="full">
                 <Button
                   isIconOnly
-                  variant="faded"
+                  variant="ghost"
                   color="secondary"
                   radius="full"
                   size="lg"
-                  onPress={() => removeCard(card.cardId)}
+                  onPress={addCard}
                 >
-                  <PiTrash size={25} />
+                  <PiPlus size={25} />
                 </Button>
               </Tooltip>
-            </StylishDiv>
-          ))}
-
-          <div className="border-secondary/40 flex w-full flex-row flex-nowrap items-center justify-center gap-4 rounded-[20px] border-1 border-dashed p-4 md:rounded-[35px]">
-            <Tooltip
-              content="Add a new card"
-              showArrow={true}
-              delay={0}
-              closeDelay={0}
-              radius="full"
-            >
-              <Button
-                isIconOnly
-                variant="ghost"
-                color="secondary"
-                radius="full"
-                size="lg"
-                onPress={() => addCard()}
-              >
-                <PiPlus size={25} />
-              </Button>
-            </Tooltip>
+            </div>
           </div>
-        </div>
+        </Reorder.Group>
 
         <div className="mt-5 flex justify-center">
           <Button
@@ -431,19 +336,14 @@ const CreateDeck = () => {
         </div>
       </Form>
 
-      <Modal
-        isOpen={isImportOpen}
-        size="2xl"
-        onClose={() => setIsImportOpen(false)}
-      >
+      <Modal isOpen={isImportOpen} size="2xl" onClose={() => setIsImportOpen(false)}>
         <ModalContent>
           <ModalHeader className="text-primary flex flex-col gap-1">
             Import Cards
             <p className="text-foreground text-sm">
               Import multiple cards at once by pasting CSV formatted text below.
               <br />
-              Format: Each line should contain the front and back of a card,
-              separated by a comma.
+              Format: Each line should contain the front and back of a card, separated by a comma.
               <br />
               Example: &quot;Capital of France, Paris&quot;
             </p>
@@ -460,9 +360,7 @@ const CreateDeck = () => {
               value={importedCards}
               onValueChange={setImportedCards}
               minRows={10}
-              classNames={{
-                inputWrapper: "rounded-[25px] px-5",
-              }}
+              classNames={{ inputWrapper: "rounded-[25px] px-5" }}
             />
           </ModalBody>
           <ModalFooter>
@@ -471,7 +369,7 @@ const CreateDeck = () => {
               radius="full"
               className="font-bold"
               color="primary"
-              onPress={() => importCards()}
+              onPress={importCards}
             >
               Import
             </Button>

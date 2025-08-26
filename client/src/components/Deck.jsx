@@ -9,14 +9,14 @@ import {
   CardFooter,
   Avatar,
   Button,
-  Link,
   Chip,
+  Link,
 } from "@heroui/react";
 import cn from "@/util/cn";
 import { ROUTES } from "@/routes/paths.js";
 import { PiCaretRightBold } from "react-icons/pi";
 
-const Deck = ({ deck, className }) => {
+const Deck = ({ deck, className, from }) => {
   const { user: currentUser } = useContext(UserContext);
   const {
     _id: deckID,
@@ -36,7 +36,12 @@ const Deck = ({ deck, className }) => {
         className
       )}
       classNames={{ base: "rounded-[20px] md:rounded-[35px]" }}
-      onPress={() => navigate(ROUTES.DECK_DETAILS(deckID))}
+      onPress={() =>
+        navigate(
+          ROUTES.DECK_DETAILS(deckID),
+          from ? { state: { from } } : undefined
+        )
+      }
     >
       <CardHeader className="flex items-start justify-between gap-4 pb-0">
         <p className="text-secondary line-clamp-2 text-left font-bold">
@@ -71,13 +76,18 @@ const Deck = ({ deck, className }) => {
           </div>
         </div>
         <Button
-          as={Link}
           isIconOnly
+          as={Link}
           color="primary"
           radius="full"
           size="md"
           variant="ghost"
-          href={ROUTES.DECK_DETAILS(deckID)}
+          onPress={() =>
+            navigate(
+              ROUTES.DECK_DETAILS(deckID),
+              from ? { state: { from } } : undefined
+            )
+          }
         >
           <PiCaretRightBold size={20} />
         </Button>
@@ -98,6 +108,7 @@ Deck.propTypes = {
     cardsCount: PropTypes.number.isRequired,
   }).isRequired,
   className: PropTypes.string,
+  from: PropTypes.string,
 };
 
 export default Deck;

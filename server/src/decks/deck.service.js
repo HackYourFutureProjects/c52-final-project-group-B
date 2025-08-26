@@ -6,6 +6,10 @@ import { CardModel } from "../cards/card.model.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { createAndThrowError } from "../util/createAndThrowError.js";
 import decksFilterPipeline from "./decksFilterPipeline.js";
+import openai from "../services/openAi/config/openai.js";
+import { zodTextFormat } from "openai/helpers/zod";
+import { flashcardPrompt_V2 } from "../services/openAi/prompts/flashcards.js";
+import { generatedDeckSchema } from "./deck.schema.js";
 
 class DeckService {
   async getDecks({
@@ -241,7 +245,7 @@ class DeckService {
   async getCardsByDeckId(id) {
     const deck = await DeckModel.findById(id);
     if (!deck) createAndThrowError(HTTP_STATUS.NOT_FOUND, "Deck not found");
-    const cards = await CardModel.find({ deckId: id });
+    const cards = await CardModel.find({ deckId: id }).sort({ order: 1 });
     return cards;
   }
 
@@ -312,6 +316,36 @@ class DeckService {
         "Card not found or does not belong to this deck",
       );
     }
+  }
+
+  async generateDeck_V2(userPrompt) {
+    const response = await openai.responses.create({
+      model: "gpt-4.1-mini",
+      input: [
+        {
+          role: "developer",
+          content: flashcardPrompt_V2,
+        },
+        {
+          role: "user",
+          content: userPrompt,
+        },
+      ],
+      text: {
+        format: zodTextFormat(generatedDeckSchema, "structured_output"),
+      },
+      temperature: 0.2,
+      max_output_tokens: 5000,
+    });
+
+    if (response.status !== "completed") {
+      createAndThrowError(
+        HTTP_STATUS.NOT_FOUND,
+        "We were unable to generate the deck",
+      );
+    }
+
+    return JSON.parse(response.output_text);
   }
 }
 
