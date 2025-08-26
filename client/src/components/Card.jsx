@@ -27,7 +27,7 @@ export const DecksCard = ({
           isFlipped && flipDirection === "vertical" && "rotate-x-180"
         )}
       >
-        <div className="absolute inset-0 size-full backface-hidden">
+        <div className="absolute inset-0 size-full [transform:rotateY(0deg)] [backface-visibility:hidden]">
           <div className="ring-secondary/10 hover:ring-secondary bg-secondary/5 text-secondary flex h-full w-full flex-col items-center justify-between rounded-[20px] p-4 ring-2 transition duration-250 md:rounded-[35px]">
             <div className="flex h-full items-center justify-center text-lg font-bold">
               {front}
