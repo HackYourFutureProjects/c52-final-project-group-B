@@ -276,7 +276,9 @@ const CreateDeck = () => {
               </Button>
             </Tooltip>
             <Tooltip
-              content={isPublic ? "Deck is set to public" : "Deck is set to private"}
+              content={
+                isPublic ? "Deck is set to public" : "Deck is set to private"
+              }
               showArrow
               radius="full"
             >
@@ -288,7 +290,11 @@ const CreateDeck = () => {
                 size="lg"
                 onPress={() => setIsPublic(!isPublic)}
               >
-                {isPublic ? <PiLockKeyOpen size={25} /> : <PiLockKey size={25} />}
+                {isPublic ? (
+                  <PiLockKeyOpen size={25} />
+                ) : (
+                  <PiLockKey size={25} />
+                )}
               </Button>
             </Tooltip>
           </div>
@@ -336,14 +342,19 @@ const CreateDeck = () => {
         </div>
       </Form>
 
-      <Modal isOpen={isImportOpen} size="2xl" onClose={() => setIsImportOpen(false)}>
+      <Modal
+        isOpen={isImportOpen}
+        size="2xl"
+        onClose={() => setIsImportOpen(false)}
+      >
         <ModalContent>
           <ModalHeader className="text-primary flex flex-col gap-1">
             Import Cards
             <p className="text-foreground text-sm">
               Import multiple cards at once by pasting CSV formatted text below.
               <br />
-              Format: Each line should contain the front and back of a card, separated by a comma.
+              Format: Each line should contain the front and back of a card,
+              separated by a comma.
               <br />
               Example: &quot;Capital of France, Paris&quot;
             </p>
