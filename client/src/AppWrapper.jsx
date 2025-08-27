@@ -5,12 +5,16 @@ import { ToastProvider } from "@heroui/toast";
 import UserProvider from "@/provider/UserProvider";
 import Navigator from "@/components/Navigator";
 import Footer from "@/components/Footer";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 /**
  * This component wraps our App with the providers we do not want to have in our tests
  */
 const AppWrapper = ({ children }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  useEffect(() => window.scrollTo(0, 0), [pathname]);
 
   return (
     <HeroUIProvider navigate={navigate} useHref={useHref}>
