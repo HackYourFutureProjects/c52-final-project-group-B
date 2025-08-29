@@ -25,7 +25,7 @@ import {
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
-import { createDeck } from "@/api/decksAPI";
+import { createDeck, generateDeck_V2 } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
@@ -33,15 +33,25 @@ import Papa from "papaparse";
 import StylishDiv from "@/components/StylishDiv";
 import { Reorder } from "framer-motion";
 import CreateCard from "@/components/CreateCard";
+import AnoAI from "@/components/animated-shader-background";
 
 const CreateDeck = () => {
   const { user, isUserLoaded, setIsLoginOpen, forceLogin } =
     useContext(UserContext);
 
+  const [deckTitle, setDeckTitle] = useState("");
+  const [deckDescription, setDeckDescription] = useState("");
+  const [deckLanguages, setDeckLanguages] = useState([]);
+
   const [cards, setCards] = useState([{ id: 1, question: "", answer: "" }]);
   const [isPublic, setIsPublic] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [importedCards, setImportedCards] = useState("");
+
+  const [userPrompt, setUserPrompt] = useState("");
+  const [isGenerateOpen, setIsGenerateOpen] = useState(false);
+  const [isGenerateSubmitting, setIsGenerateSubmitting] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -138,6 +148,42 @@ const CreateDeck = () => {
     }
   };
 
+  const generateDeck = async () => {
+    setIsGenerateSubmitting(true);
+    try {
+      const generatedDeck = await generateDeck_V2(userPrompt);
+
+      setDeckTitle(generatedDeck.deck.title);
+      setDeckDescription(generatedDeck.deck.description);
+      setDeckLanguages(generatedDeck.deck.languages);
+
+      const adjustedCards = generatedDeck.cards.map((card, index) => ({
+        id: new Date().getTime() + index,
+        question: card.question.trim(),
+        answer: card.answer.trim(),
+        order: index,
+      }));
+
+      setCards(adjustedCards);
+      addToast({
+        title: "Deck generated",
+        description: "Your AI-generated deck is ready, review and publish it!",
+        color: "success",
+        radius: "full",
+      });
+    } catch (err) {
+      addToast({
+        title: "Generation failed",
+        description: err?.message || "Could not generate deck.",
+        color: "danger",
+        radius: "full",
+      });
+    } finally {
+      setIsGenerateSubmitting(false);
+      setIsGenerateOpen(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="text-center">
@@ -190,6 +236,8 @@ const CreateDeck = () => {
             isRequired
             minLength={2}
             maxLength={100}
+            value={deckTitle}
+            onValueChange={setDeckTitle}
             className="items-center md:items-start"
             classNames={{
               inputWrapper: "px-5 items-center md:items-start",
@@ -205,6 +253,8 @@ const CreateDeck = () => {
             isRequired
             minLength={10}
             maxLength={500}
+            value={deckDescription}
+            onValueChange={setDeckDescription}
             className="items-center md:items-start"
             classNames={{
               inputWrapper: "px-5 rounded-[25px] items-center md:items-start",
@@ -220,6 +270,8 @@ const CreateDeck = () => {
             selectionMode="multiple"
             isRequired
             isClearable
+            selectedKeys={deckLanguages}
+            onSelectionChange={setDeckLanguages}
             className="items-center text-center md:items-start md:text-left"
             classNames={{
               trigger: "px-5 items-center md:items-start",
@@ -295,6 +347,19 @@ const CreateDeck = () => {
                 ) : (
                   <PiLockKey size={25} />
                 )}
+              </Button>
+            </Tooltip>
+
+            <Tooltip content="Generate Deck Using Ai" showArrow radius="full">
+              <Button
+                isIconOnly
+                variant="faded"
+                color="secondary"
+                radius="full"
+                size="lg"
+                onPress={() => setIsGenerateOpen(true)}
+              >
+                Ai
               </Button>
             </Tooltip>
           </div>
@@ -387,6 +452,93 @@ const CreateDeck = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isGenerateOpen}
+        backdrop="blur"
+        size="2xl"
+        onClose={() => setIsGenerateOpen(false)}
+        classNames={{
+          wrapper: "z-60 ",
+          base: " bg-default-100 from-secondary/15 to-default-100 ring-default md:p-2 rounded-[20px] bg-radial-[at_50%_0%] p-0 to-100% ring-1 md:rounded-[35px]",
+          // backdrop: "bg-[hsl(var(--heroui-background))]/10",
+          backdrop: "bg-black/80",
+        }}
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+        placement="center"
+      >
+        <ModalContent>
+          <ModalHeader className="text-primary flex flex-col gap-1">
+            Generate A Deck
+            <p className="text-foreground text-sm">
+              Type your prompt and let AI generate a deck for you!
+            </p>
+          </ModalHeader>
+          <ModalBody>
+            <Textarea
+              isClearable
+              variant="faded"
+              color="secondary"
+              label="Describe the topic for your deck"
+              placeholder="e.g., Basic Spanish greetings for travel"
+              minLength={3}
+              value={userPrompt}
+              onValueChange={setUserPrompt}
+              classNames={{
+                inputWrapper: "rounded-[25px] px-5",
+              }}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              size="lg"
+              radius="full"
+              className="font-bold"
+              onPress={() => {
+                setUserPrompt("");
+                setIsGenerateOpen(false);
+              }}
+              isDisabled={!user || isGenerateSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="lg"
+              radius="full"
+              className="font-bold"
+              color="primary"
+              onPress={() => generateDeck()}
+              isDisabled={!user || isGenerateSubmitting}
+              isLoading={isGenerateSubmitting}
+            >
+              Generate
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {isGenerateOpen && <AnoAI />}
     </>
   );
 };
