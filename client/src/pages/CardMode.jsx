@@ -171,9 +171,9 @@ const CardMode = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
-            { label: `Library`, path: `${ROUTES.DECKS}` },
+            { label: "Browse Decks", path: ROUTES.BROWSE },
             { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
-            { label: `Card Mode`, path: ROUTES.DECK_CARD_MODE(id) },
+            { label: "Card Mode", path: ROUTES.DECK_CARD_MODE(id) },
           ]}
         >
           {deck?.title}

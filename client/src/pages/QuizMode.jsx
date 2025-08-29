@@ -162,9 +162,9 @@ const QuizMode = () => {
         <Title
           breadcrumbs={[
             { label: "Home", path: ROUTES.HOME },
-            { label: `Library`, path: `${ROUTES.DECKS}` },
+            { label: "Browse Decks", path: ROUTES.BROWSE },
             { label: `${deck?.title}`, path: ROUTES.DECK_DETAILS(id) },
-            { label: `Quiz Mode`, path: ROUTES.DECK_QUIZ_MODE(id) },
+            { label: "Quiz Mode", path: ROUTES.DECK_QUIZ_MODE(id) },
           ]}
         >
           {deck?.title}
