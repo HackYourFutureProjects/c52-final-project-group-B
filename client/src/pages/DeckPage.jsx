@@ -182,7 +182,7 @@ const DeckPage = () => {
             { label: "Home", path: ROUTES.HOME },
             location.state?.from === ROUTES.MY_DECKS
               ? { label: "My Decks", path: ROUTES.MY_DECKS }
-              : { label: "Library", path: ROUTES.DECKS },
+              : { label: "Browse Decks", path: ROUTES.BROWSE },
             {
               label: `${deck?.title || (isLoading ? "Loading..." : "Deck")}`,
               path: `${ROUTES.DECK_DETAILS(id)}`,
