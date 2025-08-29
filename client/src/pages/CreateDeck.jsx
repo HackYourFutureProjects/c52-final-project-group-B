@@ -359,7 +359,7 @@ const CreateDeck = () => {
                 size="lg"
                 onPress={() => setIsGenerateOpen(true)}
               >
-                Ai
+                AI
               </Button>
             </Tooltip>
           </div>
