@@ -6,7 +6,7 @@ import { createAndThrowError } from "../util/createAndThrowError.js";
 import decksFilterPipeline from "./decksFilterPipeline.js";
 import openai from "../services/openAi/config/openai.js";
 import { zodTextFormat } from "openai/helpers/zod";
-import { flashcardPrompt_V2 } from "../services/openAi/prompts/flashcards.js";
+import { flashcardPrompt } from "../services/openAi/prompts/flashcards.js";
 import { generatedDeckSchema } from "./deck.schema.js";
 
 class DeckService {
@@ -316,13 +316,13 @@ class DeckService {
     }
   }
 
-  async generateDeck_V2(userPrompt) {
+  async generateDeck(userPrompt) {
     const response = await openai.responses.create({
       model: "gpt-4.1-mini",
       input: [
         {
           role: "developer",
-          content: flashcardPrompt_V2,
+          content: flashcardPrompt,
         },
         {
           role: "user",

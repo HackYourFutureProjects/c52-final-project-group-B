@@ -25,7 +25,7 @@ import {
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
-import { createDeck, generateDeck_V2 } from "@/api/decksAPI";
+import { createDeck, generateDeck } from "@/api/decksAPI";
 import { createCard } from "@/api/cardsAPI";
 import languages from "@/data/languages.js";
 import { ROUTES } from "@/routes/paths.js";
@@ -148,10 +148,10 @@ const CreateDeck = () => {
     }
   };
 
-  const generateDeck = async () => {
+  const handleGenerateDeck = async () => {
     setIsGenerateSubmitting(true);
     try {
-      const generatedDeck = await generateDeck_V2(userPrompt);
+      const generatedDeck = await generateDeck(userPrompt);
 
       setDeckTitle(generatedDeck.deck.title);
       setDeckDescription(generatedDeck.deck.description);
@@ -528,7 +528,7 @@ const CreateDeck = () => {
               radius="full"
               className="font-bold"
               color="primary"
-              onPress={() => generateDeck()}
+              onPress={() => handleGenerateDeck()}
               isDisabled={!user || isGenerateSubmitting}
               isLoading={isGenerateSubmitting}
             >

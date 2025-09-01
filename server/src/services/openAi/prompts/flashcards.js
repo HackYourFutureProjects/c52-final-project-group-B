@@ -1,4 +1,4 @@
-export const flashcardPrompt_V2 = `
+export const flashcardPrompt = `
 You are an assistant that generates flashcard decks.
 
 - Your output must always represent flashcards in a deck.

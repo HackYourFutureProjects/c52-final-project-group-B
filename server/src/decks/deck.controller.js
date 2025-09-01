@@ -74,9 +74,9 @@ export const deleteDeck = async (req, res) => {
 /**
  * Generate a deck using AI, then persist the deck and its cards.
  */
-export const generateDeck_V2 = async (req, res) => {
+export const generateDeck = async (req, res) => {
   const { userPrompt } = generateDeck_V2Schema.parse(req.body);
-  const generatedDeck = await deckService.generateDeck_V2(userPrompt);
+  const generatedDeck = await deckService.generateDeck(userPrompt);
 
   res.status(HTTP_STATUS.CREATED).json(generatedDeck);
 };
