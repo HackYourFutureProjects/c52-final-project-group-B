@@ -52,19 +52,19 @@ class UserService {
   async loginUser(email, password) {
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+      createAndThrowError(HTTP_STATUS.FORBIDDEN, "Invalid credentials");
     }
 
     if (user.isDeleted) {
       createAndThrowError(
-        HTTP_STATUS.UNAUTHORIZED,
+        HTTP_STATUS.FORBIDDEN,
         "Your account is deactivated, please contact support",
       );
     }
 
     const passwordMatches = await compare(password, user.password);
     if (!passwordMatches) {
-      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+      createAndThrowError(HTTP_STATUS.FORBIDDEN, "Invalid credentials");
     }
 
     const accessToken = generateAccessToken(user);
@@ -130,7 +130,7 @@ class UserService {
     const token = fullToken.split(" ")[1];
     const validToken = verifyAccessToken(token);
     if (!validToken) {
-      createAndThrowError(HTTP_STATUS.UNAUTHORIZED, "Token is not valid");
+      createAndThrowError(HTTP_STATUS.FORBIDDEN, "Token is not valid");
     }
     const userId = decodedToken(token)?.id;
 
@@ -147,7 +147,7 @@ class UserService {
     const isMatch = await compare(currentPassword, user.password);
     if (!isMatch) {
       createAndThrowError(
-        HTTP_STATUS.UNAUTHORIZED,
+        HTTP_STATUS.FORBIDDEN,
         "Current password is incorrect",
       );
     }
