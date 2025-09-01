@@ -10,6 +10,8 @@ Users can:
 - Browse and manage personal and public decks
 - Sign up, log in, and reset passwords
 
+![App Demo](./client/public/demo.gif)
+
 ## File structure
 
 ```
