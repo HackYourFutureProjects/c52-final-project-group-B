@@ -13,7 +13,6 @@ import {
   createCard,
   updateCardById,
   deleteCardById,
-  generateDeck,
   generateDeck_V2,
 } from "./deck.controller.js";
 
@@ -22,7 +21,6 @@ const deckRouter = Router();
 deckRouter.get("/", getDecks);
 deckRouter.get("/mine", authenticate, getMyDecks);
 deckRouter.post("/", authenticate, createDeck);
-deckRouter.post("/generate", authenticate, generateDeck);
 deckRouter.post("/generate_v2", authenticate, generateDeck_V2);
 deckRouter.get("/:deckId", getDeckById);
 deckRouter.put("/:deckId", authenticate, updateDeck);
