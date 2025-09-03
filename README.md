@@ -45,12 +45,6 @@ Users can:
 │  │  └─ util/
 │  └─ index.js
 │
-├─ cypress/
-│  ├─ e2e/
-│  ├─ fixtures/
-│  ├─ plugins/
-│  └─ support/
-│
 ├─ Procfile
 ├─ package.json
 └─ README.md
